@@ -20,19 +20,19 @@ export class DeparturesRow extends LitElement {
         }
     `];
 
-    @property() 
+    @property({attribute: false}) 
     public config!: EntityConfig
 
-    @property()
+    @property({attribute: false})
     public showDelay: boolean = true
 
-    @property()
+    @property({attribute: false})
     public showIcon: boolean = false
 
-    @property()
+    @property({attribute: false})
     public showTimestamp: boolean = false
     
-    @property() 
+    @property({attribute: false}) 
     public hass!: HomeAssistant;
 
     @state()
@@ -72,7 +72,10 @@ export class DeparturesRow extends LitElement {
             return "-:-"
         }
         
-        const _date = new Date(date)
+        let _date = new Date(date)
+        
+        // ignore seconds and milliseconds
+        _date.setSeconds(0,0)
 
         if(isThisMinute(_date)){
             this._now = true
