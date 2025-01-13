@@ -165,9 +165,9 @@ export class DeparturesRow extends LitElement {
             return nothing
         }
 
-        const delayed = this._delay >= 0
-        const sign = delayed ? "+" : "-"
+        const delayed = this._delay > 0
+        const sign = this._delay >=0 ? "+" : "-"
         
-        return html`<span class="delay" delayed=${delayed}>(${sign}${this._delay})</span>`
+        return html`<span class="delay" ?delayed=${delayed}>(${sign}${this._delay})</span>`
     }
 }
