@@ -44,4 +44,10 @@ export const cardStyles = css`
         font-weight: bold;
         background: none;
     }
+    .delay {
+        color: "limegreen";
+    }
+    .delay[delayed] {
+        color: "#F72C5B";
+    }
     `;

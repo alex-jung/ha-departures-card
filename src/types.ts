@@ -3,9 +3,9 @@ import { LovelaceCardConfig } from "custom-card-helpers";
 export interface Config extends LovelaceCardConfig {
     title: string;
     icon: string;
-    showDelay?: boolean;
-    showTransportIcon?: boolean;
-    showTimestamp?: boolean;
+    showDelay: boolean;
+    showTransportIcon: boolean;
+    showTimestamp: boolean;
     entities?: EntityConfig[];
   }
 

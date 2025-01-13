@@ -9,10 +9,10 @@ import { styleMap } from 'lit/directives/style-map.js';
 export class DeparturesTable extends LitElement {
     static styles = cardStyles;
 
-    @property() 
+    @property({attribute: false}) 
     public hass!: HomeAssistant;
 
-    @property()
+    @property({attribute: false})
     private config!: Config;
 
     render() 

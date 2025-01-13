@@ -28,9 +28,11 @@ export class DeparturesCard extends LitElement
 {
   static styles = cardStyles;
 
-  @property({ attribute: false }) public hass!: HomeAssistant;
+  @property({ attribute: false }) 
+  public hass!: HomeAssistant;
 
-  @state() private _config!: Config;
+  @state() 
+  private _config!: Config;
   
   public static getStubConfig(): Record<string, unknown> {
     return {};
@@ -56,7 +58,7 @@ export class DeparturesCard extends LitElement
       <ha-card>
         <div>
           <card-header .title=${this._config.title} .icon=${this._config.icon}></card-header>
-          <departures-table .config=${this._config} .hass=${this.hass} />
+          <departures-table .config=${this._config} .hass=${this.hass}></departures-table>
         </div>
       </ha-card>
     `;

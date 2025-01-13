@@ -23,17 +23,17 @@ export class DeparturesRow extends LitElement {
     @property({attribute: false}) 
     public config!: EntityConfig
 
-    @property({attribute: false})
-    public showDelay: boolean = true
-
-    @property({attribute: false})
-    public showIcon: boolean = false
-
-    @property({attribute: false})
-    public showTimestamp: boolean = false
-    
     @property({attribute: false}) 
     public hass!: HomeAssistant;
+
+    @property({type: Boolean})
+    public showDelay = true
+
+    @property({type: Boolean})
+    public showIcon: boolean = false
+
+    @property({type: Boolean})
+    public showTimestamp: boolean = false
 
     @state()
     private _departure: string = "-:-"
@@ -72,12 +72,10 @@ export class DeparturesRow extends LitElement {
             return "-:-"
         }
         
-        let _date = new Date(date)
+        let _param_date = new Date(date).setSeconds(0,0)
+        let _now_date = new Date().setSeconds(0,0)
         
-        // ignore seconds and milliseconds
-        _date.setSeconds(0,0)
-
-        if(isThisMinute(_date)){
+        if(isThisMinute(_param_date)){
             this._now = true
 
             return "Jetzt"
@@ -88,10 +86,10 @@ export class DeparturesRow extends LitElement {
         }
 
         if(this.showTimestamp){
-            return lightFormat(_date, "HH:mm")
+            return lightFormat(_param_date, "HH:mm")
         }
 
-        return intlFormatDistance(_date, Date.now(), { style: 'short' })
+        return intlFormatDistance(_param_date, _now_date, { style: 'short' })
     }
 
     private calculateDelay(currentDate: string, plannedDate: string): number
@@ -167,11 +165,9 @@ export class DeparturesRow extends LitElement {
             return nothing
         }
 
-        const styles = {
-            color: this._delay > 0 ? 'red' : 'green'
-        }
-        const sign = this._delay >= 0 ? "+" : "-"
-
-        return html`<span class="delay" style=${styleMap(styles)}>(${sign}${this._delay})</span>`
+        const delayed = this._delay >= 0
+        const sign = delayed ? "+" : "-"
+        
+        return html`<span class="delay" delayed=${delayed}>(${sign}${this._delay})</span>`
     }
 }
