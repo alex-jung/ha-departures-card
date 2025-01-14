@@ -45,9 +45,9 @@ export const cardStyles = css`
         background: none;
     }
     .delay {
-        color: "limegreen";
+        color: limegreen;
     }
     .delay[delayed] {
-        color: "#F72C5B";
+        color: #F72C5B;
     }
     `;
