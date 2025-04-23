@@ -1,6 +1,5 @@
 import { html, LitElement } from 'lit';
-import { state, property } from 'lit/decorators.js';
-import { customElement } from 'lit/decorators.js';
+import { state, property, customElement } from 'lit/decorators.js';
 import { Config } from './types.js';
 import { HomeAssistant } from 'custom-card-helpers';
 import { cardStyles } from './styles.js';
@@ -16,7 +15,7 @@ import './departures-row.js'
   description: 'Display departure times for different public transports',
 });
 
-const version = "0.0.1"
+const version = "2.0.0"
 const repoUrl = "https://github.com/alex-jung/ha-departures-card"
 
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato")
@@ -33,6 +32,9 @@ export class DeparturesCard extends LitElement
 
   @state() 
   private _config!: Config;
+
+  @state()
+  private _open: boolean = false;
   
   public static getStubConfig(): Record<string, unknown> {
     return {};
@@ -51,6 +53,16 @@ export class DeparturesCard extends LitElement
     }
 
     this._config = config
+
+    if (!this._config.entities || this._config.entities.length === 0) {
+      throw new Error("Please define at least one entity in the configuration.");
+    }
+  }
+
+  private _handleClick(event: Event) {
+    console.log("Clicked on departures-table", event);
+    this._open = !this._open;
+
   }
 
   render() {
@@ -58,9 +70,18 @@ export class DeparturesCard extends LitElement
       <ha-card>
         <div>
           <card-header .title=${this._config.title} .icon=${this._config.icon}></card-header>
-          <departures-table .config=${this._config} .hass=${this.hass}></departures-table>
+          <departures-table 
+            @click="${this._handleClick}" 
+            .config=${this._config}
+            .hass=${this.hass}>
+          </departures-table>
         </div>
       </ha-card>
+      <ha-dialog ?open="${this._open}">
+        <h2>Mein Dialog</h2>
+        <p>Dies ist ein Beispiel für einen Dialog mit LitElement.</p>
+        <button @click="${this._handleClick}">Schließen</button>
+      </ha-dialog>
     `;
   }
 }

@@ -5,6 +5,8 @@ export const cardStyles = css`
         display: block;
         height: auto;
         padding: 16px;
+        width: 800px;
+        cursor: pointer;
     }
     card-header {
         display: flex;
@@ -15,12 +17,6 @@ export const cardStyles = css`
     }
     .card-title {
         font-size: 2em;
-    }
-    .table-header {
-        display: flex;
-        padding-top: 20px;
-        flex-wrap: nowrap;
-        justify-content: space-between;
     }
     .cell-line {
         display: flex;
@@ -44,10 +40,15 @@ export const cardStyles = css`
         font-weight: bold;
         background: none;
     }
-    .delay {
-        color: limegreen;
+    button {
+      padding: 10px;
+      background-color: #6200ea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    .delay[delayed] {
-        color: #F72C5B;
+    button:hover {
+      background-color: #3700b3;
     }
     `;

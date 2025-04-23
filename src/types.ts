@@ -3,9 +3,9 @@ import { LovelaceCardConfig } from "custom-card-helpers";
 export interface Config extends LovelaceCardConfig {
     title: string;
     icon: string;
-    showDelay: boolean;
+    animation: boolean;
     showTransportIcon: boolean;
-    showTimestamp: boolean;
+    departuresToShow: number;
     entities?: EntityConfig[];
   }
 
@@ -14,11 +14,19 @@ export interface EntityConfig {
     line_color: string;
     line_name: number;
     destination_name: string;
-    dest_time: Date;
 }
 
 export enum EntityAttributes {
   PLANNED_TIME = "planned_departure_time",
+  PLANNED_TIME_1 = "planned_departure_time_1",
+  PLANNED_TIME_2 = "planned_departure_time_2",
+  PLANNED_TIME_3 = "planned_departure_time_3",
+  PLANNED_TIME_4 = "planned_departure_time_4",
+  ESTIMATED_TIME = "estimated_departure_time",
+  ESTIMATED_TIME_1 = "estimated_departure_time_1",
+  ESTIMATED_TIME_2 = "estimated_departure_time_2",
+  ESTIMATED_TIME_3 = "estimated_departure_time_3",
+  ESTIMATED_TIME_4 = "estimated_departure_time_4",
   LINE_NAME = "line_name",
   DIRECTION = "direction",
   TRANSPORT = "transport",
