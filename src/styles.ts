@@ -4,33 +4,33 @@ export const cardStyles = css`
     ha-card {
         display: block;
         height: auto;
-        padding: 16px;
+        width: 100%;
+        cursor: pointer;
+        overflow: hidden;
     }
-    card-header {
+    .card-header {
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-between;
         align-items: center;
-        font-size: 14px;
-    }
-    .card-title {
         font-size: 2em;
     }
-    .table-header {
+    .cell-icon {
         display: flex;
-        padding-top: 20px;
-        flex-wrap: nowrap;
-        justify-content: space-between;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
     }
     .cell-line {
         display: flex;
         align-items: center;
-        width: 70px;
+        justify-content: center;
+        min-width: 70px;
     }
     .cell-destination {
         display: flex;
-        align-items: left;
         flex: 2;
+        white-space: nowrap;
     }
     .line-number {
         display: flex;
@@ -38,16 +38,15 @@ export const cardStyles = css`
         align-items: center;
         margin: 5px;
         border-radius: 5px;
-        width: 130px;
+        width: 100%;
         height: 25px;
         font-size: 1.2em;
         font-weight: bold;
-        background: none;
     }
-    .delay {
-        color: limegreen;
-    }
-    .delay[delayed] {
-        color: #F72C5B;
+    @media (min-width: 600px) and (min-height: 501px) {
+      ha-dialog {
+        --mdc-dialog-min-width: 750px !important;
+        --mdc-dialog-max-width: 100vw !important;
+      }
     }
     `;
