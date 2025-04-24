@@ -12,6 +12,10 @@ Describe what's wrong.
 **Describe expected behaviour**
 What did you expect?
 
+**Departures-card version**
+| visible in console log
+version:
+
 **Your card configuration**
 ```yaml
 type: custom:departures-card
