@@ -86,7 +86,7 @@ const at=t=>(e,i)=>{void 0!==i?i.addInitializer((()=>{customElements.define(t,e)
         --mdc-dialog-max-width: 100vw !important;
       }
     }
-    `;function ut(t,e){const i={de:{departures:"Abfahrten",line:"Linie",destination:"Ziel"},en:{departures:"Departures",line:"Line",destination:"Destination"}};return e&&"undefined"!==e||(e="en"),i[e][t]||i.en[t]}let ft=class extends rt{constructor(){super(...arguments),this.moreInfo=!1}getState(t){return this.hass?this.hass.states[t]:{}}render(){const t=this.hass.locale?.language,e=void 0===this.config.showAnimation||this.config.showAnimation,i=void 0===this.config.showTransportIcon||this.config.showTransportIcon;let s=void 0===this.config.departuresToShow?1:this.config.departuresToShow;return this.moreInfo&&(s=5),F`
+    `;function ut(t,e){const i={de:{departures:"Abfahrten",line:"Linie",destination:"Ziel"},en:{departures:"Departures",line:"Line",destination:"Destination"}};return e&&"undefined"!==e||(e="en"),i[e][t]||i.en[t]}let ft=class extends rt{constructor(){super(...arguments),this.moreInfo=!1}getState(t){return this.hass?this.hass.states[t]:{}}render(){const t=this.hass.locale?.language,e=void 0===this.config.showAnimation||this.config.showAnimation,i=void 0!==this.config.showTransportIcon&&this.config.showTransportIcon;let s=void 0===this.config.departuresToShow?1:this.config.departuresToShow;return this.moreInfo&&(s=5),F`
             <table-header>
                 ${this.config.showTransportIcon?F`<div class="cell-icon">Icon</div>`:W}    
                 <div class="cell-line">${ut("line",t)}</div>
@@ -148,11 +148,11 @@ const bt=_t(class extends $t{constructor(t){if(super(t),t.type!==mt||"class"!==t
             width: 90px;
         }
         .container {
-            margin: 5px;
+            margin: 0 0 10px 0;
             display: grid;
             justify-self: center;
             grid-template-columns: min-content min-content min-content;
-            grid-template-rows: 10px 20px;
+            grid-template-rows: 13px 20px;
             gap: 0px 3px;
             grid-auto-flow: row;
             grid-template-areas:

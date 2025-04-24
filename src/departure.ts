@@ -12,11 +12,11 @@ export class Departure extends LitElement {
             width: 90px;
         }
         .container {
-            margin: 5px;
+            margin: 0 0 10px 0;
             display: grid;
             justify-self: center;
             grid-template-columns: min-content min-content min-content;
-            grid-template-rows: 10px 20px;
+            grid-template-rows: 13px 20px;
             gap: 0px 3px;
             grid-auto-flow: row;
             grid-template-areas:
