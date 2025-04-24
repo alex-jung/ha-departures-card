@@ -12,11 +12,11 @@ export class Departure extends LitElement {
             width: 90px;
         }
         .container {
-            margin: 0 0 10px 0;
+            margin: 5px;
             display: grid;
             justify-self: center;
             grid-template-columns: min-content min-content min-content;
-            grid-template-rows: 13px 20px;
+            grid-template-rows: 15px 20px;
             gap: 0px 3px;
             grid-auto-flow: row;
             grid-template-areas:
@@ -30,7 +30,6 @@ export class Departure extends LitElement {
         }
         .delay { 
             grid-area: delay; 
-            font-size: 0.8em;
             justify-self: start;
         }
         .green {
@@ -48,10 +47,12 @@ export class Departure extends LitElement {
             grid-area: text;    
             font-size: 1.3em;
             font-weight: bold;
-            color: var(--primary-text-color);
             align-self: end;
             align-content: center;
-            line-height: 1.3em;
+            line-height: 24px;
+        }
+        .text.now {
+            margin-bottom: -5px;
         }
 
         .pulsating {
@@ -171,7 +172,8 @@ export class Departure extends LitElement {
         }
 
         const textClasses = {
-            "pulsating": pulsating
+            "pulsating": pulsating,
+            "now": this.data.mode == DepartureTimeMode.NOW,
         }
 
         return html`
