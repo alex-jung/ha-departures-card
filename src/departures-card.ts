@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { state, property, customElement } from 'lit/decorators.js';
 import { Config } from './types.js';
 import { HomeAssistant } from 'custom-card-helpers';
@@ -74,12 +74,7 @@ export class DeparturesCard extends LitElement
     }
   }
 
-  private _handleClick(event: Event) {
-    console.log("Clicked on departures-table", event);
-    this._open = !this._open;
-  }
-
-  render() {
+  protected render(): TemplateResult { 
     const title = this.config.title || text("departures", this.hass.locale?.language)
     const icon = this.config.icon || "mdi:bus"
 
@@ -91,16 +86,27 @@ export class DeparturesCard extends LitElement
             <ha-icon icon="${icon}"></ha-icon>
           </div> 
           <departures-table 
-            @click="${this._handleClick}" 
+            @click="${() => this._open = true}" 
             .config=${this.config}
             .hass=${this.hass}>
           </departures-table>
         </div>
       </ha-card>
-      <ha-dialog ?open="${this._open}">
-        <h2>Mein Dialog</h2>
-        <p>Dies ist ein Beispiel für einen Dialog mit LitElement.</p>
-        <button @click="${this._handleClick}">Schließen</button>
+      <ha-dialog hideactions ?open="${this._open}" @closed="${() => this._open = false}">
+        <div class="card-header">
+          <ha-icon-button @click="${() => this._open = false}" aria-label="Close" title="Close">
+            <ha-icon icon="mdi:close"></ha-icon>
+          </ha-icon-button>
+          ${title}
+          <ha-icon icon="${icon}"></ha-icon>
+        </div>
+        <div class="content">
+          <departures-table
+            .config=${this.config}
+            .moreInfo=${true}
+            .hass=${this.hass}>
+          </departures-table>
+        </div>
       </ha-dialog>
     `;
   }

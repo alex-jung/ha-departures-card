@@ -29,6 +29,9 @@ export class DeparturesTable extends LitElement {
     @property({attribute: false})
     private config!: Config;
 
+    @property({attribute: false})
+    private moreInfo: boolean = false;
+
     /**
      * Retrieves the state of a specified Home Assistant entity.
      *
@@ -47,7 +50,12 @@ export class DeparturesTable extends LitElement {
         const language = this.hass.locale?.language
         const showAnimation = this.config.showAnimation === undefined ? true : this.config.showAnimation
         const showTransportIcon = this.config.showTransportIcon === undefined ? true : this.config.showTransportIcon
-        const departuresToShow = this.config.departuresToShow === undefined ? 1 : this.config.departuresToShow
+        let departuresToShow = this.config.departuresToShow === undefined ? 1 : this.config.departuresToShow
+
+        if(this.moreInfo) { 
+            departuresToShow = 5
+        }
+
 
         return html`
             <table-header>

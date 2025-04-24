@@ -43,15 +43,10 @@ export const cardStyles = css`
         font-size: 1.2em;
         font-weight: bold;
     }
-    button {
-      padding: 10px;
-      background-color: #6200ea;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #3700b3;
+    @media (min-width: 600px) and (min-height: 501px) {
+      ha-dialog {
+        --mdc-dialog-min-width: 750px !important;
+        --mdc-dialog-max-width: 100vw !important;
+      }
     }
     `;
