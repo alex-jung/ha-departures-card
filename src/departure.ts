@@ -85,8 +85,25 @@ export class Departure extends LitElement {
     @property({ attribute: false }) 
     public estimated: Date | null  = null;
 
+    /**
+     * Indicates whether the pulsating animation should be displayed.
+     * 
+     * @property
+     * @type {boolean}
+     * @default true
+     */
+    @property({ attribute: false })
+    public showAnimation: boolean = true;
+
+    /**
+     * Represents the state of departure time data.
+     * 
+     * @private
+     * @type {DepartureTime}
+     * @default A new instance of `DepartureTime` initialized with `false`.
+     */
     @state()
-    private _data: DepartureTime = new DepartureTime(false);
+    private data: DepartureTime = new DepartureTime(false);
 
     private intervalTimer?: NodeJS.Timeout | undefined
     private INTERVAL = 10000 // update every 10 sec
@@ -101,32 +118,55 @@ export class Departure extends LitElement {
     override disconnectedCallback(): void {
       super.disconnectedCallback()
       clearInterval(this.intervalTimer)
+      
       this.intervalTimer = undefined
     }
 
+    /**
+     * Updates the departure time data by calculating the difference
+     * between the planned and estimated times. The result is stored
+     * in the `data` property.
+     *
+     * @private
+     */
     private updateTime = () => {
-        this._data = calculateDepartureTime(this.planned, this.estimated);
+        this.data = calculateDepartureTime(this.planned, this.estimated);
     }
 
-    private _getTimeHtml(): TemplateResult {
+    /**
+     * Generates the HTML template for displaying the departure time.
+     *
+     * Depending on the `mode` of the departure time, this method dynamically
+     * creates the appropriate HTML content. It supports different modes such as:
+     * - `NOW`: Displays an icon indicating transport arrival and optionally applies
+     *   a pulsating animation if `showAnimation` is enabled.
+     * - `DIFF`: Displays the time difference in minutes and applies a pulsating
+     *   animation if the difference is within a specific range (0 to 5 minutes) 
+     *   and `showAnimation` is enabled.
+     * - `TIMESTAMP` and `NONE`: Displays the raw time value as provided in the data.
+     *
+     * @returns {TemplateResult} The HTML template for the departure time, including
+     * a pulsating animation if applicable.
+     */
+    private getTimeHtml(): TemplateResult {
         let innerHtml;
         const nowIcon = "mdi:bus-side";
-        let pulsating = false
+        let pulsating = false;
 
-        switch(this._data.mode) {
+        switch(this.data.mode) {
             case DepartureTimeMode.NOW:
                 innerHtml = html`<ha-icon icon=${nowIcon}></ha-icon>`;
-                pulsating = true;
+                pulsating = this.showAnimation && true;
                 break;
             case DepartureTimeMode.DIFF:
-                let diffMins = Number(this._data.time)
+                let diffMins = Number(this.data.time)
 
                 if(diffMins >= 0 && diffMins <= 5) {
-                    pulsating = true
+                    pulsating = this.showAnimation && true;
                 }
             case DepartureTimeMode.TIMESTAMP:
             case DepartureTimeMode.NONE:
-                innerHtml = html`${this._data.time}`;
+                innerHtml = html`${this.data.time}`;
                 break;
         }
 
@@ -139,38 +179,36 @@ export class Departure extends LitElement {
         `;
     }
 
-    private _getDelayHtml(): TemplateResult {
+    /**
+     * Generates an HTML template representing the delay information for a departure.
+     *
+     * The delay is displayed with a "+" sign if it is positive, or as-is if it is negative.
+     * The delay text is styled with CSS classes based on whether the delay is positive or non-positive.
+     *
+     * @returns {TemplateResult} An HTML template containing the delay information with appropriate styling.
+     */
+    private getDelayHtml(): TemplateResult {
         let delayHtml;
 
-        if(this._data.realTime && this._data.mode == DepartureTimeMode.DIFF) {
-            delayHtml = this._data.delay >= 0 ? `+${this._data.delay}` : `${this._data.delay}`;
+        if(this.data.realTime && this.data.mode == DepartureTimeMode.DIFF) {
+            delayHtml = this.data.delay >= 0 ? `+${this.data.delay}` : `${this.data.delay}`;
         }
 
         const delayClasses = {
-            "green": this._data.delay <= 0,
-            "red": this._data.delay > 0,
+            "green": this.data.delay <= 0,
+            "red": this.data.delay > 0,
         }
 
         return html`<div class="delay ${classMap(delayClasses)}">${delayHtml}</div>`
     }
 
     protected render(): TemplateResult {
-        //console.log("render departure", this._data)
-
-        this.updateTime();
-
-        let _prefix = this._data.prefix;
-        let _postfix = this._data.postfix;
-
-        //console.debug("Departure", this._data.mode);
-
-
         return html`
             <div class="container">
-                <div class="prefix">${_prefix}</div>
-                ${this._getTimeHtml()}
-                <div class="postfix">${_postfix}</div>
-                ${this._getDelayHtml()}
+                <div class="prefix">${this.data.prefix}</div>
+                ${this.getTimeHtml()}
+                <div class="postfix">${this.data.postfix}</div>
+                ${this.getDelayHtml()}
             </div>
             `;
   }

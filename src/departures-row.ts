@@ -16,6 +16,7 @@ export class DeparturesRow extends LitElement {
             display: flex;
             flex-wrap: nowrap;
             align-items: center;
+            justify-content: space-between;
         }
     `];
 
@@ -25,34 +26,50 @@ export class DeparturesRow extends LitElement {
     @property({attribute: false}) 
     public state!: HassEntity
 
+    /**
+     * Indicates whether an transport type icon should be displayed.
+     * When set to `true`, the icon (first columnt in the table) will be shown; otherwise, it will be hidden.
+     */
     @property({attribute: false})
-    public destination: string = ""
+    public showIcon: boolean = false
 
-    @property({attribute: false})
-    public lineName: string = ""
-
+    /**
+     * Customizable background color for the line.
+     * 
+     * @type {string}
+     * @default ""
+     */
     @property({attribute: false})
     public lineColor: string = ""
 
-    @property({type: Boolean})
-    public showIcon: boolean = false
+    /**
+     * Specifies the number of departure times to display.
+     * 
+     * @property
+     * @type {number}
+     * @default 1
+     */
+    @property({attribute: false})
+    public timesToShow: number = 1
+
+    /**
+     * Indicates whether the pulsating animation for departures time < in 5 min. should be displayed.
+     * When set to `true`, animations will be enabled; otherwise, they will be disabled.
+     */
+    @property({attribute: false})
+    public showAnimation: boolean = true
 
     @state()
-    private _times: Array<Array<string | null>> = []
+    private times: Array<Array<string | null>> = []
 
-    private updateTimes = () => {
-        this._times = []
+    private updateTimes() {
+        this.times = []
 
-        this._times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME], this.state?.attributes[EntityAttributes.ESTIMATED_TIME]])
-        this._times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME_1], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_1]])
-        this._times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME_2], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_2]])
-        this._times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME_3], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_3]])
-        this._times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME_4], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_4]])
-        
-        if(this.state)
-        {
-            console.log(this.destination, this._times)
-        }
+        this.times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME], this.state?.attributes[EntityAttributes.ESTIMATED_TIME]])
+        this.times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME_1], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_1]])
+        this.times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME_2], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_2]])
+        this.times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME_3], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_3]])
+        this.times.push([this.state?.attributes[EntityAttributes.PLANNED_TIME_4], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_4]])
     }
 
     protected render(): TemplateResult {        
@@ -62,7 +79,7 @@ export class DeparturesRow extends LitElement {
             ${this.renderIcon()}
             ${this.renderLine()}
             ${this.renderDestination()}
-            ${this.renderDepartureTime()}
+            ${this.renderDepartureTimes()}
         `;
     }
 
@@ -73,7 +90,11 @@ export class DeparturesRow extends LitElement {
 
         let icon = this.state.attributes[EntityAttributes.ICON] ?? "mdi:train-bus"
 
-        return html`<ha-icon icon=${icon}></ha-icon>`
+        return html`
+            <div class="cell-icon">
+                <ha-icon icon=${icon}></ha-icon>
+            </div>
+        `
     }
 
     private renderLine(){
@@ -98,11 +119,13 @@ export class DeparturesRow extends LitElement {
         `
     }
 
-    private renderDepartureTime(){
+    private renderDepartureTimes(){
+        let times = this.times.slice(0, this.timesToShow)
+
         return html`
-            ${this._times.map(times => 
+            ${times.map(times => 
                 html`
-                <departure-text .planned=${times[0]} .estimated=${times[1]}></departure-text>`)}
+                <departure-text .planned=${times[0]} .estimated=${times[1]} .showAnimation=${this.showAnimation}></departure-text>`)}
         `
     }
 }

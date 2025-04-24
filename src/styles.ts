@@ -4,29 +4,33 @@ export const cardStyles = css`
     ha-card {
         display: block;
         height: auto;
-        padding: 16px;
-        width: 800px;
+        width: 100%;
         cursor: pointer;
+        overflow: hidden;
     }
-    card-header {
+    .card-header {
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-between;
         align-items: center;
-        font-size: 14px;
-    }
-    .card-title {
         font-size: 2em;
+    }
+    .cell-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
     }
     .cell-line {
         display: flex;
         align-items: center;
-        width: 70px;
+        justify-content: center;
+        min-width: 70px;
     }
     .cell-destination {
         display: flex;
-        align-items: left;
         flex: 2;
+        white-space: nowrap;
     }
     .line-number {
         display: flex;
@@ -34,11 +38,10 @@ export const cardStyles = css`
         align-items: center;
         margin: 5px;
         border-radius: 5px;
-        width: 130px;
+        width: 100%;
         height: 25px;
         font-size: 1.2em;
         font-weight: bold;
-        background: none;
     }
     button {
       padding: 10px;

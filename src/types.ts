@@ -3,7 +3,7 @@ import { LovelaceCardConfig } from "custom-card-helpers";
 export interface Config extends LovelaceCardConfig {
     title: string;
     icon: string;
-    animation: boolean;
+    showAnimation: boolean;
     showTransportIcon: boolean;
     departuresToShow: number;
     entities?: EntityConfig[];

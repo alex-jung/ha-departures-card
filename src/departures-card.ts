@@ -3,11 +3,10 @@ import { state, property, customElement } from 'lit/decorators.js';
 import { Config } from './types.js';
 import { HomeAssistant } from 'custom-card-helpers';
 import { cardStyles } from './styles.js';
-import './card-header.js'
 import './departures-table.js'
 import './departures-row.js'
+import { text } from './texts.js';
 
-// This puts your card into the UI card picker dialog
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
   type: 'departures-card',
@@ -18,7 +17,7 @@ import './departures-row.js'
 const version = "2.0.0"
 const repoUrl = "https://github.com/alex-jung/ha-departures-card"
 
-console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato")
+console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;")
 console.log(`Github repository: ${repoUrl}`)
 console.groupEnd()
 
@@ -31,7 +30,7 @@ export class DeparturesCard extends LitElement
   public hass!: HomeAssistant;
 
   @state() 
-  private _config!: Config;
+  private config!: Config;
 
   @state()
   private _open: boolean = false;
@@ -40,21 +39,37 @@ export class DeparturesCard extends LitElement
     return {};
   }
 
+  /**
+   * Calculates and returns the size of the card.
+   * 
+   * The size is determined based on the configuration of the card. If no configuration
+   * is provided, the default size is 1. If the configuration includes entities, the size
+   * is calculated as the number of entities plus 1.
+   * 
+   * @returns {Promise<number>} A promise that resolves to the size of the card.
+   */
   public async getCardSize(): Promise<number> {
-    if (!this._config) 
+    if (!this.config) 
       return 1;
 
-    return this._config.entities ? this._config.entities.length + 1 : 1;
+    return this.config.entities ? this.config.entities.length + 1 : 1;
   }
 
+  /**
+   * Sets the configuration for the departures card.
+   * 
+   * @param config - The configuration object to set.
+   * @throws {Error} If the provided configuration is invalid.
+   * @throws {Error} If no entities are defined in the configuration or the entities array is empty.
+   */
   public setConfig(config: Config) {
     if(!config){
       throw new Error("Invalid configuration");
     }
 
-    this._config = config
+    this.config = config
 
-    if (!this._config.entities || this._config.entities.length === 0) {
+    if (!this.config.entities || this.config.entities.length <= 0) {
       throw new Error("Please define at least one entity in the configuration.");
     }
   }
@@ -62,17 +77,22 @@ export class DeparturesCard extends LitElement
   private _handleClick(event: Event) {
     console.log("Clicked on departures-table", event);
     this._open = !this._open;
-
   }
 
   render() {
+    const title = this.config.title || text("departures", this.hass.locale?.language)
+    const icon = this.config.icon || "mdi:bus"
+
     return html`
       <ha-card>
-        <div>
-          <card-header .title=${this._config.title} .icon=${this._config.icon}></card-header>
+        <div class="card-content">
+          <div class="card-header">
+            ${title}
+            <ha-icon icon="${icon}"></ha-icon>
+          </div> 
           <departures-table 
             @click="${this._handleClick}" 
-            .config=${this._config}
+            .config=${this.config}
             .hass=${this.hass}>
           </departures-table>
         </div>
