@@ -17,6 +17,7 @@ export class DeparturesRow extends LitElement {
             flex-wrap: nowrap;
             align-items: center;
             justify-content: space-between;
+            align-items:baseline;
         }
     `];
 
