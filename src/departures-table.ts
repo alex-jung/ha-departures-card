@@ -49,7 +49,7 @@ export class DeparturesTable extends LitElement {
     protected render(): TemplateResult {
         const language = this.hass.locale?.language
         const showAnimation = this.config.showAnimation === undefined ? true : this.config.showAnimation
-        const showTransportIcon = this.config.showTransportIcon === undefined ? true : this.config.showTransportIcon
+        const showTransportIcon = this.config.showTransportIcon === undefined ? false : this.config.showTransportIcon
         let departuresToShow = this.config.departuresToShow === undefined ? 1 : this.config.departuresToShow
 
         if(this.moreInfo) { 
