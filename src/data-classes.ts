@@ -3,6 +3,7 @@ export enum DepartureTimeMode {
     TIMESTAMP = "timestamp",
     DIFF      = "diff",
     NOW       = "now",
+    PAST      = "past",
 }
 
 export class DepartureTime{
@@ -44,6 +45,11 @@ export class DepartureTime{
                 this._prefix = "";
                 this._postfix = "";
                 this._time = "-";
+                break;
+            case DepartureTimeMode.PAST:
+                this._prefix = "";
+                this._postfix = "";
+                this._time = "...";
                 break;
             default:
                 console.warn("Unknown mode", mode);

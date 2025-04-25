@@ -9,12 +9,14 @@ export class Departure extends LitElement {
     static styles = [
         css`
         :host {
-            width: 90px;
+            display: flex;
         }
         .container {
+            width: 60px;
             margin: 5px;
             display: grid;
             justify-self: center;
+            justify-content: center;
             grid-template-columns: min-content min-content min-content;
             grid-template-rows: 15px 20px;
             gap: 0px 3px;
@@ -33,10 +35,10 @@ export class Departure extends LitElement {
             justify-self: start;
         }
         .green {
-            color: limegreen;
+            color: var(--success-color);
         }
         .red {
-            color: #F72C5B;
+            color: var(--error-color);
         }
         .postfix { 
             grid-area: postfix; 
@@ -51,10 +53,6 @@ export class Departure extends LitElement {
             align-content: center;
             line-height: 24px;
         }
-        .text.now {
-            margin-bottom: -5px;
-        }
-
         .pulsating {
             animation: pulsieren 1.5s infinite;
         }
@@ -107,7 +105,7 @@ export class Departure extends LitElement {
     private data: DepartureTime = new DepartureTime(false);
 
     private intervalTimer?: NodeJS.Timeout | undefined
-    private INTERVAL = 10000 // update every 10 sec
+    private INTERVAL = 2000 // update every 2 sec
 
     override connectedCallback(): void {
       super.connectedCallback();
@@ -167,13 +165,13 @@ export class Departure extends LitElement {
                 }
             case DepartureTimeMode.TIMESTAMP:
             case DepartureTimeMode.NONE:
+            case DepartureTimeMode.PAST:
                 innerHtml = html`${this.data.time}`;
                 break;
         }
 
         const textClasses = {
             "pulsating": pulsating,
-            "now": this.data.mode == DepartureTimeMode.NOW,
         }
 
         return html`
@@ -207,7 +205,6 @@ export class Departure extends LitElement {
     protected render(): TemplateResult {
         return html`
             <div class="container">
-                <div class="prefix">${this.data.prefix}</div>
                 ${this.getTimeHtml()}
                 <div class="postfix">${this.data.postfix}</div>
                 ${this.getDelayHtml()}

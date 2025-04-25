@@ -95,7 +95,7 @@ export class DeparturesCard extends LitElement
       <ha-dialog hideactions ?open="${this._open}" @closed="${() => this._open = false}">
         <div class="card-header">
           <ha-icon-button @click="${() => this._open = false}" aria-label="Close" title="Close">
-            <ha-icon icon="mdi:close"></ha-icon>
+            <ha-icon icon="mdi:close" style="display: flex;"></ha-icon>
           </ha-icon-button>
           ${title}
           <ha-icon icon="${icon}"></ha-icon>

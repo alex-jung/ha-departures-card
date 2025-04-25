@@ -40,8 +40,14 @@ export function calculateDepartureTime(plannedDepartureTime: Date | null, actual
   result.delay = differenceInMinutes(tActual, tPlanned);
 
 
-  if(isThisMinute(tActual) || isPast(tActual)) {
+  if(isThisMinute(tActual)) {
     result.updateTime(DepartureTimeMode.NOW);
+
+    return result;
+  }
+
+  if(isPast(tActual)) {
+    result.updateTime(DepartureTimeMode.PAST);
 
     return result;
   }
