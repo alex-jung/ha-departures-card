@@ -197,7 +197,11 @@ const bt=_t(class extends gt{constructor(t){if(super(t),t.type!==mt||"class"!==t
         .pulsating {
             animation: pulsieren 1.5s infinite;
         }
-
+        @media (min-width: 100px) and (max-width: 500px){
+            :contianer {
+                margin: 5px 0px 5px 0px;
+            }
+        }
         @keyframes pulsieren {
             0% {
                 transform: scale(1);
