@@ -42,10 +42,6 @@ export class DepartureTime{
                 this._time = "Now";
                 break;
             case DepartureTimeMode.NONE:
-                this._prefix = "";
-                this._postfix = "";
-                this._time = "-";
-                break;
             case DepartureTimeMode.PAST:
                 this._prefix = "";
                 this._postfix = "";

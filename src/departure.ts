@@ -12,7 +12,7 @@ export class Departure extends LitElement {
             display: flex;
         }
         .container {
-            width: 60px;
+            width: 50px;
             margin: 5px;
             display: grid;
             justify-self: center;

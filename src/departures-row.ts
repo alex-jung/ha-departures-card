@@ -33,7 +33,7 @@ export class DeparturesRow extends LitElement {
         @media (min-width: 100px) and (max-width: 500px){
             :host {
                 display: grid;
-                grid-template-columns: 1fr;
+                grid-template-columns: 100%;
                 grid-template-rows: auto auto;
             }
             destination-container{
