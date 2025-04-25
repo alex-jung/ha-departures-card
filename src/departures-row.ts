@@ -15,9 +15,39 @@ export class DeparturesRow extends LitElement {
         :host {
             display: flex;
             flex-wrap: nowrap;
-            align-items: center;
             justify-content: space-between;
             align-items:baseline;
+        }
+        destination-container{
+            flex: 2; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        times-container{
+            flex: 1; 
+            display: flex; 
+            justify-content: flex-end; 
+            align-items: center;
+        }
+        @media (min-width: 100px) and (max-width: 500px){
+            :host {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+            }
+            destination-container{
+                flex: 1; 
+                display: flex; 
+                justify-content: flex-start; 
+                align-items: center;
+                background: var(--primary-color);
+            }
+            times-container{
+                flex: 2;
+                display: flex;
+                justify-content: flex-start;
+            }
         }
     `];
 
@@ -77,10 +107,14 @@ export class DeparturesRow extends LitElement {
         this.updateTimes()
 
         return html`
-            ${this.renderIcon()}
-            ${this.renderLine()}
-            ${this.renderDestination()}
-            ${this.renderDepartureTimes()}
+            <destination-container>
+                ${this.renderIcon()}
+                ${this.renderLine()}
+                ${this.renderDestination()}
+            </destination-container>
+            <times-container>
+                ${this.renderDepartureTimes()}
+            </times-container>
         `;
     }
 

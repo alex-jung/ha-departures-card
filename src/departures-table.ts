@@ -18,8 +18,14 @@ export class DeparturesTable extends LitElement {
         table-header {
             display: flex;
             padding-top: 20px;
-            flex-wrap: nowrap;
             justify-content: space-between;
+            font-weight: bold;
+        }
+
+        @media (max-width: 500px) {
+            table-header {
+                display: none;
+            }
         }
     `];
 
@@ -55,7 +61,6 @@ export class DeparturesTable extends LitElement {
         if(this.moreInfo) { 
             departuresToShow = 5
         }
-
 
         return html`
             <table-header>

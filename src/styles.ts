@@ -45,7 +45,7 @@ export const cardStyles = css`
     }
     @media (min-width: 600px) and (min-height: 501px) {
       ha-dialog {
-        --mdc-dialog-min-width: 750px !important;
+        --mdc-dialog-min-width: 650px !important;
         --mdc-dialog-max-width: 100vw !important;
       }
     }
