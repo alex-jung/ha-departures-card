@@ -81,8 +81,8 @@ export class DeparturesTable extends LitElement {
                     .lineColor=${entityConfig.line_color}
                     .state=${this.getState(entityConfig.entity)}
                     .timesToShow=${departuresToShow}
-                    .showAnimation=${showAnimation}
-                </departures-row>`
+                    .showAnimation=${showAnimation}/>
+                `
             }) : nothing}
         `;
     }
