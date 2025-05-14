@@ -81,10 +81,15 @@ const at=t=>(e,i)=>{void 0!==i?i.addInitializer((()=>{customElements.define(t,e)
         font-weight: bold;
     }
     @media (min-width: 600px) and (min-height: 501px) {
-      ha-dialog {
-        --mdc-dialog-min-width: 650px !important;
-        --mdc-dialog-max-width: 100vw !important;
-      }
+        ha-dialog {
+            --mdc-dialog-min-width: 650px !important;
+            --mdc-dialog-max-width: 100vw !important;
+        }
+    }
+    @media (max-width: 400px){
+        ha-dialog {
+            --dialog-content-padding: 20px 10px 10px 10px !important;
+        }
     }
     `;function ut(t,e){const i={de:{departures:"Abfahrten",line:"Linie",destination:"Ziel"},en:{departures:"Departures",line:"Line",destination:"Destination"}};return e&&"undefined"!==e||(e="en"),i[e][t]||i.en[t]}let ft=class extends rt{constructor(){super(...arguments),this.moreInfo=!1}getState(t){return this.hass?this.hass.states[t]:{}}render(){const t=this.hass.locale?.language,e=void 0===this.config.showAnimation||this.config.showAnimation,i=void 0!==this.config.showTransportIcon&&this.config.showTransportIcon;let s=void 0===this.config.departuresToShow?1:this.config.departuresToShow;return this.moreInfo&&(s=5),F`
             <table-header>
