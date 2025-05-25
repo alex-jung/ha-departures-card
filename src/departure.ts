@@ -1,7 +1,6 @@
 import { classMap } from 'lit/directives/class-map.js';
 import { css, html, LitElement, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { calculateDepartureTime } from './helpers';
+import { customElement, property } from 'lit/decorators.js';
 import { DepartureTime, DepartureTimeMode } from './data-classes';
 
 @customElement('departure-text')
@@ -12,7 +11,7 @@ export class Departure extends LitElement {
             display: flex;
         }
         .container {
-            width: 60px;
+            width: 50px;
             margin: 5px;
             display: grid;
             justify-self: center;
@@ -56,7 +55,11 @@ export class Departure extends LitElement {
         .pulsating {
             animation: pulsieren 1.5s infinite;
         }
-
+        @media (min-width: 100px) and (max-width: 500px){
+            :contianer {
+                margin: 5px 0px 5px 0px;
+            }
+        }
         @keyframes pulsieren {
             0% {
                 transform: scale(1);
@@ -69,20 +72,9 @@ export class Departure extends LitElement {
             }
         }
     `];
-    /**
-     * Represents the planned departure time.
-     * This property holds a `Date` object indicating the scheduled time of departure,
-     * or `null` if no planned time is available.
-     */
+
     @property({ attribute: false }) 
-    public planned: Date | null  = null;
-    /**
-     * Represents the estimated departure time.
-     * This property can either hold a `Date` object indicating the estimated time
-     * or `null` if no estimation is available.
-     */
-    @property({ attribute: false }) 
-    public estimated: Date | null  = null;
+    public time!: DepartureTime;
 
     /**
      * Indicates whether the pulsating animation should be displayed.
@@ -94,43 +86,6 @@ export class Departure extends LitElement {
     @property({ attribute: false })
     public showAnimation: boolean = true;
 
-    /**
-     * Represents the state of departure time data.
-     * 
-     * @private
-     * @type {DepartureTime}
-     * @default A new instance of `DepartureTime` initialized with `false`.
-     */
-    @state()
-    private data: DepartureTime = new DepartureTime(false);
-
-    private intervalTimer?: NodeJS.Timeout | undefined
-    private INTERVAL = 2000 // update every 2 sec
-
-    override connectedCallback(): void {
-      super.connectedCallback();
-      this.intervalTimer = setInterval(this.updateTime, this.INTERVAL)
-
-      this.updateTime();
-    }
-  
-    override disconnectedCallback(): void {
-      super.disconnectedCallback()
-      clearInterval(this.intervalTimer)
-      
-      this.intervalTimer = undefined
-    }
-
-    /**
-     * Updates the departure time data by calculating the difference
-     * between the planned and estimated times. The result is stored
-     * in the `data` property.
-     *
-     * @private
-     */
-    private updateTime = () => {
-        this.data = calculateDepartureTime(this.planned, this.estimated);
-    }
 
     /**
      * Generates the HTML template for displaying the departure time.
@@ -152,13 +107,17 @@ export class Departure extends LitElement {
         const nowIcon = "mdi:bus-side";
         let pulsating = false;
 
-        switch(this.data.mode) {
+        if(!this.time) {
+            return html`<div class="text">-</div>`;
+        }
+
+        switch(this.time.mode) {
             case DepartureTimeMode.NOW:
                 innerHtml = html`<ha-icon icon=${nowIcon}></ha-icon>`;
                 pulsating = this.showAnimation && true;
                 break;
             case DepartureTimeMode.DIFF:
-                let diffMins = Number(this.data.time)
+                let diffMins = Number(this.time.time)
 
                 if(diffMins >= 0 && diffMins <= 5) {
                     pulsating = this.showAnimation && true;
@@ -166,7 +125,7 @@ export class Departure extends LitElement {
             case DepartureTimeMode.TIMESTAMP:
             case DepartureTimeMode.NONE:
             case DepartureTimeMode.PAST:
-                innerHtml = html`${this.data.time}`;
+                innerHtml = html`${this.time.time}`;
                 break;
         }
 
@@ -190,23 +149,37 @@ export class Departure extends LitElement {
     private getDelayHtml(): TemplateResult {
         let delayHtml;
 
-        if(this.data.realTime && this.data.mode == DepartureTimeMode.DIFF) {
-            delayHtml = this.data.delay >= 0 ? `+${this.data.delay}` : `${this.data.delay}`;
+        if(!this.time) {
+            return html`<div class="delay"></div>`;
+        }
+
+        if(this.time.realTime && this.time.mode == DepartureTimeMode.DIFF) {
+            delayHtml = this.time.delay >= 0 ? `+${this.time.delay}` : `${this.time.delay}`;
         }
 
         const delayClasses = {
-            "green": this.data.delay <= 0,
-            "red": this.data.delay > 0,
+            "green": this.time.delay <= 0,
+            "red": this.time.delay > 0,
         }
 
         return html`<div class="delay ${classMap(delayClasses)}">${delayHtml}</div>`
+    }
+
+    private getPostfixHtml(): TemplateResult {
+        if(!this.time) {
+            return html`<div class="postfix"></div>`;
+        }
+        
+        return html`
+            <div class="postfix">${this.time.postfix}</div>
+        `;
     }
 
     protected render(): TemplateResult {
         return html`
             <div class="container">
                 ${this.getTimeHtml()}
-                <div class="postfix">${this.data.postfix}</div>
+                ${this.getPostfixHtml()}
                 ${this.getDelayHtml()}
             </div>
             `;

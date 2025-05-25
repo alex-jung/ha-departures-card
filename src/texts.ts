@@ -12,7 +12,7 @@ export function text(key: string, language: string | undefined): string {
         }
     };
 
-    if (!language || language === "undefined") {
+    if (!language || language === "undefined" || !Object.keys(texts).includes(language)) {
         language = "en";
     }
 

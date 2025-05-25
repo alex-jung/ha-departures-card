@@ -43,10 +43,16 @@ export const cardStyles = css`
         font-size: 1.2em;
         font-weight: bold;
     }
-    @media (min-width: 600px) and (min-height: 501px) {
-      ha-dialog {
-        --mdc-dialog-min-width: 650px !important;
-        --mdc-dialog-max-width: 100vw !important;
-      }
+    @media (min-width: 600px) and (min-height: 501px) 
+    {
+        ha-dialog {
+            --mdc-dialog-min-width: 650px !important;
+            --mdc-dialog-max-width: 100vw !important;
+        }
+    }
+    @media (max-width: 400px){
+        ha-dialog {
+            --dialog-content-padding: 20px 10px 10px 10px !important;
+        }
     }
     `;

@@ -14,7 +14,7 @@ import { text } from './texts.js';
   description: 'Display departure times for different public transports',
 });
 
-const version = "2.0.0"
+const version = "1.0.0"
 const repoUrl = "https://github.com/alex-jung/ha-departures-card"
 
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;")
@@ -32,8 +32,14 @@ export class DeparturesCard extends LitElement
   @state() 
   private config!: Config;
 
+  /**
+   * Indicates whether the "more info" popup is currently open.
+   * This state is used to toggle the visibility of additional information popup.
+   * 
+   * @private
+   */
   @state()
-  private _open: boolean = false;
+  private moreInfoOpen: boolean = false;
   
   public static getStubConfig(): Record<string, unknown> {
     return {};
@@ -86,15 +92,15 @@ export class DeparturesCard extends LitElement
             <ha-icon icon="${icon}"></ha-icon>
           </div> 
           <departures-table 
-            @click="${() => this._open = true}" 
+            @click="${() => this.moreInfoOpen = true}" 
             .config=${this.config}
             .hass=${this.hass}>
           </departures-table>
         </div>
       </ha-card>
-      <ha-dialog hideactions ?open="${this._open}" @closed="${() => this._open = false}">
+      <ha-dialog hideactions ?open="${this.moreInfoOpen}" @closed="${() => this.moreInfoOpen = false}">
         <div class="card-header">
-          <ha-icon-button @click="${() => this._open = false}" aria-label="Close" title="Close">
+          <ha-icon-button @click="${() => this.moreInfoOpen = false}" aria-label="Close" title="Close">
             <ha-icon icon="mdi:close" style="display: flex;"></ha-icon>
           </ha-icon-button>
           ${title}
