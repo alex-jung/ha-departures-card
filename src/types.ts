@@ -11,9 +11,10 @@ export interface Config extends LovelaceCardConfig {
 
 export interface EntityConfig {
     entity: string;
-    line_color: string;
-    line_name: number;
-    destination_name: string;
+    lineColor: string;
+    lineName: number;
+    timeStyle: string;
+    destinationName: string;
 }
 
 export enum EntityAttributes {

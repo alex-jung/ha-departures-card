@@ -1,183 +1,185 @@
 # Departures Card
+![GitHub Release](https://img.shields.io/github/v/release/alex-jung/ha-departures-card)
+![GitHub License](https://img.shields.io/github/license/alex-jung/ha-departures-card)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/alex-jung/ha-departures-card/total)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/alex-jung/ha-departures-card)
+
+
 A card to display departure times provided by [Departures](https://github.com/alex-jung/ha-departures) custom integration.
+
 
 <p align="center">
   <img width="600" src="assets/image_top.png"/>
 </p>
 
 ## Installation
-### Manual 
 
+#### Manual 
 1. Download from last release `dist/ha-departures-car.js` file. 
-2. Switch on `advanced mode`
+2. Activate Home Assistant `advanced mode` (Profile -> Advanced mode)
 3. Open `settings -> Dashboards` and click on tree dots in right upper corner
 4. Click on `Ressourcen` and then on `Add Ressource` button
 5. Add `local/ha-departures-card.js` as JS module
 6. Refresh the page
 
-### HACS
-> Ongoing
+#### HACS (recommended)
+1. Add this repository as a custom repository (HACS -> Custom repositories)
+2. Search for `departures-card` and install it.
+3. Add new card to dashboard
 
-## Using
+## Card Properties
+|yaml attribute                          |Type    |Required |Default value|
+|----------------------------------------|--------|---------|---|
+|type                                    |string  |yes  |`custom:departures-card`|
+|[title](#title)                         |string  |no   |Departures|
+|[icon](#icon)                           |string  |no   |mdi:bus|
+|[showAnimation](#showanimation)         |boolean |no   |true|
+|[showTransportIcon](#showtransporticon) |boolean |no   |false|
+|[departuresToShow](#departurestoshow)   |number (max. 5)  |no   |1|
+|entities                                |list    |yes  |-|
 
-Let's start adding a new card to dashboard.
-``` yaml
-type: custom:departures-card
-```
-The result should be an empty card in preview window like this:
+### "title"
+**Default**: Departures
 
-![card](assets/image_empty.png)
-
-### Card configuration
-
-|yaml attribute                            |type    |required |default value              |
-|------------------------------------------|--------|---------|---------------------------|
-|type                                      |string  |Required |`custom:departures-card`   |
-|[title](#card-title)                      |string  |Optional |empty                      |
-|[icon](#card-icon)                        |string  |Optional |mdi:bus                    |
-|[showTransportIcon](#show-transport-icon) |boolean |Optional |false                      |
-|[showTimestamp](#show-timestamp)          |boolean |Optional |false                      |
-|[showDelay](#show-delay)                  |boolean |Optional |false                      |
-
-#### Card title
-
-You may give your card a meaningsful name. It's done by setting `title` attribute:
+Sets the card's title, e.g., "Plärrer.".
+If no title provided, the default value is used (based on user language setting)
 
 ``` yaml
 type: custom:departures-card
 title: Frankenstr.
 ```
 
-![card](assets/image_title.png)
+|empty|title: "Frankenstr."|
+|------------|---------------------|
+|![card](assets/image_default_title.png) | ![card](assets/image_title.png)|
 
-#### Card icon
+### "icon"
+**Default**: mdi:bus
 
-Optionaly we can set an icon for the card with `icon` attribute:
-
-``` yaml
-type: custom:departures-card
-...
-icon: mdi:bus-articulated-front
-```
-Result:
-
-![card](assets/image_card_icon.png)
-
-#### Entities
+Defines the icon displayed on the card.
 
 ``` yaml
 type: custom:departures-card
-...
-entities:
-  - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-  - entity: sensor.nurnberg_frankenstr_tram_5_tiergarten
+icon: mdi:bus-multiple
 ```
 
-![card](assets/image_entities.png)
+|empty|icon: mdi:bus-multiple|
+|------------|---------------------|
+|![card](assets/image_default_icon.png) | ![card](assets/image_icon_defined.png)|
 
-#### Show transport icon
-With this attribute you can configure, whether the transpor icon is shown in line column or not
+### "departuresToShow"
+**Default**: 1
+
+This options specifies the number of departure entries to display on the card. By default, it is set to 1, meaning only the next departure will be shown. 
+Users can increase this value up to 5 to show multiple upcoming departures, depending on their preferences or the available space on the dashboard.
 
 ``` yaml
 type: custom:departures-card
-...
+departuresToShow: 3
+```
+
+|empty|departuresToShow: 3|
+|------------|---------------------|
+|![card](assets/image_departures_to_show_1.png) | ![card](assets/image_departures_to_show_3.png)|
+
+### "showAnimation"
+**Default**: true
+
+The showAnimation option enables a visual animation to highlight upcoming departures. When the remaining time until the arrival of a vehicle falls below 5 minutes, the corresponding display element will begin to pulse. This serves as a visual alert to draw the user's attention to the imminent departure.
+
+``` yaml
+type: custom:departures-card
+showAnimation: true
+```
+
+|showAnimation: true |
+|------------|
+|![card](assets/show_animation.gif)|
+
+
+### "showTransportIcon"
+**Default**: false
+
+The showTransportIcon option controls whether an icon representing the type of vehicle (e.g., bus, subway, tram) is displayed.
+
+``` yaml
+type: custom:departures-card
 showTransportIcon: true
-...
 ```
 
-| showTransportIcon: `true`                   | showTransportIcon: `false`                     | 
-|---------------------------------------------|------------------------------------------------|
-|![card](assets/image_transport_icon_with.png)|![card](assets/image_transport_icon_without.png)|
+|showTransportIcon: false |showTransportIcon: true|
+|------------|---------------------|
+|![card](assets/image_show_transport_icon_false.png) | ![card](assets/image_show_transport_icon_true.png)|
 
-#### Show timestamp
+## Entity Properties
 
-The card currently supports two modes of showing the departure times.
+### "lineColor"
+**Default**: empty (no background color)
 
-- Show timestamp of next departure (`showTimestamp: true`)
-- Show time delta to next departure (`showTimestamp: false`)
+The "lineColor" option specifies the background color used to represent a vehicle line on the card. This allows users to visually distinguish different lines by assigning them unique colors. The color can be defined using standard formats like a hex code (e.g., #FF5733) or a predefined color name.
 
 ``` yaml
 type: custom:departures-card
-...
-showTimestamp: true
-...
-```
-
-| showTimestamp: `true`             | showTimestamp: `false`                         | 
-|-----------------------------------|------------------------------------------------|
-|![card](assets/image_timestamp.png)  |![card](assets/image_transport_icon_with.png)|
-
-#### Show delay
-
-!!! warning
-    This option will work only if endpoint provides real time information. Please s. [table](https://github.com/alex-jung/ha-departures/blob/master/README.md#supported-efa-endpoints)
-
-``` yaml
-type: custom:departures-card
-...
-showDelay: true
-...
-```
-
-| showDelay: `true`             | showDelay: `false`                         | 
-|-----------------------------------|------------------------------------------------|
-|![card](assets/image_show_delay_on.png)|![card](assets/image_show_delay_off.png)|
-
-### Entity configuration
-
-Each entity can be configured individually with following attributes:
-
-|yaml attribute                        |type    |required |default value              |
-|--------------------------------------|--------|---------|---------------------------|
-|entity                                |string  |Required |empty                      |
-|[destination_name](#destination-name) |string  |Optional |empty                      |
-|[line_name](#line-name)               |string  |Optional |empty                      |
-|[line_color](#line-color)             |boolean |Optional |emtpy                      |
-
-#### Destination name
-Per default the card uses name of departure provided by `departures` integration. This name can be overwritten by attribute `destination_name`
-
-``` yaml
-type: custom:departures-card
-...
 entities:
   - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-    destination_name: "Ziegelstein"
+    lineColor: #EB5A3C
 ```
 
-| destination_name: `empty`                        | destination_name: `"Ziegelstein"`        | 
-|--------------------------------------------------|------------------------------------------|
-|![card](assets/image_destination_name_default.png)|![card](assets/image_destination_name.png)|
+|empty |lineColor: #EB5A3C|
+|------------|---------------------|
+|![card](assets/image_no_linecolor.png) | ![card](assets/image_linecolor_defined.png)|
 
-#### Line name
+### "lineName"
+**Default**: Name provided by the server.
 
-The name of line can be configured as well:
+The "lineName" option specifies the name or identifier of the vehicle line (e.g., bus number, train line, or tram route) displayed on the card.
 
 ``` yaml
 type: custom:departures-card
-...
 entities:
   - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-    line_name: "45"
+    lineName: 45
 ```
 
-| line_name: `empty`             | line_name: `"45"`                         | 
-|-----------------------------------|------------------------------------------------|
-|![card](assets/image_destination_name_default.png)|![card](assets/image_line_name.png)|
+|empty |lineName: 45|
+|------------|---------------------|
+|![card](assets/image_no_linename.png) | ![card](assets/image_linename_defined.png)|
 
-#### Line color
+### "timeStyle"
+**Default**: dynamic
 
-The attribute will change the background color of line:
+- "dynamic":
+
+  If the time to the next departure is less than 60 minutes, it is displayed as a relative time (e.g., "in 15 min").
+  If the time is 60 minutes or more, it is displayed as an absolute timestamp (e.g., "14:30").
+
+- "timestamp":
+
+  The departure time is always displayed as an absolute timestamp (e.g., "14:30"), regardless of how far in the future it is.
 
 ``` yaml
 type: custom:departures-card
-...
 entities:
   - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-    line_color: "#EB5A3C"
-
+    timeStyle: timestamp
 ```
 
-| line_color: `empty`               | line_name: `"#EB5A3C"`                            |
-|-----------------------------------|---------------------------------------------------|
-|![card](assets/image_destination_name_default.png)|![card](assets/image_line_color.png)|
+|empty |timeStyle: timestamp|
+|------------|---------------------|
+|![card](assets/image_time_style_dynamic.png) | ![card](assets/time_style_timestamp.png)|
+
+### "destinationName"
+**Default**: Destination name provided by the server.
+
+Option to overwrite default destination name provided by API.
+
+``` yaml
+type: custom:departures-card
+entities:
+  - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
+    destinationName: Ziegelstein
+```
+
+|empty |destinationName: Ziegelstein|
+|------------|---------------------|
+|![card](assets/image_no_destination_name.png) | ![card](assets/destination_named_defined.png)|

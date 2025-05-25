@@ -65,6 +65,9 @@ export class DeparturesRow extends LitElement {
     @property({attribute: false})
     public showIcon: boolean = false
 
+    @property({attribute: false})
+    public timeStyle: string = "dynamic"
+
     /**
      * Customizable background color for the line.
      * 
@@ -134,7 +137,11 @@ export class DeparturesRow extends LitElement {
      * @private
      */
     private _updateTimes() {
-        this.times = [new DepartureTime(), new DepartureTime(), new DepartureTime(),new DepartureTime(), new DepartureTime()]
+        this.times = [new DepartureTime(this.timeStyle), 
+            new DepartureTime(this.timeStyle), 
+            new DepartureTime(this.timeStyle),
+            new DepartureTime(this.timeStyle), 
+            new DepartureTime(this.timeStyle)]
 
         this.times[0].updateTime(this.state?.attributes[EntityAttributes.PLANNED_TIME], this.state?.attributes[EntityAttributes.ESTIMATED_TIME])
         this.times[1].updateTime(this.state?.attributes[EntityAttributes.PLANNED_TIME_1], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_1])
@@ -181,10 +188,10 @@ export class DeparturesRow extends LitElement {
     }
 
     private renderLine(){
-        const line = this.config?.line_name ?? this.state?.attributes[EntityAttributes.LINE_NAME]
+        const line = this.config?.lineName ?? this.state?.attributes[EntityAttributes.LINE_NAME]
 
         const lineStyles = {
-            background: this.config?.line_color || ""
+            background: this.config?.lineColor || ""
         }
 
         return html`
@@ -195,7 +202,7 @@ export class DeparturesRow extends LitElement {
     }
 
     private renderDestination(){
-        let destination = this.config?.destination_name ?? this.state?.attributes[EntityAttributes.DIRECTION]
+        let destination = this.config?.destinationName ?? this.state?.attributes[EntityAttributes.DIRECTION]
 
         return html`
             <div class="cell-destination">${destination}</div>

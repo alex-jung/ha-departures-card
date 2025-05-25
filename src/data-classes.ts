@@ -16,9 +16,16 @@ export class DepartureTime{
     private _postfix: string = "";
     private _time: string = "";
     private _mode: DepartureTimeMode = DepartureTimeMode.NONE;
+    private _styleMode: string = "dynamic";
 
-    constructor(plannedDepartureTime: Date | null = null, actualDepartureTime: Date | null = null) {
-        this.updateTime(plannedDepartureTime, actualDepartureTime);
+    constructor(styleMode:string) 
+    {
+        if(styleMode == "timestamp"){
+            this._styleMode = "timestamp";
+        }
+        else{
+            this._styleMode = "dynamic";
+        }
     }
 
     public updateTime(plannedDepartureTime: Date | null, actualDepartureTime: Date | null) {
@@ -55,15 +62,22 @@ export class DepartureTime{
 
         // calculate time to next departure
         const diffMins = tActual && tNow ? differenceInMinutes(tActual, tNow) : 0;
-
-        if(diffMins >= 60)
+        
+        if(this._styleMode == "dynamic")
+        {
+            if(diffMins >= 60)
+                {
+                    this._updateMode(DepartureTimeMode.TIMESTAMP, lightFormat(tActual, "HH:mm"));
+                }
+                else
+                {
+                    this._updateMode(DepartureTimeMode.DIFF, diffMins.toString());
+                }
+        }else
         {
             this._updateMode(DepartureTimeMode.TIMESTAMP, lightFormat(tActual, "HH:mm"));
         }
-        else
-        {
-            this._updateMode(DepartureTimeMode.DIFF, diffMins.toString());
-        }
+
     }
 
     public _updateMode(mode: DepartureTimeMode, data: string = "") {
