@@ -112,6 +112,13 @@ showTransportIcon: true
 |![card](assets/image_show_transport_icon_false.png) | ![card](assets/image_show_transport_icon_true.png)|
 
 ## Entity Properties
+|yaml attribute                      |Type    |Required |Default value|
+|------------------------------------|--------|-------- |-------------|
+|[linecolor](#linecolor)            |string  |no       |empty        |
+|[linename](#linename)               |string  |no       |empty        |
+|[timestyle](#timestyle)            |string  |no       |dynamic      |
+|[destinationname](#destinationname) |string  |no       |empty        |
+|[nowIcon](#nowicon)                 |string  |no       |empty        |
 
 ### "lineColor"
 **Default**: empty (no background color)
@@ -148,13 +155,11 @@ entities:
 ### "timeStyle"
 **Default**: dynamic
 
-- "dynamic":
-
+- "dynamic"
   If the time to the next departure is less than 60 minutes, it is displayed as a relative time (e.g., "in 15 min").
   If the time is 60 minutes or more, it is displayed as an absolute timestamp (e.g., "14:30").
 
-- "timestamp":
-
+- "timestamp"
   The departure time is always displayed as an absolute timestamp (e.g., "14:30"), regardless of how far in the future it is.
 
 ``` yaml
@@ -183,3 +188,20 @@ entities:
 |empty |destinationName: Ziegelstein|
 |------------|---------------------|
 |![card](assets/image_no_destination_name.png) | ![card](assets/destination_named_defined.png)|
+
+### "nowIcon"
+**Default**: empty
+
+With `nowIcon` the user can overwrite default icon shown for now arriving transports. 
+If no custom icon is defined, the transport type icon provided by `ha-departures` is used.
+
+``` yaml
+type: custom:departures-card
+entities:
+  - entity: sensor.frankenstr_u_bahn_u1_langwasser_sud
+    nowIcon: mdi:rv-truck
+```
+
+|empty |nowIcon: mdi:rv-truck|
+|------------|---------------------|
+|![card](assets/image_nowicon_default.png) | ![card](assets/image_nowicon_custom.png)|

@@ -86,6 +86,9 @@ export class Departure extends LitElement {
     @property({ attribute: false })
     public showAnimation: boolean = true;
 
+    @property({ attribute: false })
+    public nowIcon: string = "mdi:train-bus";
+
 
     /**
      * Generates the HTML template for displaying the departure time.
@@ -104,7 +107,6 @@ export class Departure extends LitElement {
      */
     private getTimeHtml(): TemplateResult {
         let innerHtml;
-        const nowIcon = "mdi:bus-side";
         let pulsating = false;
 
         if(!this.time) {
@@ -113,7 +115,7 @@ export class Departure extends LitElement {
 
         switch(this.time.mode) {
             case DepartureTimeMode.NOW:
-                innerHtml = html`<ha-icon icon=${nowIcon}></ha-icon>`;
+                innerHtml = html`<ha-icon icon=${this.nowIcon}></ha-icon>`;
                 pulsating = this.showAnimation && true;
                 break;
             case DepartureTimeMode.DIFF:
