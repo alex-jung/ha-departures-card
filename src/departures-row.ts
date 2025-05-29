@@ -65,18 +65,6 @@ export class DeparturesRow extends LitElement {
     @property({attribute: false})
     public showIcon: boolean = false
 
-    @property({attribute: false})
-    public timeStyle: string = "dynamic"
-
-    /**
-     * Customizable background color for the line.
-     * 
-     * @type {string}
-     * @default ""
-     */
-    @property({attribute: false})
-    public lineColor: string = ""
-
     /**
      * Specifies the number of departure times to display.
      * 
@@ -137,11 +125,13 @@ export class DeparturesRow extends LitElement {
      * @private
      */
     private _updateTimes() {
-        this.times = [new DepartureTime(this.timeStyle), 
-            new DepartureTime(this.timeStyle), 
-            new DepartureTime(this.timeStyle),
-            new DepartureTime(this.timeStyle), 
-            new DepartureTime(this.timeStyle)]
+        let timeStyle = this.config?.timeStyle ?? "dynamic"
+
+        this.times = [new DepartureTime(timeStyle), 
+            new DepartureTime(timeStyle), 
+            new DepartureTime(timeStyle),
+            new DepartureTime(timeStyle), 
+            new DepartureTime(timeStyle)]
 
         this.times[0].updateTime(this.state?.attributes[EntityAttributes.PLANNED_TIME], this.state?.attributes[EntityAttributes.ESTIMATED_TIME])
         this.times[1].updateTime(this.state?.attributes[EntityAttributes.PLANNED_TIME_1], this.state?.attributes[EntityAttributes.ESTIMATED_TIME_1])
@@ -158,6 +148,26 @@ export class DeparturesRow extends LitElement {
 
         console.log("-----------------------------")
         */
+    }
+
+    /**
+     * Retrieves the icon to be used for the "now" state.
+     *
+     * The method checks for a custom icon in the configuration (`config.nowIcon`).
+     * If not found, it attempts to use the icon from the entity's state attributes (`state.attributes[EntityAttributes.ICON]`).
+     * If neither is available, it returns a default Material Design Icon (`mdi:train-bus`).
+     *
+     * @returns {string} The icon string to be used for the "now" state.
+     */
+    private _getNowIcon(): string {
+        if (this.config?.nowIcon) {
+            return this.config.nowIcon;
+        }
+        if (this.state?.attributes[EntityAttributes.ICON]) {
+            return this.state.attributes[EntityAttributes.ICON];
+        }
+
+        return "mdi:train-bus"; // Default icon if none is provided
     }
 
     protected render(): TemplateResult {   
@@ -221,10 +231,16 @@ export class DeparturesRow extends LitElement {
             times = times.concat(new Array(missing).fill(null))
         }
 
+        let icon = this._getNowIcon() 
+
         return html`
             ${times.map(time => 
                 html`
-                <departure-text .time=${time} .showAnimation=${this.showAnimation}></departure-text>`)}
+                <departure-text 
+                    .time=${time} 
+                    .showAnimation=${this.showAnimation}
+                    .nowIcon=${icon}>
+                </departure-text>`)}
         `
     }
 }

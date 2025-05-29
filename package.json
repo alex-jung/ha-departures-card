@@ -14,7 +14,7 @@
   "repository": "https://github.com/alex-jung/ha-departures-card",
   "license": "MIT",
   "author": "Alex Jung <jungdevelop@googlemail.com>",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "module": "dist/ha-departures-card.js",
   "scripts": {
     "start": "rollup -c --watch",

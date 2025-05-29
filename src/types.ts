@@ -15,6 +15,7 @@ export interface EntityConfig {
     lineName: number;
     timeStyle: string;
     destinationName: string;
+    nowIcon: string;
 }
 
 export enum EntityAttributes {
