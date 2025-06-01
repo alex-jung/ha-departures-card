@@ -32,11 +32,12 @@ A card to display departure times provided by [Departures](https://github.com/al
 |----------------------------------------|--------|---------|---|
 |type                                    |string  |yes  |`custom:departures-card`|
 |[title](#title)                         |string  |no   |Departures|
+|[debug](#debug)                         |boolean |no   |false|
 |[icon](#icon)                           |string  |no   |mdi:bus|
 |[showAnimation](#showanimation)         |boolean |no   |true|
 |[showTransportIcon](#showtransporticon) |boolean |no   |false|
 |[departuresToShow](#departurestoshow)   |number (max. 5)  |no   |1|
-|entities                                |list    |yes  |-|
+|entities                                |entity[]|yes  |-|
 
 ### "title"
 **Default**: Departures
@@ -52,6 +53,16 @@ title: Frankenstr.
 |empty|title: "Frankenstr."|
 |------------|---------------------|
 |![card](assets/image_default_title.png) | ![card](assets/image_title.png)|
+
+### "debug"
+**Default**: false
+
+Provides an option to debug data returned by the API.
+
+``` yaml
+type: custom:departures-card
+debug: true
+```
 
 ### "icon"
 **Default**: mdi:bus

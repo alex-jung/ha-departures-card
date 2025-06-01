@@ -76,6 +76,7 @@ export class DeparturesTable extends LitElement {
                     .config=${entityConfig}
                     .hass=${this.hass} 
                     .showIcon=${showTransportIcon}
+                    .debug=${this.config.debug === true}
                     .state=${this.getState(entityConfig.entity)}
                     .timesToShow=${departuresToShow}
                     .showAnimation=${showAnimation}/>

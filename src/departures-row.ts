@@ -15,21 +15,29 @@ export class DeparturesRow extends LitElement {
         css`
         :host {
             display: flex;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             justify-content: space-between;
-            align-items:baseline;
+            align-items: baseline;
         }
         destination-container{
+            display: flex;     
             flex: 2; 
-            display: flex; 
             justify-content: space-between; 
             align-items: center;
         }
         times-container{
+            display: flex;     
             flex: 1; 
-            display: flex; 
             justify-content: flex-end; 
             align-items: center;
+        }
+        debug-info {
+            display: flex;
+            width: 100%;
+            font-size: 0.8em;
+            color: white;
+            padding: 10px;
+            background-color: black;
         }
         @media (min-width: 100px) and (max-width: 500px){
             :host {
@@ -64,6 +72,9 @@ export class DeparturesRow extends LitElement {
      */
     @property({attribute: false})
     public showIcon: boolean = false
+
+    @property({attribute: false})
+    public debug: boolean = false
 
     /**
      * Specifies the number of departure times to display.
@@ -180,6 +191,7 @@ export class DeparturesRow extends LitElement {
             <times-container>
                 ${this.renderDepartureTimes()}
             </times-container>
+            ${this.debug ? this.renderDebugInfo() : nothing}
         `;
     }
 
@@ -242,5 +254,13 @@ export class DeparturesRow extends LitElement {
                     .nowIcon=${icon}>
                 </departure-text>`)}
         `
+    }
+
+    private renderDebugInfo() {
+        return html`
+            <debug-info>
+                <pre>${JSON.stringify(this.state?.attributes, null, 1)}</pre></br>
+            </debug-info>
+        `;
     }
 }
