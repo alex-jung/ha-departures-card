@@ -12,11 +12,11 @@ export interface Config extends LovelaceCardConfig {
 
 export interface EntityConfig {
     entity: string;
-    lineColor: string;
-    lineName: number;
+    lineColor: string | null;
+    lineName: string | null;
     timeStyle: string;
-    destinationName: string;
-    nowIcon: string;
+    destinationName: string | null;
+    nowIcon: string | null;
 }
 
 export enum EntityAttributes {

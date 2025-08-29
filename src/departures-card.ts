@@ -5,7 +5,8 @@ import { HomeAssistant } from 'custom-card-helpers';
 import { cardStyles } from './styles.js';
 import './departures-table.js'
 import './departures-row.js'
-import { text } from './texts.js';
+import './editor/departures-card-editor.js';
+import { localize } from './localize.js';
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
@@ -14,7 +15,7 @@ import { text } from './texts.js';
   description: 'Display departure times for different public transports',
 });
 
-const version = "1.1.1"
+const version = "1.2.0"
 const repoUrl = "https://github.com/alex-jung/ha-departures-card"
 
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;")
@@ -41,8 +42,16 @@ export class DeparturesCard extends LitElement
   @state()
   private moreInfoOpen: boolean = false;
   
-  public static getStubConfig(): Record<string, unknown> {
-    return {};
+  public static getStubConfig(hass: HomeAssistant): Record<string, unknown> {
+    return {
+      "type": "custom:departures-card",
+      "title": localize("card.departures", hass.locale?.language) || "Departures",
+      "entity": []
+    };
+  }
+
+  static getConfigElement() {
+    return document.createElement("departures-card-editor");
   }
 
   /**
@@ -81,7 +90,7 @@ export class DeparturesCard extends LitElement
   }
 
   protected render(): TemplateResult { 
-    const title = this.config.title || text("departures", this.hass.locale?.language)
+    const title = this.config.title || localize("card.departures", this.hass.locale?.language)
     const icon = this.config.icon || "mdi:bus"
 
     return html`

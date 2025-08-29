@@ -1,0 +1,22 @@
+{
+  "card": {
+    "editor": {
+      "cardTitle": "Card Titel (optional)",
+      "cardIcon": "Card Icon (optional)",
+      "showAnimation": "Animation anzeigen",
+      "showTransportIcon": "Transport Icon anzeigen",
+      "debug": "Debug",
+      "departuresToShow": "Anzahl der Abfahrten",
+      "addEntity": "Neue Entity",
+      "entity": {
+        "entity": "Entity",
+        "destinationName": "Zielname",
+        "lineName": "Linienname",
+        "lineColor": "Linienfarbe",
+        "nowIcon": "Anfahrt Icon",        
+        "timeStyle": "Ankunftszeit Stil",
+        "remove": "Entfernen"
+      }
+    }
+  }
+}

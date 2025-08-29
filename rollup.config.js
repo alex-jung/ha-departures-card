@@ -5,8 +5,6 @@ import babel from "@rollup/plugin-babel";
 import { terser } from "rollup-plugin-terser";
 import json from "@rollup/plugin-json";
 
-const dev = process.env.ROLLUP_WATCH;
-
 const plugins = [
   nodeResolve(),
   commonjs(),
