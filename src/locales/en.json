@@ -17,6 +17,9 @@
         "timeStyle": "Departure time style",
         "remove": "Delete"
       }
-    }
+    },
+    "departures": "Departures",
+    "line": "Line",
+    "destination": "Destination"
   }
 }

@@ -17,6 +17,9 @@
         "timeStyle": "Ankunftszeit Stil",
         "remove": "Entfernen"
       }
-    }
+    },
+    "departures": "Abfahrten",
+    "line": "Linie",
+    "destination": "Ziel"
   }
 }
