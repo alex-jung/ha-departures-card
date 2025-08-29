@@ -101,7 +101,7 @@ export class DeparturesCardEntityEditor extends LitElement {
     }   
 
     private handleDelete() {
-        this.dispatchEvent(new CustomEvent('onDelete', {detail: this.data?.uuid }));
+        this.dispatchEvent(new CustomEvent('onDelete', {detail: this.data?.index }));
     }
 
     protected _computeLabelCallback = (schema: any) => 

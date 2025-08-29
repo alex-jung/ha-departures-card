@@ -139,12 +139,10 @@ export class DepartureTime{
 }
 
 export class EntityTab {
-    uuid: string;
     index: number;
     config: EntityConfig;
 
-    constructor(uuid: string, index: number, config: EntityConfig | undefined) {
-        this.uuid = uuid;
+    constructor(index: number, config: EntityConfig | undefined) {
         this.index = index;
 
         if (config === undefined) {

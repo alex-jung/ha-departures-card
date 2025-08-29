@@ -56,7 +56,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
   public setConfig(config: Config) 
   {
     this._config = config;
-    this._tabs = config.entities?.map((config, index) => new EntityTab(crypto.randomUUID(), Number(index + 1), config)) || [];
+    this._tabs = config.entities?.map((config, index) => new EntityTab(Number(index + 1), config)) || [];
   }
 
   private SCHEMA = [
@@ -174,7 +174,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
       return;
     }
 
-    let newTab = new EntityTab(crypto.randomUUID(), this._tabs.length + 1, undefined);
+    let newTab = new EntityTab(this._tabs.length + 1, undefined);
 
     this._tabs = [...this._tabs, newTab];
     this._currTab = `${this._tabs.length}`;
