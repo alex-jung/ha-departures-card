@@ -14,14 +14,15 @@
   "repository": "https://github.com/alex-jung/ha-departures-card",
   "license": "MIT",
   "author": "Alex Jung <jungdevelop@googlemail.com>",
-  "version": "1.1.1",
-  "module": "dist/ha-departures-card.js",
+  "version": "2.0.0",
   "scripts": {
     "start": "rollup -c --watch",
     "build": "rollup -c",
     "semantic-release": "semantic-release"
   },
   "dependencies": {
+    "@material/web": "^2.3.0",
+    "@mdi/js": "^7.4.47",
     "card-tools": "github:thomasloven/lovelace-card-tools",
     "custom-card-helpers": "1.8.0",
     "date-fns": "^4.1.0",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
+    "@mdi/js": "^7.4.47",
     "@open-wc/testing": "^4.0.0",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.0.0",

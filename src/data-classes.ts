@@ -1,5 +1,6 @@
 import { prepareDate } from './helpers';
 import { differenceInMinutes, isPast, isThisMinute, lightFormat } from "date-fns";
+import { EntityConfig } from './types';
 
 export enum DepartureTimeMode {
     NONE      = "none",
@@ -134,5 +135,29 @@ export class DepartureTime{
     }
     get time(): string {
         return this._time;
+    }
+}
+
+export class EntityTab {
+    index: number;
+    config: EntityConfig;
+
+    constructor(index: number, config: EntityConfig | undefined) {
+        this.index = index;
+
+        if (config === undefined) {
+            this.config = <EntityConfig>{
+                entity: "",
+                lineColor: null,
+                lineName: null,
+                timeStyle: "dynamic",
+                destinationName: null,
+                nowIcon: null,
+            };
+        }else
+            {
+            this.config = config;
+        }
+        
     }
 }

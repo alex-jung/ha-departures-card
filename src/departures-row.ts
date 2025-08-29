@@ -34,7 +34,7 @@ export class DeparturesRow extends LitElement {
         debug-info {
             display: flex;
             width: 100%;
-            font-size: 0.8em;
+            font-size: 0.7em;
             color: white;
             padding: 10px;
             background-color: black;

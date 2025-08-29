@@ -4,7 +4,7 @@ import { cardStyles } from './styles.js';
 import { HomeAssistant } from 'custom-card-helpers';
 import { HassEntity } from 'home-assistant-js-websocket'
 import { Config } from './types.js';
-import { text } from './texts.js';
+import { localize } from './localize.js';
 
 @customElement('departures-table')
 export class DeparturesTable extends LitElement {
@@ -65,9 +65,9 @@ export class DeparturesTable extends LitElement {
         return html`
             <table-header>
                 ${this.config.showTransportIcon ? html`<div class="cell-icon">Icon</div>`: nothing}    
-                <div class="cell-line">${text("line", language)}</div>
-                <div class="cell-destination">${text("destination", language)}</div>
-                <div>${text("departures", language)}</div>
+                <div class="cell-line">${localize("card.line", this.hass.locale?.language)}</div>
+                <div class="cell-destination">${localize("card.destination", this.hass.locale?.language)}</div>
+                <div>${localize("card.departures", this.hass.locale?.language)}</div>
             </table-header>
             <hr style="width:100%"/>
             ${this.config.entities ? this.config.entities.map((entityConfig) => {
