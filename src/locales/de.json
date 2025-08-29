@@ -1,8 +1,8 @@
 {
   "card": {
     "editor": {
-      "cardTitle": "Card Titel (optional)",
-      "cardIcon": "Card Icon (optional)",
+      "title": "Card Titel (optional)",
+      "icon": "Card Icon (optional)",
       "showAnimation": "Animation anzeigen",
       "showTransportIcon": "Transport Icon anzeigen",
       "debug": "Debug",

@@ -65,11 +65,11 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
           type: "grid",
           schema: [
             {
-              name: "cardTitle",
+              name: "title",
               required: false,
               selector: { text: {} },
             },
-            { name: "cardIcon", selector: { icon: {} } },
+            { name: "icon", selector: { icon: {} } },
           ]
         },
         {
