@@ -60,12 +60,12 @@ export class DeparturesCardEntityEditor extends LitElement {
         },
         {
             name: "timeStyle",
-            selector: { select: {
-                options: [
-                    { value: "dynamic", label: "Dynamic" },
-                    { value: "timestamp", label: "Timestamp" },
-                ]
-            } }
+            type: "select",
+            default: "dynamic",
+            options: [
+                ["dynamic", "Dynamic"],
+                ["timestamp", "Timestamp"],
+            ]
         },
 
     ] as const;
