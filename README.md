@@ -23,8 +23,8 @@ A card to display departure times provided by [Departures](https://github.com/al
 6. Refresh the page
 
 #### HACS (recommended)
-1. Add this repository as a custom repository (HACS -> Custom repositories)
-2. Search for `departures-card` and install it.
+1. Add this repository as a custom repository (HACS -> Custom repositories, type "Dashboard")
+2. Search for `Departures Card` and install it.
 3. Add new card to dashboard
 
 ## Card Properties
@@ -134,16 +134,16 @@ showTransportIcon: true
 ### "lineColor"
 **Default**: empty (no background color)
 
-The "lineColor" option specifies the background color used to represent a vehicle line on the card. This allows users to visually distinguish different lines by assigning them unique colors. The color can be defined using standard formats like a hex code (e.g., #FF5733) or a predefined color name.
+The "lineColor" option specifies the background color used to represent a vehicle line on the card. This allows users to visually distinguish different lines by assigning them unique colors. The color can be defined using standard formats like a hex code (e.g., "#FF5733") or a predefined color name.
 
 ``` yaml
 type: custom:departures-card
 entities:
   - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-    lineColor: #EB5A3C
+    lineColor: "#EB5A3C"
 ```
 
-|empty |lineColor: #EB5A3C|
+|empty |lineColor: "#EB5A3C"|
 |------------|---------------------|
 |![card](assets/image_no_linecolor.png) | ![card](assets/image_linecolor_defined.png)|
 
