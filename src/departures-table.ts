@@ -56,9 +56,10 @@ export class DeparturesTable extends LitElement {
         const language = this.hass.locale?.language
         const showAnimation = this.config.showAnimation === undefined ? true : this.config.showAnimation
         const showTransportIcon = this.config.showTransportIcon === undefined ? false : this.config.showTransportIcon
+        const hideEmptyDepartures = this.config.hideEmptyDepartures === undefined ? false : this.config.hideEmptyDepartures
         let departuresToShow = this.config.departuresToShow === undefined ? 1 : this.config.departuresToShow
 
-        if(this.moreInfo) { 
+        if(this.moreInfo) {
             departuresToShow = 5
         }
 
@@ -79,7 +80,8 @@ export class DeparturesTable extends LitElement {
                     .debug=${this.config.debug === true}
                     .state=${this.getState(entityConfig.entity)}
                     .timesToShow=${departuresToShow}
-                    .showAnimation=${showAnimation}/>
+                    .showAnimation=${showAnimation}
+                    .hideEmptyDepartures=${hideEmptyDepartures}/>
                 `
             }) : nothing}
         `;

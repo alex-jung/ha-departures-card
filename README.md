@@ -28,16 +28,17 @@ A card to display departure times provided by [Departures](https://github.com/al
 3. Add new card to dashboard
 
 ## Card Properties
-|yaml attribute                          |Type    |Required |Default value|
-|----------------------------------------|--------|---------|---|
-|type                                    |string  |yes  |`custom:departures-card`|
-|[title](#title)                         |string  |no   |Departures|
-|[debug](#debug)                         |boolean |no   |false|
-|[icon](#icon)                           |string  |no   |mdi:bus|
-|[showAnimation](#showanimation)         |boolean |no   |true|
-|[showTransportIcon](#showtransporticon) |boolean |no   |false|
-|[departuresToShow](#departurestoshow)   |number (max. 5)  |no   |1|
-|entities                                |entity[]|yes  |-|
+| yaml attribute                              |Type    |Required |Default value|
+|---------------------------------------------|--------|---------|---|
+| type                                        |string  |yes  |`custom:departures-card`|
+| [title](#title)                             |string  |no   |Departures|
+| [debug](#debug)                             |boolean |no   |false|
+| [icon](#icon)                               |string  |no   |mdi:bus|
+| [showAnimation](#showanimation)             |boolean |no   |true|
+| [showTransportIcon](#showtransporticon)     |boolean |no   |false|
+| [hideEmptyDepartures](#hideemptydepartures) |boolean |no   |false|
+| [departuresToShow](#departurestoshow)       |number (max. 5) |no   |1|
+| entities                                    |entity[]|yes  |-|
 
 ### "title"
 **Default**: Departures
@@ -121,6 +122,20 @@ showTransportIcon: true
 |showTransportIcon: false |showTransportIcon: true|
 |------------|---------------------|
 |![card](assets/image_show_transport_icon_false.png) | ![card](assets/image_show_transport_icon_true.png)|
+
+### "hideEmptyDepartures"
+**Default**: false
+
+The hideEmptyDepartures option controls whether lines without any departure times are displayed.
+
+``` yaml
+type: custom:departures-card
+hideEmptyDepartures: true
+```
+
+|hideEmptyDepartures: false | hideEmptyDepartures: true                    |
+|------------|----------------------------------------------|
+|![card](assets/image_hide_empty_lines_0.png) | ![card](assets/image_hide_empty_lines_1.png) |
 
 ## Entity Properties
 |yaml attribute                      |Type    |Required |Default value|

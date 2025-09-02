@@ -94,6 +94,12 @@ export class DeparturesRow extends LitElement {
     public showAnimation: boolean = true
 
     /**
+     * Hide the row if no departures are available (all times "-").
+     */
+    @property({attribute: false})
+    public hideEmptyDepartures: boolean = false
+
+    /**
      * Holds an array of departure times.
      * This state property is used to manage and track the list of departure times
      * for the component.
@@ -181,7 +187,39 @@ export class DeparturesRow extends LitElement {
         return "mdi:train-bus"; // Default icon if none is provided
     }
 
-    protected render(): TemplateResult {   
+    protected render(): TemplateResult | typeof nothing {
+        // Build up to timesToShow usable times here (render-side)
+        const timeStyle = this.config?.timeStyle ?? "dynamic";
+        const attributePairs = [
+            { p: EntityAttributes.PLANNED_TIME, e: EntityAttributes.ESTIMATED_TIME },
+            { p: EntityAttributes.PLANNED_TIME_1, e: EntityAttributes.ESTIMATED_TIME_1 },
+            { p: EntityAttributes.PLANNED_TIME_2, e: EntityAttributes.ESTIMATED_TIME_2 },
+            { p: EntityAttributes.PLANNED_TIME_3, e: EntityAttributes.ESTIMATED_TIME_3 },
+            { p: EntityAttributes.PLANNED_TIME_4, e: EntityAttributes.ESTIMATED_TIME_4 },
+        ];
+        const timesTarget = Math.max(0, this.timesToShow || 0);
+        const upcoming: DepartureTime[] = [];
+        for (const pair of attributePairs) {
+            if (upcoming.length >= timesTarget) break;
+            const dt = new DepartureTime(timeStyle);
+            const planned = this.state?.attributes?.[pair.p as unknown as string];
+            const estimated = this.state?.attributes?.[pair.e as unknown as string];
+            dt.updateTime(planned as any, estimated as any);
+            // Exclude PAST and NONE ("-")
+            if (dt.mode !== DepartureTimeMode.PAST && !(dt.mode === DepartureTimeMode.NONE || dt.time === "-")) {
+                upcoming.push(dt);
+            }
+        }
+        // When fewer than target, pad with null placeholders for rendering
+        const missing = Math.max(0, timesTarget - upcoming.length);
+        const displayTimes = missing > 0 ? upcoming.concat(new Array(missing).fill(null)) : upcoming;
+
+        // Hide row if requested and there are no usable times
+        const hideEmpty = this.hideEmptyDepartures === true;
+        if (hideEmpty && upcoming.length === 0) {
+            return nothing;
+        }
+
         return html`
             <destination-container>
                 ${this.renderIcon()}
@@ -189,7 +227,7 @@ export class DeparturesRow extends LitElement {
                 ${this.renderDestination()}
             </destination-container>
             <times-container>
-                ${this.renderDepartureTimes()}
+                ${displayTimes.map(time => this.renderDepartureTimeItem(time))}
             </times-container>
             ${this.debug ? this.renderDebugInfo() : nothing}
         `;
@@ -231,29 +269,14 @@ export class DeparturesRow extends LitElement {
         `
     }
 
-    private renderDepartureTimes(){
-        let times = this.times.filter((time) => time.mode != DepartureTimeMode.PAST)
-        
-        const missing = this.timesToShow - times.length
-
-        if(missing <=0 ){
-            times = times.slice(0, this.timesToShow) 
-        }
-        else{
-            times = times.concat(new Array(missing).fill(null))
-        }
-
-        let icon = this._getNowIcon() 
-
+    private renderDepartureTimeItem(time: any, iconArg?: string) {
+        const icon = iconArg ?? this._getNowIcon();
         return html`
-            ${times.map(time => 
-                html`
-                <departure-text 
-                    .time=${time} 
-                    .showAnimation=${this.showAnimation}
-                    .nowIcon=${icon}>
-                </departure-text>`)}
-        `
+            <departure-text 
+                .time=${time} 
+                .showAnimation=${this.showAnimation}
+                .nowIcon=${icon}>
+            </departure-text>`;
     }
 
     private renderDebugInfo() {
