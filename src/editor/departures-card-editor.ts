@@ -84,6 +84,9 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
               name: "showTransportIcon", type: "boolean",
             },
             {
+              name: "hideEmptyDepartures", type: "boolean",
+            },
+            {
               name: "debug", type: "boolean",
             }
           ],

@@ -7,6 +7,7 @@ export interface Config extends LovelaceCardConfig {
     showTransportIcon: boolean;
     debug: boolean;
     departuresToShow: number;
+    hideEmptyDepartures: boolean;
     entities?: EntityConfig[];
   }
 

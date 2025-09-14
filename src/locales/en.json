@@ -5,6 +5,7 @@
       "icon": "Card icon (optional)",
       "showAnimation": "Show arrival animation",
       "showTransportIcon": "Show transport icon",
+      "hideEmptyDepartures": "Hide empty departures",
       "debug": "Debug",
       "departuresToShow": "Departures to show",
       "addEntity": "Add entity",
