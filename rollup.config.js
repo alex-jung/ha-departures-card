@@ -2,8 +2,8 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import typescript from "@rollup/plugin-typescript";
 import babel from "@rollup/plugin-babel";
-import { terser } from "rollup-plugin-terser";
 import json from "@rollup/plugin-json";
+import terser from "@rollup/plugin-terser";
 
 const plugins = [
   nodeResolve(),
@@ -23,7 +23,7 @@ export default [
     output: {
       sourcemap: true,
       format: "es",
-      file: "dist/ha-departures-card.js"
+      file: "dist/ha-departures-card.js",
     },
     plugins: [...plugins],
   },

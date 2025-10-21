@@ -17,15 +17,18 @@ function getNestedValue(obj: any, keyPath: string): string | undefined {
 export function localize(
   key: string,
   lang: SupportedLanguages | string = "en",
-  vars?: Record<string, string>
+  vars?: Record<string, string>,
 ): string {
-  const langKey = (Object.keys(translations) as SupportedLanguages[]).includes(lang as SupportedLanguages)
+  const langKey = (Object.keys(translations) as SupportedLanguages[]).includes(
+    lang as SupportedLanguages,
+  )
     ? (lang as SupportedLanguages)
     : "en";
   const langData = translations[langKey];
   const fallbackData = translations["en"];
 
-  let template = getNestedValue(langData, key) ?? getNestedValue(fallbackData, key);
+  let template =
+    getNestedValue(langData, key) ?? getNestedValue(fallbackData, key);
   if (typeof template !== "string") return key;
 
   if (vars) {
