@@ -1,8 +1,9 @@
 {
   "card": {
     "editor": {
-      "title": "Card titel (optional)",
+      "title": "Card header text (optional)",
       "icon": "Card icon (optional)",
+      "showCardHeader": "Show card header",
       "showAnimation": "Show arrival animation",
       "showTransportIcon": "Show transport icon",
       "hideEmptyDepartures": "Hide empty departures",

@@ -1,152 +1,173 @@
 import { css, html, LitElement, nothing } from "lit";
-import { state, property, customElement } from 'lit/decorators.js';
+import { state, property, customElement } from "lit/decorators.js";
 import { Config } from "../types";
-import { HomeAssistant, fireEvent, LovelaceCardEditor  } from "custom-card-helpers";
+import {
+  HomeAssistant,
+  fireEvent,
+  LovelaceCardEditor,
+} from "custom-card-helpers";
 import "./departures-entity-editor";
 import { localize } from "../localize";
 
-import {
-  mdiPlus
-} from "@mdi/js";
+import { mdiPlus } from "@mdi/js";
 import { cardStyles } from "../styles";
 import { EntityTab } from "../data-classes";
 
-
-@customElement('departures-card-editor')
-export class DeparturesCardEditor extends LitElement implements LovelaceCardEditor {
+@customElement("departures-card-editor")
+export class DeparturesCardEditor
+  extends LitElement
+  implements LovelaceCardEditor
+{
   static styles = [
-      cardStyles,
-      css`
-      .entity-editor-content{
-          border: 1px solid var(--divider-color);
-          padding: 10px;
+    cardStyles,
+    css`
+      .entity-editor-content {
+        border: 1px solid var(--divider-color);
+        padding: 10px;
       }
       .toolbar {
-        display: flex; 
-        justify-content: space-between; 
+        display: flex;
+        justify-content: space-between;
         align-items: flex-start;
-      }
-      sl-tab-group {
-        flex: 1; 
-        margin-right: 5px; 
-        max-width:400px; 
-        --ha-tab-track-color:var(--card-background-color)  
       }
       ha-expansion-panel {
         margin-top: 20px;
       }
-      .card-options{
-          display: flex;
-          justify-content: flex-end;
-          width: 100%;
+      ha-tab-group {
+        flex: 1;
+        margin-right: 5px;
+        max-width: 400px;
       }
-  `];
-  @property({ attribute: false }) 
+    `,
+  ];
+  @property({ attribute: false })
   public hass!: HomeAssistant;
 
-  @state() 
+  @state()
   private _config!: Config;
 
   @state()
-  private _tabs:EntityTab[] = [];
+  private _tabs: EntityTab[] = [];
 
-  @state() 
+  @state()
   private _currTab: string = "1";
-  
-  public setConfig(config: Config) 
-  {
+
+  public setConfig(config: Config) {
     this._config = config;
-    this._tabs = config.entities?.map((config, index) => new EntityTab(Number(index + 1), config)) || [];
+    this._tabs =
+      config.entities?.map(
+        (config, index) => new EntityTab(Number(index + 1), config),
+      ) || [];
   }
 
   private SCHEMA = [
+    {
+      name: "showCardHeader",
+      type: "boolean",
+      default: true,
+    },
+    {
+      name: "",
+      type: "grid",
+      column_min_width: "100px",
+      schema: [
         {
-          name: "",
-          type: "grid",
-          schema: [
-            {
-              name: "title",
-              required: false,
-              selector: { text: {} },
-            },
-            { name: "icon", selector: { icon: {} } },
-          ]
+          name: "title",
+          required: false,
+          selector: { text: {} },
+        },
+        { name: "icon", selector: { icon: {} } },
+      ],
+    },
+    {
+      name: "",
+      type: "grid",
+      column_min_width: "100px",
+      schema: [
+        {
+          name: "showAnimation",
+          type: "boolean",
         },
         {
-          name: "",
-          type: "grid",
-          column_min_width: "100px",
-          schema: [
-            {
-              name: "showAnimation", type: "boolean",
-            },
-            {
-              name: "showTransportIcon", type: "boolean",
-            },
-            {
-              name: "hideEmptyDepartures", type: "boolean",
-            },
-            {
-              name: "debug", type: "boolean",
-            }
-          ],
+          name: "showTransportIcon",
+          type: "boolean",
         },
         {
-          name: "departuresToShow",
-          type: "integer",
-          required: true,
-          default: 3,
-          valueMin: 1,
-          valueMax: 5,
+          name: "hideEmptyDepartures",
+          type: "boolean",
         },
+        {
+          name: "debug",
+          type: "boolean",
+        },
+      ],
+    },
+    {
+      name: "departuresToShow",
+      selector: {
+        number: {
+          min: 1,
+          max: 5,
+          step: 1,
+          mode: "slider",
+        },
+      },
+    },
   ] as const;
 
-  protected render() { 
+  protected render() {
     if (!this.hass || !this._config) {
       return nothing;
     }
 
-    if(this._tabs.length === 0) {
+    if (this._tabs.length === 0) {
       this.addEntity();
     }
 
     return html`
-        <ha-form
-          .schema="${this.SCHEMA}"
-          .data="${this._config}"
-          .hass="${this.hass}"
-          .computeLabel=${this.computeLabelCallback}
-          @value-changed=${this.configChanged}
-        >
-        </ha-form>
+      <ha-form
+        .schema="${this.SCHEMA}"
+        .data="${this._config}"
+        .hass="${this.hass}"
+        .computeLabel=${this.computeLabelCallback}
+        @value-changed=${this.configChanged}
+      >
+      </ha-form>
 
-        <ha-expansion-panel .leftChevron=${true}>
-          <span slot="header">Entities</span>
-          <div class="card-config">
-            <div class="toolbar">
-              <sl-tab-group @sl-tab-show=${this.handleTabChanged}>
+      <ha-expansion-panel .leftChevron=${true}>
+        <span slot="header">Entities</span>
+        <div class="card-config">
+          <div class="toolbar">
+            <ha-tab-group @wa-tab-show=${this.handleTabChanged}>
               ${this._tabs.map(
                 (tab) => html`
-                  <sl-tab slot="nav" .panel=${tab.index} .active=${this._currTab === tab.index.toString()}>
+                  <ha-tab-group-tab
+                    slot="nav"
+                    .panel=${tab.index}
+                    .active=${this._currTab === tab.index.toString()}
+                  >
                     ${tab.index}
-                  </sl-tab>
-                `
+                  </ha-tab-group-tab>
+                `,
               )}
-              </sl-tab-group>
-              <ha-icon-button
-                .path=${mdiPlus}
-                .label=${localize("card.editor.addEntity", this.hass.locale?.language)}
-                @click=${this.addEntity}
-              ></ha-icon-button>
-            </div>
-              <departures-entity-editor 
-                .hass=${this.hass}
-                .data=${this.getTabData()}
-                @onDelete=${this.removeEntity}
-                @onChange=${this.updateEntity}
-                />
+            </ha-tab-group>
+            <ha-icon-button
+              .path=${mdiPlus}
+              .label=${localize(
+                "card.editor.addEntity",
+                this.hass.locale?.language,
+              )}
+              @click=${this.addEntity}
+            ></ha-icon-button>
           </div>
-        </ha-expansion-panel>
+          <departures-entity-editor
+            .hass=${this.hass}
+            .data=${this.getTabData()}
+            @onDelete=${this.removeEntity}
+            @onChange=${this.updateEntity}
+          />
+        </div>
+      </ha-expansion-panel>
     `;
   }
 
@@ -161,16 +182,15 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
   private getTabData(): EntityTab | undefined {
     const index = parseInt(this._currTab) - 1;
 
-    if(index >= 0 && index < this._tabs.length) {
+    if (index >= 0 && index < this._tabs.length) {
       return this._tabs[index];
     }
 
     return undefined;
   }
 
-  private computeLabelCallback = (schema: any) => 
-    localize(`card.editor.${schema.name}`, this.hass.locale?.language)
-
+  private computeLabelCallback = (schema: any) =>
+    localize(`card.editor.${schema.name}`, this.hass.locale?.language);
 
   private addEntity() {
     if (!this._config) {
@@ -185,7 +205,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     this.updateConfig();
   }
 
-  private removeEntity(ev:Event) {
+  private removeEntity(ev: Event) {
     if (!this._config) {
       return;
     }
@@ -215,10 +235,10 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     fireEvent(this, "config-changed", { config: this._config });
   }
 
-  private updateConfig(){
-    const config = {...this._config};
-    
-    config.entities = this._tabs.map(tab => tab.config);
+  private updateConfig() {
+    const config = { ...this._config };
+
+    config.entities = this._tabs.map((tab) => tab.config);
     this._config = config;
 
     fireEvent(this, "config-changed", { config: this._config });
@@ -243,6 +263,6 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
 
     this._config = event.detail.value;
 
-    fireEvent(this, 'config-changed', { config: this._config});
+    fireEvent(this, "config-changed", { config: this._config });
   }
 }

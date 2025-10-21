@@ -1,8 +1,9 @@
 {
   "card": {
     "editor": {
-      "title": "Card Titel (optional)",
+      "title": "Card Header text (optional)",
       "icon": "Card Icon (optional)",
+      "showCardHeader": "Card Header anzeigen",
       "showAnimation": "Animation anzeigen",
       "showTransportIcon": "Transport Icon anzeigen",
       "hideEmptyDepartures": "Leere Abfahrten ausblenden",
@@ -14,7 +15,7 @@
         "destinationName": "Zielname",
         "lineName": "Linienname",
         "lineColor": "Linienfarbe",
-        "nowIcon": "Anfahrt Icon",        
+        "nowIcon": "Anfahrt Icon",
         "timeStyle": "Ankunftszeit Stil",
         "remove": "Entfernen"
       }

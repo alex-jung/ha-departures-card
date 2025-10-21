@@ -1,89 +1,116 @@
-import { css, html, LitElement, nothing, TemplateResult } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { cardStyles } from './styles.js';
-import { HomeAssistant } from 'custom-card-helpers';
-import { HassEntity } from 'home-assistant-js-websocket'
-import { Config } from './types.js';
-import { localize } from './localize.js';
+import { css, html, LitElement, nothing, TemplateResult } from "lit";
+import { customElement, property } from "lit/decorators.js";
+import { cardStyles } from "./styles.js";
+import { HomeAssistant } from "custom-card-helpers";
+import { HassEntity } from "home-assistant-js-websocket";
+import { Config } from "./types.js";
+import { localize } from "./localize.js";
+import { styleMap } from "lit/directives/style-map.js";
 
-@customElement('departures-table')
+@customElement("departures-table")
 export class DeparturesTable extends LitElement {
-    static styles = [
-        cardStyles,
-        css`
-        :host {
-            display: flex;
-            flex-direction: column;
-        }
+  static styles = [
+    cardStyles,
+    css`
+      :host {
+        display: flex;
+        flex-direction: column;
+      }
+      table-header {
+        display: flex;
+        padding-top: 20px;
+        justify-content: space-between;
+        font-weight: bold;
+      }
+
+      @media (max-width: 500px) {
         table-header {
-            display: flex;
-            padding-top: 20px;
-            justify-content: space-between;
-            font-weight: bold;
+          display: none;
         }
+      }
+    `,
+  ];
 
-        @media (max-width: 500px) {
-            table-header {
-                display: none;
-            }
-        }
-    `];
+  @property({ attribute: false })
+  public hass!: HomeAssistant;
 
-    @property({attribute: false}) 
-    public hass!: HomeAssistant;
+  @property({ attribute: false })
+  private config!: Config;
 
-    @property({attribute: false})
-    private config!: Config;
+  @property({ attribute: false })
+  private moreInfo: boolean = false;
 
-    @property({attribute: false})
-    private moreInfo: boolean = false;
+  /**
+   * Retrieves the state of a specified Home Assistant entity.
+   *
+   * @param entityName - The ID of the Home Assistant entity.
+   * @returns The state of the specified entity as a `HassEntity` object if available,
+   *          or an empty object if the `hass` property is not defined.
+   */
+  private getState(entityName: string): HassEntity | {} {
+    if (this.hass) return this.hass.states[entityName];
 
-    /**
-     * Retrieves the state of a specified Home Assistant entity.
-     *
-     * @param entityName - The ID of the Home Assistant entity.
-     * @returns The state of the specified entity as a `HassEntity` object if available,
-     *          or an empty object if the `hass` property is not defined.
-     */
-    private getState(entityName:string): HassEntity | {} {
-        if(this.hass)
-            return this.hass.states[entityName]
+    return {};
+  }
 
-        return {}
+  protected render(): TemplateResult {
+    const showAnimation =
+      this.config.showAnimation === undefined
+        ? true
+        : this.config.showAnimation;
+    const showTransportIcon =
+      this.config.showTransportIcon === undefined
+        ? false
+        : this.config.showTransportIcon;
+    const hideEmptyDepartures =
+      this.config.hideEmptyDepartures === undefined
+        ? false
+        : this.config.hideEmptyDepartures;
+    const showCardHeader =
+      this.config.showCardHeader === undefined
+        ? false
+        : this.config.showCardHeader;
+    let departuresToShow =
+      this.config.departuresToShow === undefined
+        ? 1
+        : this.config.departuresToShow;
+
+    if (this.moreInfo) {
+      departuresToShow = 5;
     }
 
-    protected render(): TemplateResult {
-        const language = this.hass.locale?.language
-        const showAnimation = this.config.showAnimation === undefined ? true : this.config.showAnimation
-        const showTransportIcon = this.config.showTransportIcon === undefined ? false : this.config.showTransportIcon
-        const hideEmptyDepartures = this.config.hideEmptyDepartures === undefined ? false : this.config.hideEmptyDepartures
-        let departuresToShow = this.config.departuresToShow === undefined ? 1 : this.config.departuresToShow
+    const headerPaddingTop = { "padding-top": showCardHeader ? "20px" : "0px" };
 
-        if(this.moreInfo) {
-            departuresToShow = 5
-        }
-
-        return html`
-            <table-header>
-                ${this.config.showTransportIcon ? html`<div class="cell-icon">Icon</div>`: nothing}    
-                <div class="cell-line">${localize("card.line", this.hass.locale?.language)}</div>
-                <div class="cell-destination">${localize("card.destination", this.hass.locale?.language)}</div>
-                <div>${localize("card.departures", this.hass.locale?.language)}</div>
-            </table-header>
-            <hr style="width:100%"/>
-            ${this.config.entities ? this.config.entities.map((entityConfig) => {
-              return html`
-                <departures-row 
-                    .config=${entityConfig}
-                    .hass=${this.hass} 
-                    .showIcon=${showTransportIcon}
-                    .debug=${this.config.debug === true}
-                    .state=${this.getState(entityConfig.entity)}
-                    .timesToShow=${departuresToShow}
-                    .showAnimation=${showAnimation}
-                    .hideEmptyDepartures=${hideEmptyDepartures}/>
-                `
-            }) : nothing}
-        `;
-    }
+    return html`
+      <table-header style=${styleMap(headerPaddingTop)}>
+        ${this.config.showTransportIcon
+          ? html`<div class="cell-icon">Icon</div>`
+          : nothing}
+        <div class="cell-line">
+          ${localize("card.line", this.hass.locale?.language)}
+        </div>
+        <div class="cell-destination">
+          ${localize("card.destination", this.hass.locale?.language)}
+        </div>
+        <div>${localize("card.departures", this.hass.locale?.language)}</div>
+      </table-header>
+      <hr style="width:100%" />
+      ${this.config.entities
+        ? this.config.entities.map((entityConfig) => {
+            return html`
+              <departures-row
+                .config=${entityConfig}
+                .hass=${this.hass}
+                .showIcon=${showTransportIcon}
+                .debug=${this.config.debug === true}
+                .state=${this.getState(entityConfig.entity)}
+                .timesToShow=${departuresToShow}
+                .showAnimation=${showAnimation}
+                .hideEmptyDepartures=${hideEmptyDepartures}
+              />
+            `;
+          })
+        : nothing}
+    `;
+  }
 }

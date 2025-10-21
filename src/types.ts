@@ -1,23 +1,24 @@
 import { LovelaceCardConfig } from "custom-card-helpers";
 
 export interface Config extends LovelaceCardConfig {
-    title: string;
-    icon: string;
-    showAnimation: boolean;
-    showTransportIcon: boolean;
-    debug: boolean;
-    departuresToShow: number;
-    hideEmptyDepartures: boolean;
-    entities?: EntityConfig[];
-  }
+  title: string;
+  icon: string;
+  showAnimation: boolean;
+  showTransportIcon: boolean;
+  debug: boolean;
+  departuresToShow: number;
+  showCardHeader: boolean;
+  hideEmptyDepartures: boolean;
+  entities?: EntityConfig[];
+}
 
 export interface EntityConfig {
-    entity: string;
-    lineColor: string | null;
-    lineName: string | null;
-    timeStyle: string;
-    destinationName: string | null;
-    nowIcon: string | null;
+  entity: string;
+  lineColor: string | null;
+  lineName: string | null;
+  timeStyle: string;
+  destinationName: string | null;
+  nowIcon: string | null;
 }
 
 export enum EntityAttributes {
@@ -36,5 +37,5 @@ export enum EntityAttributes {
   TRANSPORT = "transport",
   LINE_ID = "line_id",
   FRIENDLY_NAME = "friendly_name",
-  ICON = "icon"
+  ICON = "icon",
 }
