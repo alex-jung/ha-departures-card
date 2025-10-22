@@ -225,80 +225,76 @@ const At=_t(class extends yt{constructor(t){if(super(t),t.type!==gt||"class"!==t
             }
         }
     `],t([dt({attribute:!1})],Vt.prototype,"time",void 0),t([dt({attribute:!1})],Vt.prototype,"showAnimation",void 0),t([dt({attribute:!1})],Vt.prototype,"nowIcon",void 0),Vt=t([at("departure-text")],Vt);let Wt=class extends rt{constructor(){super(...arguments),this.showIcon=!1,this.debug=!1,this.timesToShow=1,this.showAnimation=!0,this.hideEmptyDepartures=!1,this.times=[],this.INTERVAL=1e4}connectedCallback(){super.connectedCallback(),this.intervalId=window.setInterval((()=>{this._updateTimes()}),this.INTERVAL),this._updateTimes()}disconnectedCallback(){super.disconnectedCallback(),void 0!==this.intervalId&&clearInterval(this.intervalId)}_updateTimes(){let t=this.config?.timeStyle??"dynamic";this.times=[new zt(t),new zt(t),new zt(t),new zt(t),new zt(t)],this.times[0].updateTime(this.state?.attributes[wt.PLANNED_TIME],this.state?.attributes[wt.ESTIMATED_TIME]),this.times[1].updateTime(this.state?.attributes[wt.PLANNED_TIME_1],this.state?.attributes[wt.ESTIMATED_TIME_1]),this.times[2].updateTime(this.state?.attributes[wt.PLANNED_TIME_2],this.state?.attributes[wt.ESTIMATED_TIME_2]),this.times[3].updateTime(this.state?.attributes[wt.PLANNED_TIME_3],this.state?.attributes[wt.ESTIMATED_TIME_3]),this.times[4].updateTime(this.state?.attributes[wt.PLANNED_TIME_4],this.state?.attributes[wt.ESTIMATED_TIME_4])}_getNowIcon(){return this.config?.nowIcon?this.config.nowIcon:this.state?.attributes[wt.ICON]?this.state.attributes[wt.ICON]:"mdi:train-bus"}render(){const t=this.config?.timeStyle??"dynamic",e=[{p:wt.PLANNED_TIME,e:wt.ESTIMATED_TIME},{p:wt.PLANNED_TIME_1,e:wt.ESTIMATED_TIME_1},{p:wt.PLANNED_TIME_2,e:wt.ESTIMATED_TIME_2},{p:wt.PLANNED_TIME_3,e:wt.ESTIMATED_TIME_3},{p:wt.PLANNED_TIME_4,e:wt.ESTIMATED_TIME_4}],i=Math.max(0,this.timesToShow||0),s=[];for(const n of e){if(s.length>=i)break;const e=new zt(t),r=this.state?.attributes?.[n.p],o=this.state?.attributes?.[n.e];e.updateTime(r,o),e.mode!==Rt.PAST&&e.mode!==Rt.NONE&&"-"!==e.time&&s.push(e)}const n=Math.max(0,i-s.length),r=n>0?s.concat(new Array(n).fill(null)):s;return!0===this.hideEmptyDepartures&&0===s.length?W:F`
-            <destination-container>
-                ${this.renderIcon()}
-                ${this.renderLine()}
-                ${this.renderDestination()}
-            </destination-container>
-            <times-container>
-                ${r.map((t=>this.renderDepartureTimeItem(t)))}
-            </times-container>
-            ${this.debug?this.renderDebugInfo():W}
-        `}renderIcon(){if(!this.showIcon)return W;let t=this.state?.attributes[wt.ICON]??"mdi:train-bus";return F`
-            <div class="cell-icon">
-                <ha-icon icon=${t}></ha-icon>
-            </div>
-        `}renderLine(){const t=this.config?.lineName??this.state?.attributes[wt.LINE_NAME],e={background:this.config?.lineColor||""};return F`
-            <div class="cell-line">
-                <div class="line-number" style=${vt(e)}>${t}</div>
-            </div>
-        `}renderDestination(){let t=this.config?.destinationName??this.state?.attributes[wt.DIRECTION];return F`
-            <div class="cell-destination">${t}</div>
-        `}renderDepartureTimeItem(t,e){const i=e??this._getNowIcon();return F`
-            <departure-text 
-                .time=${t} 
-                .showAnimation=${this.showAnimation}
-                .nowIcon=${i}>
-            </departure-text>`}renderDebugInfo(){return F`
+      <destination-container>
+        ${this.renderIcon()} ${this.renderLine()} ${this.renderDestination()}
+      </destination-container>
+      <times-container>
+        ${r.map((t=>this.renderDepartureTimeItem(t)))}
+      </times-container>
+      ${this.debug?this.renderDebugInfo():W}
+    `}renderIcon(){if(!this.showIcon)return W;let t=this.state?.attributes[wt.ICON]??"mdi:train-bus";return F`
+      <div class="cell-icon">
+        <ha-icon icon=${t}></ha-icon>
+      </div>
+    `}renderLine(){const t=this.config?.lineName??this.state?.attributes[wt.LINE_NAME];let e=function(t){const e=t.replace("#","");return e.length<6?"white":(.299*parseInt(e.substring(0,2),16)+.587*parseInt(e.substring(2,4),16)+.114*parseInt(e.substring(4,6),16))/255>.5?"black":"white"}(this.config?.lineColor??"#ffffffff");const i={background:this.config?.lineColor||"",color:e};return F`
+      <div class="cell-line">
+        <div class="line-number" style=${vt(i)}>${t}</div>
+      </div>
+    `}renderDestination(){let t=this.config?.destinationName??this.state?.attributes[wt.DIRECTION];return F` <div class="cell-destination">${t}</div> `}renderDepartureTimeItem(t,e){const i=e??this._getNowIcon();return F` <departure-text
+      .time=${t}
+      .showAnimation=${this.showAnimation}
+      .nowIcon=${i}
+    >
+    </departure-text>`}renderDebugInfo(){return F`
             <debug-info>
                 <pre>${JSON.stringify(this.state?.attributes,null,1)}</pre></br>
             </debug-info>
         `}};Wt.styles=[pt,o`
+      :host {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      destination-container {
+        display: flex;
+        flex: 2;
+        justify-content: space-between;
+        align-items: center;
+      }
+      times-container {
+        display: flex;
+        flex: 1;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      debug-info {
+        display: flex;
+        width: 100%;
+        font-size: 0.7em;
+        color: white;
+        padding: 10px;
+        background-color: black;
+      }
+      @media (min-width: 100px) and (max-width: 500px) {
         :host {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: baseline;
+          display: grid;
+          grid-template-columns: 100%;
+          grid-template-rows: auto auto;
         }
-        destination-container{
-            display: flex;     
-            flex: 2; 
-            justify-content: space-between; 
-            align-items: center;
+        destination-container {
+          flex: 1;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          background: var(--primary-color);
         }
-        times-container{
-            display: flex;     
-            flex: 1; 
-            justify-content: flex-end; 
-            align-items: center;
+        times-container {
+          flex: 2;
+          display: flex;
+          justify-content: flex-start;
         }
-        debug-info {
-            display: flex;
-            width: 100%;
-            font-size: 0.7em;
-            color: white;
-            padding: 10px;
-            background-color: black;
-        }
-        @media (min-width: 100px) and (max-width: 500px){
-            :host {
-                display: grid;
-                grid-template-columns: 100%;
-                grid-template-rows: auto auto;
-            }
-            destination-container{
-                flex: 1; 
-                display: flex; 
-                justify-content: flex-start; 
-                align-items: center;
-                background: var(--primary-color);
-            }
-            times-container{
-                flex: 2;
-                display: flex;
-                justify-content: flex-start;
-            }
-        }
+      }
     `],t([dt({attribute:!1})],Wt.prototype,"config",void 0),t([dt({attribute:!1})],Wt.prototype,"state",void 0),t([dt({attribute:!1})],Wt.prototype,"showIcon",void 0),t([dt({attribute:!1})],Wt.prototype,"debug",void 0),t([dt({attribute:!1})],Wt.prototype,"timesToShow",void 0),t([dt({attribute:!1})],Wt.prototype,"showAnimation",void 0),t([dt({attribute:!1})],Wt.prototype,"hideEmptyDepartures",void 0),t([lt()],Wt.prototype,"times",void 0),Wt=t([at("departures-row")],Wt);var Bt="\\d\\d?",Zt="\\d\\d",qt="[^\\s]+";function Jt(t,e){for(var i=[],s=0,n=t.length;s<n;s++)i.push(t[s].substr(0,e));return i}var Kt=function(t){return function(e,i){var s=i[t].map((function(t){return t.toLowerCase()})),n=s.indexOf(e.toLowerCase());return n>-1?n:null}};function Yt(t){for(var e=[],i=1;i<arguments.length;i++)e[i-1]=arguments[i];for(var s=0,n=e;s<n.length;s++){var r=n[s];for(var o in r)t[o]=r[o]}return t}var Gt=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],Qt=["January","February","March","April","May","June","July","August","September","October","November","December"],Xt=Jt(Qt,3),te={dayNamesShort:Jt(Gt,3),dayNames:Gt,monthNamesShort:Xt,monthNames:Qt,amPm:["am","pm"],DoFn:function(t){return t+["th","st","nd","rd"][t%10>3?0:(t-t%10!=10?1:0)*t%10]}},ee=(Yt({},te),function(t){return+t-1}),ie=[null,Bt],se=[null,qt],ne=["isPm",qt,function(t,e){var i=t.toLowerCase();return i===e.amPm[0]?0:i===e.amPm[1]?1:null}],re=["timezoneOffset","[^\\s]*?[\\+\\-]\\d\\d:?\\d\\d|[^\\s]*?Z?",function(t){var e=(t+"").match(/([+-]|\d\d)/gi);if(e){var i=60*+e[1]+parseInt(e[2],10);return"+"===e[0]?i:-i}return 0}];Kt("monthNamesShort"),Kt("monthNames");var oe,ae;!function(){try{(new Date).toLocaleDateString("i")}catch(t){return"RangeError"===t.name}}(),function(){try{(new Date).toLocaleString("i")}catch(t){return"RangeError"===t.name}}(),function(){try{(new Date).toLocaleTimeString("i")}catch(t){return"RangeError"===t.name}}(),function(t){t.language="language",t.system="system",t.comma_decimal="comma_decimal",t.decimal_comma="decimal_comma",t.space_comma="space_comma",t.none="none"}(oe||(oe={})),function(t){t.language="language",t.system="system",t.am_pm="12",t.twenty_four="24"}(ae||(ae={}));var he=function(t,e,i,s){s=s||{},i=null==i?{}:i;var n=new Event(e,{bubbles:void 0===s.bubbles||s.bubbles,cancelable:Boolean(s.cancelable),composed:void 0===s.composed||s.composed});return n.detail=i,t.dispatchEvent(n),n};let ce=class extends rt{constructor(){super(...arguments),this._schema=[{name:"entity",selector:{entity:{},domain:"sensor"}},{name:"destinationName",selector:{text:{}}},{name:"",type:"grid",schema:[{name:"lineName",selector:{text:{}}},{name:"lineColor",selector:{text:{}}}]},{name:"nowIcon",selector:{icon:{}}},{name:"timeStyle",type:"select",default:"dynamic",options:[["dynamic","Dynamic"],["timestamp","Timestamp"]]}],this._computeLabelCallback=t=>ft(`card.editor.entity.${t.name}`,this.hass.locale?.language)}render(){return this.hass?F`
             <div class="entity-editor-content">
                 <div id="card-options">
@@ -386,7 +382,7 @@ const At=_t(class extends yt{constructor(t){if(super(t),t.type!==gt||"class"!==t
         margin-right: 5px;
         max-width: 400px;
       }
-    `],t([dt({attribute:!1})],de.prototype,"hass",void 0),t([lt()],de.prototype,"_config",void 0),t([lt()],de.prototype,"_tabs",void 0),t([lt()],de.prototype,"_currTab",void 0),de=t([at("departures-card-editor")],de),window.customCards=window.customCards||[],window.customCards.push({type:"departures-card",name:"Departures Card",description:"Display departure times for different public transports"});console.groupCollapsed("%cDepartures-Card 2.2.0","color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;"),console.log("Github repository: https://github.com/alex-jung/ha-departures-card"),console.groupEnd();let le=class extends rt{constructor(){super(...arguments),this.moreInfoOpen=!1}static getStubConfig(t){return{type:"custom:departures-card",title:ft("card.departures",t.locale?.language)||"Departures",showCardHeader:!0,departuresToShow:3,showAnimation:!0,showTransportIcon:!0,debug:!1,hideEmptyDepartures:!1,entities:[]}}static getConfigElement(){return document.createElement("departures-card-editor")}async getCardSize(){return this.config&&this.config.entities?this.config.entities.length+1:1}setConfig(t){if(!t)throw new Error("Invalid configuration");if(this.config=t,!this.config.entities||this.config.entities.length<=0)throw new Error("Please define at least one entity in the configuration.")}render(){const t=this.config.title||ft("card.departures",this.hass.locale?.language),e=this.config.icon||"mdi:bus",i=this.config.showCardHeader??!0;return F`
+    `],t([dt({attribute:!1})],de.prototype,"hass",void 0),t([lt()],de.prototype,"_config",void 0),t([lt()],de.prototype,"_tabs",void 0),t([lt()],de.prototype,"_currTab",void 0),de=t([at("departures-card-editor")],de),window.customCards=window.customCards||[],window.customCards.push({type:"departures-card",name:"Departures Card",description:"Display departure times for different public transports"});console.groupCollapsed("%cDepartures-Card 2.2.1","color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;"),console.log("Github repository: https://github.com/alex-jung/ha-departures-card"),console.groupEnd();let le=class extends rt{constructor(){super(...arguments),this.moreInfoOpen=!1}static getStubConfig(t){return{type:"custom:departures-card",title:ft("card.departures",t.locale?.language)||"Departures",showCardHeader:!0,departuresToShow:3,showAnimation:!0,showTransportIcon:!0,debug:!1,hideEmptyDepartures:!1,entities:[]}}static getConfigElement(){return document.createElement("departures-card-editor")}async getCardSize(){return this.config&&this.config.entities?this.config.entities.length+1:1}setConfig(t){if(!t)throw new Error("Invalid configuration");if(this.config=t,!this.config.entities||this.config.entities.length<=0)throw new Error("Please define at least one entity in the configuration.")}render(){const t=this.config.title||ft("card.departures",this.hass.locale?.language),e=this.config.icon||"mdi:bus",i=this.config.showCardHeader??!0;return F`
       <ha-card>
         <div class="card-content">
           ${i?F`
