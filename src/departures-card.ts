@@ -15,7 +15,7 @@ import { localize } from "./localize.js";
   description: "Display departure times for different public transports",
 });
 
-const version = "2.2.0";
+const version = "2.2.1";
 const repoUrl = "https://github.com/alex-jung/ha-departures-card";
 
 console.groupCollapsed(
