@@ -45,11 +45,32 @@ class ParserHaDepartures extends Parser {
         times.push(new DepartureTime(timeEntry.planned, timeEntry.estimated));
       });
     } else if (this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME]) {
-      times.push(this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME], this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME]);
-      times.push(this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME_1], this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME_1]);
-      times.push(this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME_2], this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME_2]);
-      times.push(this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME_3], this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME_3]);
-      times.push(this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME_4], this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME_4]);
+      const planTime1 = this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME];
+      const estTime1 = this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME];
+      const planTime2 = this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME_1];
+      const estTime2 = this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME_1];
+      const planTime3 = this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME_2];
+      const estTime3 = this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME_2];
+      const planTime4 = this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME_3];
+      const estTime4 = this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME_3];
+      const planTime5 = this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME_4];
+      const estTime5 = this._entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME_4];
+
+      if (planTime1) {
+        times.push(new DepartureTime(planTime1, estTime1));
+      }
+      if (planTime2) {
+        times.push(new DepartureTime(planTime2, estTime2));
+      }
+      if (planTime3) {
+        times.push(new DepartureTime(planTime3, estTime3));
+      }
+      if (planTime4) {
+        times.push(new DepartureTime(planTime4, estTime4));
+      }
+      if (planTime5) {
+        times.push(new DepartureTime(planTime4, estTime5));
+      }
     }
 
     return times;
