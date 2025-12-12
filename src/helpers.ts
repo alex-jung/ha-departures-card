@@ -40,18 +40,6 @@ export function getContrastTextColor(bgColor: string) {
   return luminance > 0.5 ? "black" : "white";
 }
 
-/**
- * Retrieves the state of a specified Home Assistant entity.
- *
- * @param entityName - The ID of the Home Assistant entity.
- * @returns The state of the specified entity as a `HassEntity` object if available,
- *          or an empty object if the `hass` property is not defined.
- */
-export function getEntityState(hass: HomeAssistant, entityName: string): void {
-  //   if (hass && hass.states) return hass.states[entityName];
-  //   return {};
-}
-
 export class ClassTimer {
   private timerId: number | null = null;
   private callback: (() => void) | null = null;
@@ -61,7 +49,7 @@ export class ClassTimer {
     this.duration = duration;
   }
 
-  start(callback: () => void): void {
+  public start(callback: () => void): void {
     if (this.timerId === null) {
       this.callback = callback;
       this.timerId = window.setTimeout(() => {
@@ -72,14 +60,14 @@ export class ClassTimer {
     }
   }
 
-  stop(): void {
+  public stop(): void {
     if (this.timerId !== null) {
       clearTimeout(this.timerId);
       this.timerId = null;
     }
   }
 
-  restart(): void {
+  public restart(): void {
     this.stop();
 
     if (this.callback !== null) {
@@ -87,7 +75,7 @@ export class ClassTimer {
     }
   }
 
-  isRunning(): boolean {
+  public isRunning(): boolean {
     return this.timerId != null;
   }
 }

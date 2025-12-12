@@ -93,16 +93,18 @@ export class DeparturesCard extends LitElement {
     const cardTitle = cardConfig.title || localize("card.departures", this.hass.locale?.language);
     const cardIcon = cardConfig.icon || DEFAULT_CARD_ICON;
 
-    console.groupCollapsed("Card config");
-    console.log(`departuresToShow: ${cardConfig.departuresToShow}`);
-    console.log(`scrollBackTimeout: ${cardConfig.scrollBackTimeout}`);
-    console.log(`icon: ${cardConfig.icon}`);
-    console.log(`showCardHeader: ${cardConfig.showCardHeader}`);
-    console.log(`showScrollButtons: ${cardConfig.showScrollButtons}`);
-    console.log(`title: ${cardConfig.title}`);
-    console.log(`cardStyle: ${cardConfig.cardStyle}`);
-    console.log(`dark theme: ${darkTheme}`);
-    console.groupEnd();
+    console.debug("Card configuration", cardConfig);
+
+    // console.groupCollapsed("Card config");
+    // console.log(`departuresToShow: ${cardConfig.departuresToShow}`);
+    // console.log(`scrollBackTimeout: ${cardConfig.scrollBackTimeout}`);
+    // console.log(`icon: ${cardConfig.icon}`);
+    // console.log(`showCardHeader: ${cardConfig.showCardHeader}`);
+    // console.log(`showScrollButtons: ${cardConfig.showScrollButtons}`);
+    // console.log(`title: ${cardConfig.title}`);
+    // console.log(`cardStyle: ${cardConfig.cardStyle}`);
+    // console.log(`dark theme: ${darkTheme}`);
+    // console.groupEnd();
 
     this.dataPool.update(this.hass, this.config.entities);
 
