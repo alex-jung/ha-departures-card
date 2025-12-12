@@ -20,6 +20,7 @@ export class DepartureTimesPool {
     }
     if (!hass) {
       console.debug("No home assistant object provided, ignore data update.");
+      return;
     }
 
     // remove deleted entites if some exist

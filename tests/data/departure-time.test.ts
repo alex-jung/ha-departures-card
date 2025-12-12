@@ -1,5 +1,5 @@
-import { prepareDate } from "../../helpers";
-import { DepartureTime } from "../departure-time";
+import { DepartureTime } from "../../src/data/departure-time";
+import { prepareDate } from "../../src/helpers";
 
 describe("DepartureTime", () => {
   const planned = new Date("2024-06-01T10:00:20Z");
