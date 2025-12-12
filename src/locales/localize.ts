@@ -1,5 +1,5 @@
-import en from "./locales/en.json";
-import de from "./locales/de.json";
+import en from "./en.json";
+import de from "./de.json";
 
 export type Translations = typeof en;
 export type SupportedLanguages = "en" | "de";
