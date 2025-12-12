@@ -8,15 +8,15 @@ export class DataParser {
     let parser: Parser | null = null;
 
     if (entity.attributes[HaDeparturesEntityAttributes.TIMES] || entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME]) {
-      console.debug("Detected 'ha-departures' attribute, likely ha-departures integration.");
+      console.debug("Detected 'ha-departures' attribute(s)");
 
       parser = new ParserHaDepartures(entity);
     } else if (entity.attributes[DbInfoEntityAttributes.NEXT_DEPARTURES]) {
-      console.debug("Detected 'db-infoscreen' attribute, likely db-infoscreen integration.");
+      console.debug("Detected 'db-infoscreen' attribute(s)");
 
       parser = new ParserDbInfoscreen(entity);
     } else {
-      throw new UnsupportedEntityError("No data parser found for entity '" + entity.entity_id + "'", entity.entity_id);
+      throw new UnsupportedEntityError("No data parser found for entity '" + entity.entity_id + "'", JSON.stringify(entity.attributes));
     }
 
     return parser;
@@ -69,7 +69,7 @@ class ParserHaDepartures extends Parser {
         times.push(new DepartureTime(planTime4, estTime4));
       }
       if (planTime5) {
-        times.push(new DepartureTime(planTime4, estTime5));
+        times.push(new DepartureTime(planTime5, estTime5));
       }
     }
 
