@@ -15,6 +15,7 @@
   "license": "MIT",
   "author": "Alex Jung <jungdevelop@googlemail.com>",
   "version": "3.0.0",
+  "type": "module",
   "scripts": {
     "start": "rollup -c --watch",
     "test": "jest",
