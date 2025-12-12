@@ -10,6 +10,7 @@ import { contentCore } from "../styles";
 
 import Splide, { Options as SplideOptions } from "@splidejs/splide";
 import cssText from "@splidejs/splide/dist/css/splide.min.css";
+import { DEFAULT_DEPARTURE_ROW_GAP, DEFAULT_DEPARTURE_ROW_HEIGHT, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, DEFAULT_SHOW_SCROLLBUTTONS } from "../constants";
 
 export abstract class Content extends LitElement {
   static styles = [
@@ -31,9 +32,6 @@ export abstract class Content extends LitElement {
   private splide: Splide | null = null;
 
   private scrollBackTimer: ClassTimer | null = null;
-
-  protected DEPARTURE_ROW_HEIGHT = 35; // px
-  protected DEPARTURE_ROW_GAP = 5; // px
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     this._initializeSplide();
@@ -158,7 +156,7 @@ export abstract class Content extends LitElement {
   }
 
   private _getContentHeight(): number {
-    return this.cardConfig.departuresToShow * this.DEPARTURE_ROW_HEIGHT + this.cardConfig.departuresToShow * this.DEPARTURE_ROW_GAP;
+    return this.cardConfig.departuresToShow * DEFAULT_DEPARTURE_ROW_HEIGHT + this.cardConfig.departuresToShow * DEFAULT_DEPARTURE_ROW_GAP;
   }
 
   private _renderErrors() {
@@ -178,7 +176,7 @@ export abstract class Content extends LitElement {
     }
 
     if (!this.scrollBackTimer) {
-      throw new Error("Scrollback timer was not created!");
+      return;
     }
 
     if (!this.scrollBackTimer.isRunning()) {
@@ -196,7 +194,11 @@ export abstract class Content extends LitElement {
       this.scrollBackTimer = null;
     }
 
-    const timeout = this.cardConfig.scrollBackTimeout ? this.cardConfig.scrollBackTimeout * 1000 : 3000;
+    if (this.cardConfig.scrollBackTimeout == 0) {
+      return;
+    }
+
+    const timeout = (this.cardConfig.scrollBackTimeout || DEFAULT_SCROLL_BACK_TIMEOUT) * 1000;
 
     console.debug("Initialize scrollback timer with timeout", timeout);
 
@@ -210,7 +212,7 @@ export abstract class Content extends LitElement {
     }
 
     const root = this.renderRoot.querySelector(".splide") as HTMLElement;
-    const visibleRows = this.cardConfig.departuresToShow ?? 5;
+    const visibleRows = this.cardConfig.departuresToShow ?? DEFAULT_DEPARTURES_TO_SHOW;
 
     if (!root || root === undefined) {
       console.debug("Splide root element not found.");
@@ -222,8 +224,8 @@ export abstract class Content extends LitElement {
       perPage: visibleRows,
       autoplay: false,
       pagination: false,
-      arrows: this.cardConfig.showScrollButtons ?? true,
-      gap: this.DEPARTURE_ROW_GAP,
+      arrows: this.cardConfig.showScrollButtons ?? DEFAULT_SHOW_SCROLLBUTTONS,
+      gap: DEFAULT_DEPARTURE_ROW_GAP,
       direction: "ttb",
       height: this._getContentHeight(),
       drag: true,
@@ -234,7 +236,7 @@ export abstract class Content extends LitElement {
 
     this.splide = new Splide(root, options);
 
-    this.splide.on("moved", (newIndex) => {
+    this.splide.on("moved scrolled dragged", (newIndex) => {
       console.debug("Splide moved to ", newIndex);
 
       if (newIndex == 0) {

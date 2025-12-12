@@ -12,6 +12,15 @@ import "../editor/departures-card-editor.js";
 
 import { customElement, property, state } from "lit/decorators.js";
 import { localize } from "../locales/localize";
+import {
+  DEFAULT_CARD_ICON,
+  DEFAULT_CARD_STYLE,
+  DEFAULT_DEPARTURES_TO_SHOW,
+  DEFAULT_SCROLL_BACK_TIMEOUT,
+  DEFAULT_SHOW_CARD_HEADER,
+  DEFAULT_SHOW_SCROLLBUTTONS,
+  DEFAULT_UPDATE_INTERVAL,
+} from "../constants";
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
@@ -26,12 +35,6 @@ const repoUrl = "https://github.com/alex-jung/ha-departures-card";
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;");
 console.log(`Github repository: ${repoUrl}`);
 console.groupEnd();
-
-const UPDATE_INTERVAL = 10000;
-const DEPARTURES_TO_SHOW_DEFAULT = 5;
-const SCROLL_BACK_TIMEOUT_DEFAULT = 5;
-const CARD_STYLE_DEFAULT = CardStyles.BASIC;
-const CARD_ICON_DEFAULT = "mdi:bus-multiple";
 
 @customElement("departures-card")
 export class DeparturesCard extends LitElement {
@@ -55,10 +58,11 @@ export class DeparturesCard extends LitElement {
     return {
       type: "custom:departures-card",
       title: localize("card.departures", hass.locale?.language) || "Departures",
-      showCardHeader: true,
-      departuresToShow: DEPARTURES_TO_SHOW_DEFAULT,
-      scrollBackTimeout: SCROLL_BACK_TIMEOUT_DEFAULT * 1000,
-      cardStyle: CARD_STYLE_DEFAULT,
+      showCardHeader: DEFAULT_SHOW_CARD_HEADER,
+      departuresToShow: DEFAULT_DEPARTURES_TO_SHOW,
+      showScrollButtons: DEFAULT_SHOW_SCROLLBUTTONS,
+      scrollBackTimeout: DEFAULT_SCROLL_BACK_TIMEOUT,
+      cardStyle: DEFAULT_CARD_STYLE,
       entities: [],
     };
   }
@@ -75,7 +79,7 @@ export class DeparturesCard extends LitElement {
     super.connectedCallback();
     this._updateTimer = setInterval(() => {
       this.requestUpdate();
-    }, UPDATE_INTERVAL);
+    }, DEFAULT_UPDATE_INTERVAL);
   }
 
   disconnectedCallback() {
@@ -84,10 +88,10 @@ export class DeparturesCard extends LitElement {
   }
 
   public render() {
-    let cardConfig = this.config || DeparturesCard.getStubConfig(this.hass);
-    let darkTheme = Object(this.hass?.selectedTheme)["dark"] ?? false;
+    const cardConfig = this.config || DeparturesCard.getStubConfig(this.hass);
+    const darkTheme = Object(this.hass?.selectedTheme)["dark"] ?? false;
     const cardTitle = cardConfig.title || localize("card.departures", this.hass.locale?.language);
-    const cardIcon = cardConfig.icon || CARD_ICON_DEFAULT;
+    const cardIcon = cardConfig.icon || DEFAULT_CARD_ICON;
 
     console.groupCollapsed("Card config");
     console.log(`departuresToShow: ${cardConfig.departuresToShow}`);
