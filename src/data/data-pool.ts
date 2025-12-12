@@ -3,6 +3,7 @@ import { EntityConfig, DeparturesDataRow, DeparturesData } from "../types";
 import { DataParser, Parser } from "./data-parsers";
 import { HassEntity } from "home-assistant-js-websocket";
 import { UnsupportedEntityError } from "../exceptions";
+import { DEFAULT_ENTITY_ICON } from "../constants";
 
 export class DepartureTimesPool {
   private _data = new Map<string, DeparturesData>();
@@ -28,6 +29,13 @@ export class DepartureTimesPool {
     this._updateData(hass, entities);
   }
 
+  /**
+   * Retrieves a flattened list of departures from the data pool.
+   *
+   * @param sortByDepartureTime - If true, sorts the departures by departure time in ascending order. Defaults to true.
+   * @returns An array of DeparturesDataRow objects representing upcoming departures (where timeDiff >= 0).
+   *          Each row contains departure details including entity, line name, destination, color, icon, and time information.
+   */
   public getDepartures(sortByDepartureTime: boolean = true): Array<DeparturesDataRow> {
     let departures = Array.from(this._data.values());
 
@@ -100,7 +108,7 @@ export class DepartureTimesPool {
     const direction = config.destinationName || parser.getDirection();
     const lineColor = config.lineColor;
     const times = parser.getTimes();
-    const icon = config.icon || parser.getTransportIcon() || "mdi:bus";
+    const icon = config.icon || parser.getTransportIcon() || DEFAULT_ENTITY_ICON;
 
     if (!this._data.has(config.entity)) {
       // create a new data entry
@@ -112,6 +120,8 @@ export class DepartureTimesPool {
         icon: icon,
         times: times,
       });
+
+      console.debug("Create new data for entity", config.entity);
     } else {
       // update data entry
       let data = this._data.get(config.entity);
@@ -122,6 +132,8 @@ export class DepartureTimesPool {
         data.lineColor = lineColor;
         data.icon = icon;
         data.times = times;
+
+        console.debug("Update data for entity", config.entity);
       }
     }
   }
