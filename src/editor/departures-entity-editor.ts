@@ -51,19 +51,6 @@ export class DeparturesCardEntityEditor extends LitElement {
         },
       ],
     },
-    {
-      name: "nowIcon",
-      selector: { icon: {} },
-    },
-    {
-      name: "timeStyle",
-      type: "select",
-      default: "dynamic",
-      options: [
-        ["dynamic", "Dynamic"],
-        ["timestamp", "Timestamp"],
-      ],
-    },
   ] as const;
 
   protected render() {

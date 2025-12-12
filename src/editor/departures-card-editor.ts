@@ -46,6 +46,8 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
   private _currTab: string = "1";
 
   public setConfig(config: Config) {
+    console.debug("Set config in card editor", config);
+
     this._config = config;
     this._tabs = config.entities?.map((config, index) => new EntityTab(Number(index + 1), config)) || [];
   }
@@ -108,7 +110,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
       name: "scrollBackTimeout",
       selector: {
         number: {
-          min: 1,
+          min: 0,
           max: 20,
           step: 1,
           mode: "slider",
