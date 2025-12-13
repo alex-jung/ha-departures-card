@@ -7,11 +7,11 @@ export class DataParser {
   public static getParser(entity: HassEntity): Parser {
     let parser: Parser | null = null;
 
-    if (entity.attributes[HaDeparturesEntityAttributes.TIMES] || entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME]) {
+    if (HaDeparturesEntityAttributes.TIMES in entity.attributes || HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME in entity.attributes) {
       console.debug("Detected 'ha-departures' attribute(s)");
 
       parser = new ParserHaDepartures(entity);
-    } else if (entity.attributes[DbInfoEntityAttributes.NEXT_DEPARTURES]) {
+    } else if (DbInfoEntityAttributes.NEXT_DEPARTURES in entity.attributes) {
       console.debug("Detected 'db-infoscreen' attribute(s)");
 
       parser = new ParserDbInfoscreen(entity);
