@@ -156,7 +156,9 @@ export abstract class Content extends LitElement {
   }
 
   private _getContentHeight(): number {
-    return this.cardConfig.departuresToShow * DEFAULT_DEPARTURE_ROW_HEIGHT + this.cardConfig.departuresToShow * DEFAULT_DEPARTURE_ROW_GAP;
+    const depsToShow = this.cardConfig.departuresToShow ?? DEFAULT_DEPARTURES_TO_SHOW;
+
+    return depsToShow * DEFAULT_DEPARTURE_ROW_HEIGHT + depsToShow * DEFAULT_DEPARTURE_ROW_GAP;
   }
 
   private _renderErrors() {

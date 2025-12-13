@@ -7,7 +7,7 @@ export class DataParser {
   public static getParser(entity: HassEntity): Parser {
     let parser: Parser | null = null;
 
-    if (entity.attributes[HaDeparturesEntityAttributes.TIMES] || entity.attributes[HaDeparturesEntityAttributes.ESTIMATED_DEPARTURE_TIME]) {
+    if (entity.attributes[HaDeparturesEntityAttributes.TIMES] || entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME]) {
       console.debug("Detected 'ha-departures' attribute(s)");
 
       parser = new ParserHaDepartures(entity);
@@ -16,7 +16,7 @@ export class DataParser {
 
       parser = new ParserDbInfoscreen(entity);
     } else {
-      throw new UnsupportedEntityError("No data parser found for entity '" + entity.entity_id + "'", JSON.stringify(entity.attributes));
+      throw new UnsupportedEntityError("No data parser found for entity '" + entity.entity_id + "'", entity.entity_id);
     }
 
     return parser;
