@@ -91,7 +91,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
         ["basic", "Basic"],
         ["black-white", "Black White"],
         ["cappucino", "Cappucino"],
-        ["eco-green", "Eco Green"],
+        ["blue-sky", "Blue Sky"],
       ],
       default: "basic",
     },

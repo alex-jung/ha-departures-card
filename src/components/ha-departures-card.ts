@@ -7,7 +7,8 @@ import { DepartureTimesPool } from "../data/data-pool";
 import "./content-black-white";
 import "./content-cappucino";
 import "./content-basic";
-import "./content-eco-green";
+import "./content-blue-sky";
+
 import "../editor/departures-card-editor.js";
 
 import { customElement, property, state } from "lit/decorators.js";
@@ -122,7 +123,7 @@ export class DeparturesCard extends LitElement {
                 </div>
               `
             : ""}
-          <div class="content" data-theme="dark">${content}</div>
+          <div class="content" data-theme=${darkTheme ? "dark" : "light"}>${content}</div>
         </div>
       </ha-card>
     `;
@@ -132,7 +133,7 @@ export class DeparturesCard extends LitElement {
     const basic = html`<card-content-basic .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-basic>`;
     const blackWhite = html`<card-content-black-white .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-black-white>`;
     const cappucino = html`<card-content-cappucino .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-cappucino>`;
-    const ecoGreen = html`<card-content-eco-green .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-eco-green>`;
+    const blueSky = html`<card-content-blue-sky .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-blue-sky>`;
 
     switch (cardConfig.cardStyle) {
       case CardStyles.BASIC:
@@ -141,8 +142,8 @@ export class DeparturesCard extends LitElement {
         return blackWhite;
       case CardStyles.CAPPUCINO:
         return cappucino;
-      case CardStyles.ECO_GREEN:
-        return ecoGreen;
+      case CardStyles.BLUE_SKY:
+        return blueSky;
       default:
         return basic;
     }

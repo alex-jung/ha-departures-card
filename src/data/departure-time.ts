@@ -27,6 +27,14 @@ export class DepartureTime {
     }
   }
 
+  public get planned(): Date {
+    return this._planned;
+  }
+
+  public get estimated(): Date | undefined {
+    return this._estimated;
+  }
+
   /**
    * Gets the departure time.
    * @returns The estimated departure time if available, otherwise the planned departure time.
@@ -73,5 +81,9 @@ export class DepartureTime {
    */
   public get isDelayed(): boolean {
     return this._delay != undefined && this._delay > 0;
+  }
+
+  public get isEarlier(): boolean {
+    return this._delay != undefined && this._delay < 0;
   }
 }

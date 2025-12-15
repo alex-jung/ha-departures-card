@@ -34,7 +34,7 @@ export enum CardStyles {
   BASIC = "basic",
   BLACK_WHITE = "black-white",
   CAPPUCINO = "cappucino",
-  ECO_GREEN = "eco-green",
+  BLUE_SKY = "blue-sky",
 }
 
 // ha-departures specific types

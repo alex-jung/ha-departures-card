@@ -5,7 +5,7 @@
       "icon": "Card icon (optional)",
       "showCardHeader": "Show card header",
       "showScrollButtons": "Show scroll buttons",
-      "cardStyle": "Style",
+      "cardStyle": "Card Style",
       "departuresToShow": "Departures to show per page",
       "scrollBackTimeout": "Scrollback time (seconds)",
       "addEntity": "Add entity",

@@ -14,4 +14,4 @@ export const DEFAULT_ENTITY_ICON = "mdi:bus";
 
 // layout constants
 export const DEFAULT_DEPARTURE_ROW_GAP = 5; // px
-export const DEFAULT_DEPARTURE_ROW_HEIGHT = 35; // px
+export const DEFAULT_DEPARTURE_ROW_HEIGHT = 36; // px

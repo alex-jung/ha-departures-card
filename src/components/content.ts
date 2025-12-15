@@ -79,7 +79,7 @@ export abstract class Content extends LitElement {
     `;
   }
 
-  protected renderDelay(time: DepartureTime) {
+  protected renderDelay(time: DepartureTime): TemplateResult {
     let htmlText: string = "";
 
     if (!time || time.isArriving) {
@@ -97,7 +97,7 @@ export abstract class Content extends LitElement {
     return html`<div class="cell-delay">${htmlText}</div>`;
   }
 
-  protected renderTransportIcon(transportIcon: string | null) {
+  protected renderTransportIcon(transportIcon: string | null): TemplateResult {
     let icon = transportIcon ?? "mdi:train-bus";
 
     return html`<div class="cell-transport-icon"><ha-icon icon=${icon}></ha-icon></div>`;
