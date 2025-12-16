@@ -8,6 +8,7 @@ import { localize } from "../locales/localize";
 import { mdiPlus } from "@mdi/js";
 import { cardStyles } from "../styles";
 import { EntityTab } from "./entity-tab";
+import { DEFAULT_LAYOUT } from "../constants";
 
 @customElement("departures-card-editor")
 export class DeparturesCardEditor extends LitElement implements LovelaceCardEditor {
@@ -84,7 +85,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
       ],
     },
     {
-      name: "cardStyle",
+      name: "theme",
       type: "select",
       required: true,
       options: [
@@ -116,6 +117,12 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
           mode: "slider",
         },
       },
+    },
+    {
+      name: "layout",
+      type: "string",
+      required: false,
+      default: Array.from(DEFAULT_LAYOUT.keys()).join(" "),
     },
   ] as const;
 

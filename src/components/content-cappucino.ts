@@ -2,25 +2,22 @@ import { customElement } from "lit/decorators.js";
 import { Content } from "./content";
 import { contentCappucino } from "../styles";
 import { html, TemplateResult } from "lit";
-import { DepartureTime } from "../data/departure-time";
 import { DeparturesDataRow } from "../types";
 
 @customElement("card-content-cappucino")
 export abstract class ContentCappucino extends Content {
   static styles = [Content.styles, contentCappucino];
 
-  protected renderTransportIcon(transportIcon: string | null): TemplateResult {
-    return html``;
-  }
-
   protected getDepartureLineStyles(departure: DeparturesDataRow) {
     return {
+      ...super.getDepartureLineStyles(departure),
       "border-left": `5px solid ${departure.lineColor}`,
     };
   }
 
-  protected renderDelay(time: DepartureTime): TemplateResult {
+  protected renderDelay(departure: DeparturesDataRow): TemplateResult {
     let delayColor = "var(--departures-delay-none)";
+    const time = departure.time;
 
     if (time.isDelayed) {
       delayColor = "var(--departures-delay-bad)";

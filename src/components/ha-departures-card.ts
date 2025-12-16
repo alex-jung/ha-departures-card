@@ -1,5 +1,5 @@
 import { LitElement, TemplateResult, html } from "lit-element";
-import { CardStyles, Config, DeparturesDataRow } from "../types";
+import { CardTheme, Config, DeparturesDataRow } from "../types";
 import { HomeAssistant } from "custom-card-helpers";
 import { cardStyles } from "../styles";
 import { DepartureTimesPool } from "../data/data-pool";
@@ -15,7 +15,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { localize } from "../locales/localize";
 import {
   DEFAULT_CARD_ICON,
-  DEFAULT_CARD_STYLE,
+  DEFAULT_CARD_THEME,
   DEFAULT_DEPARTURES_TO_SHOW,
   DEFAULT_SCROLL_BACK_TIMEOUT,
   DEFAULT_SHOW_CARD_HEADER,
@@ -63,7 +63,7 @@ export class DeparturesCard extends LitElement {
       departuresToShow: DEFAULT_DEPARTURES_TO_SHOW,
       showScrollButtons: DEFAULT_SHOW_SCROLLBUTTONS,
       scrollBackTimeout: DEFAULT_SCROLL_BACK_TIMEOUT,
-      cardStyle: DEFAULT_CARD_STYLE,
+      theme: DEFAULT_CARD_THEME,
       entities: [],
     };
   }
@@ -103,7 +103,7 @@ export class DeparturesCard extends LitElement {
     // console.log(`showCardHeader: ${cardConfig.showCardHeader}`);
     // console.log(`showScrollButtons: ${cardConfig.showScrollButtons}`);
     // console.log(`title: ${cardConfig.title}`);
-    // console.log(`cardStyle: ${cardConfig.cardStyle}`);
+    // console.log(`theme: ${cardConfig.theme}`);
     // console.log(`dark theme: ${darkTheme}`);
     // console.groupEnd();
 
@@ -135,14 +135,14 @@ export class DeparturesCard extends LitElement {
     const cappucino = html`<card-content-cappucino .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-cappucino>`;
     const blueSky = html`<card-content-blue-sky .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-blue-sky>`;
 
-    switch (cardConfig.cardStyle) {
-      case CardStyles.BASIC:
+    switch (cardConfig.theme) {
+      case CardTheme.BASIC:
         return basic;
-      case CardStyles.BLACK_WHITE:
+      case CardTheme.BLACK_WHITE:
         return blackWhite;
-      case CardStyles.CAPPUCINO:
+      case CardTheme.CAPPUCINO:
         return cappucino;
-      case CardStyles.BLUE_SKY:
+      case CardTheme.BLUE_SKY:
         return blueSky;
       default:
         return basic;

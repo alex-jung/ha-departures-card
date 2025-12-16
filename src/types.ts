@@ -9,7 +9,9 @@ export interface Config extends LovelaceCardConfig {
   showCardHeader: boolean;
   scrollBackTimeout: number;
   showScrollButtons: boolean;
-  cardStyle: CardStyles;
+  showArrivalAnimation: boolean;
+  theme: CardTheme;
+  layout: string;
   entities?: EntityConfig[];
 }
 
@@ -30,7 +32,7 @@ export type DeparturesDataRow = EntityConfig & {
   time: DepartureTime;
 };
 
-export enum CardStyles {
+export enum CardTheme {
   BASIC = "basic",
   BLACK_WHITE = "black-white",
   CAPPUCINO = "cappucino",

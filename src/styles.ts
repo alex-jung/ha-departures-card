@@ -43,11 +43,9 @@ export const contentCore = css`
   }
   .departure-line {
     display: grid;
-    grid-template-columns: auto auto 1fr auto 40px;
-    align-items: center;
     column-gap: 5px;
-    justify-content: center;
     width: 100%;
+    padding: 5px;
   }
   .splide__slide {
     display: flex;
@@ -66,15 +64,20 @@ export const contentCore = css`
     text-overflow: ellipsis;
   }
   .cell-line {
-    justify-self: center;
-    padding: 0px 10px;
+    text-align: center;
   }
-  .cell-time {
-    width: 100%;
+  .cell-time-diff {
+    text-align: center;
+  }
+  .cell-planned-time {
+    text-align: center;
+  }
+  .cell-estimated-time {
     text-align: center;
   }
   .cell-delay {
-    justify-self: center;
+    width: 100%;
+    text-align: center;
   }
   .error {
     display: grid;
@@ -107,12 +110,6 @@ export const contentBasic = css`
     border-radius: 10px;
   }
   .departure-line {
-    display: grid;
-    grid-template-columns: auto auto 1fr 50px 30px;
-    align-items: center;
-    column-gap: 5px;
-    justify-content: center;
-    padding: 5px;
     border-radius: 3px;
     border: 1px solid var(--departures-border-color);
   }
@@ -126,7 +123,6 @@ export const contentBlackWhite = css`
     font-family: "Roboto Mono", monospace;
   }
   .cell-line {
-    font-size: 1.2em;
     font-weight: bold;
   }
   .cell-destination {
@@ -134,17 +130,7 @@ export const contentBlackWhite = css`
     letter-spacing: 2px;
   }
   .departure-line {
-    display: grid;
-    grid-template-columns: auto auto 1fr 60px 30px;
-    align-items: center;
-    column-gap: 5px;
-    justify-content: center;
-    padding: 5px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-  }
-  .cell-time {
-    width: 100%;
-    text-align: center;
   }
 `;
 export const contentCappucino = css`
@@ -156,19 +142,14 @@ export const contentCappucino = css`
     font-weight: bold;
   }
   .departure-line {
-    display: grid;
-    grid-template-columns: auto 1fr 60px 30px;
-    align-items: center;
-    column-gap: 5px;
-    justify-content: center;
-    width: 100%;
     border-left: 5px solid grey;
     background-color: #f5efe6;
     color: #6f4e37;
   }
   .cell-delay {
+    display: flex;
     justify-content: center;
-    margin: 0px 10px;
+    align-items: center;
   }
 `;
 export const contenBlueSky = css`
@@ -177,42 +158,22 @@ export const contenBlueSky = css`
     background-color: #0d2f55;
     color: white;
   }
-  .departure-line {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    column-gap: 5px;
-    width: 100%;
-  }
   .departure-line.arriving {
     animation: flash 2s ease-in-out infinite;
   }
-  .cell-line {
-    border-bottom: 1px solid white;
-    padding: 0px 0px 3px 0px;
-    text-align: center;
-  }
-  .cell-destination {
-    border-bottom: 1px solid white;
+  .departure-line > div {
     padding-bottom: 3px;
-  }
-  .cell-time {
-    border-bottom: 1px solid white;
-    padding-bottom: 3px;
-  }
-  .cell-estimated-time {
     border-bottom: 1px solid white;
   }
   .cell-estimated-time > div {
-    padding: 0px 5px;
-    margin-bottom: 3px;
     background: lightgray;
     color: black;
   }
 
-  .cell-estimated-time.delayed > div {
+  .cell-estimated-time.delayed {
     color: var(--departures-delay-bad);
   }
-  .cell-estimated-time.earlier > div {
+  .cell-estimated-time.earlier {
     color: var(--departures-delay-ok);
   }
 `;

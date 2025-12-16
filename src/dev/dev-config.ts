@@ -1,6 +1,6 @@
 import { html, LitElement } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { CardStyles, Config } from "../types";
+import { CardTheme, Config } from "../types";
 import { getConfigStub } from "./stubs";
 
 @customElement("dev-config")
@@ -33,7 +33,7 @@ export class DevConfig extends LitElement {
           label="Theme"
           placeholder="Basic"
           @sl-input=${(e: Event) => {
-            this.config.cardStyle = (e.target as HTMLInputElement).value as CardStyles;
+            this.config.theme = (e.target as HTMLInputElement).value as CardTheme;
           }}>
           <sl-option value="basic">Basic</sl-option>
           <sl-option value="black-white">Black White</sl-option>

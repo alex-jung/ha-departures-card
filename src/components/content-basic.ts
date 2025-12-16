@@ -10,14 +10,14 @@ import { DeparturesDataRow } from "../types";
 export abstract class ContentBasic extends Content {
   static styles = [Content.styles, contentBasic];
 
-  protected renderCellLineName(name: string | null, lineColor: string | null = null): TemplateResult {
-    const contrastTextColor = getContrastTextColor(lineColor ?? "#ffffff");
+  protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {
+    const contrastTextColor = getContrastTextColor(departure.lineColor ?? "#ffffff");
 
     const styles = {
-      backgroundColor: lineColor,
-      color: lineColor ? contrastTextColor : "",
+      backgroundColor: departure.lineColor,
+      color: departure.lineColor ? contrastTextColor : "",
     };
 
-    return html`<div class="cell-line" style="${styleMap(styles)}">${name}</div>`;
+    return html`<div class="cell-line" style="${styleMap(styles)}">${departure.lineName}</div>`;
   }
 }

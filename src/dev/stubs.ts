@@ -1,5 +1,5 @@
 import { HomeAssistant } from "custom-card-helpers";
-import { CardStyles, Config, EntityConfig } from "../types";
+import { CardTheme, Config, EntityConfig } from "../types";
 
 export function getEntityConfigStub(index: number): EntityConfig {
   return {
@@ -19,8 +19,10 @@ export function getConfigStub(): Config {
     departuresToShow: 10,
     showCardHeader: true,
     scrollBackTimeout: 3,
-    cardStyle: CardStyles.BLACK_WHITE,
+    theme: CardTheme.BLACK_WHITE,
+    layout: "",
     showScrollButtons: true,
+    showArrivalAnimation: true,
     entities: [],
   };
 }

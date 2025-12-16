@@ -4,13 +4,13 @@ import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { Config, DeparturesDataRow } from "../types";
 import { ClassTimer } from "../helpers";
-import { DepartureTime } from "../data/departure-time";
 import { lightFormat } from "date-fns";
 import { contentCore } from "../styles";
+import { DEFAULT_DEPARTURE_ROW_GAP, DEFAULT_DEPARTURE_ROW_HEIGHT, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, DEFAULT_SHOW_SCROLLBUTTONS } from "../constants";
+import { Layout } from "../data/layout";
 
 import Splide, { Options as SplideOptions } from "@splidejs/splide";
 import cssText from "@splidejs/splide/dist/css/splide.min.css";
-import { DEFAULT_DEPARTURE_ROW_GAP, DEFAULT_DEPARTURE_ROW_HEIGHT, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, DEFAULT_SHOW_SCROLLBUTTONS } from "../constants";
 
 export abstract class Content extends LitElement {
   static styles = [
@@ -32,6 +32,8 @@ export abstract class Content extends LitElement {
   private splide: Splide | null = null;
 
   private scrollBackTimer: ClassTimer | null = null;
+
+  private layout: Layout | null = null;
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     this._initializeSplide();
@@ -61,6 +63,10 @@ export abstract class Content extends LitElement {
       return html`Card configuration is not available!`;
     }
 
+    if (!this.layout) {
+      this.layout = new Layout(this.cardConfig.layout);
+    }
+
     return html`
     <div class="splide-root">
       <div class="splide">
@@ -79,40 +85,95 @@ export abstract class Content extends LitElement {
     `;
   }
 
-  protected renderDelay(time: DepartureTime): TemplateResult {
-    let htmlText: string = "";
+  protected renderDepartureLine(departure: DeparturesDataRow): TemplateResult {
+    let classes = this.getDepartureLineClasses(departure);
+    let styles = this.getDepartureLineStyles(departure);
+    let layoutCells = this.layout?.getCells();
 
-    if (!time || time.isArriving) {
+    if (!layoutCells) {
       return html``;
     }
 
-    if (time.delay != undefined && time.delay != 0) {
-      if (time.delay > 0) {
-        htmlText = `(+${time.delay})`;
-      } else {
-        htmlText = `(-${time.delay})`;
-      }
-    }
+    let content: Array<TemplateResult> = [];
 
-    return html`<div class="cell-delay">${htmlText}</div>`;
+    layoutCells.forEach((cell) => {
+      switch (cell) {
+        case "icon":
+          content.push(this.renderTransportIcon(departure));
+          break;
+        case "line":
+          content.push(this.renderCellLineName(departure));
+          break;
+        case "destination":
+          content.push(this.renderCellDestination(departure));
+          break;
+        case "time-diff":
+          content.push(this.renderCellTimeDiff(departure));
+          break;
+        case "planned-time":
+          content.push(this.renderCellPlannedTime(departure));
+          break;
+        case "estimated-time":
+          content.push(this.renderCellEstimatedTime(departure));
+          break;
+        case "delay":
+          content.push(this.renderDelay(departure));
+          break;
+      }
+    });
+
+    return html` <div class="departure-line ${classMap(classes)}" style="${styleMap(styles)}">${content}</div> `;
+
+    // return html`
+    //   <div class="departure-line ${classMap(classes)}" style="${styleMap(styles)}">
+    //     ${layoutCells.includes("icon") ? this.renderTransportIcon(departure) : nothing}
+    //     <!-- prevent formatting -->
+    //     ${layoutCells.includes("line") ? this.renderCellLineName(departure) : nothing}
+    //     <!-- prevent formatting -->
+    //     ${layoutCells.includes("destination") ? this.renderCellDestination(departure) : nothing}
+    //     <!-- prevent formatting -->
+    //     ${layoutCells.includes("time-diff") ? this.renderCellTimeDiff(departure) : nothing}
+    //     <!-- prevent formatting -->
+    //     ${layoutCells.includes("planned-time") ? this.renderCellPlannedTime(departure) : nothing}
+    //     <!-- prevent formatting -->
+    //     ${layoutCells.includes("estimated-time") ? this.renderCellEstimatedTime(departure) : nothing}
+    //     <!-- prevent formatting -->
+    //     ${layoutCells.includes("delay") ? this.renderDelay(departure) : nothing}
+    //   </div>
+    // `;
   }
 
-  protected renderTransportIcon(transportIcon: string | null): TemplateResult {
-    let icon = transportIcon ?? "mdi:train-bus";
+  protected renderTransportIcon(departure: DeparturesDataRow): TemplateResult {
+    let icon = departure.icon ?? "mdi:train-bus";
 
     return html`<div class="cell-transport-icon"><ha-icon icon=${icon}></ha-icon></div>`;
   }
 
-  protected renderCellLineName(name: string | null, lineColor: string | null = null): TemplateResult {
-    return html`<div class="cell-line">${name}</div>`;
+  protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {
+    return html`<div class="cell-line">${departure.lineName}</div>`;
   }
 
-  protected renderCellDestination(destinationName: string | null): TemplateResult {
-    return html`<div class="cell-destination">${destinationName}</div>`;
+  protected renderCellDestination(departure: DeparturesDataRow): TemplateResult {
+    return html`<div class="cell-destination">${departure.destinationName}</div>`;
   }
 
-  protected renderCellTime(time: DepartureTime): TemplateResult {
+  protected renderCellPlannedTime(departure: DeparturesDataRow): TemplateResult {
+    const time = departure.time.planned;
+    const htmlText = time ? lightFormat(time, "HH:mm") : "-";
+
+    return html`<div class="cell-planned-time">${htmlText}</div>`;
+  }
+
+  protected renderCellEstimatedTime(departure: DeparturesDataRow): TemplateResult {
+    const time = departure.time.estimated;
+    const htmlText = time ? lightFormat(time, "HH:mm") : "-";
+
+    return html`<div class="cell-estimated-time">${htmlText}</div>`;
+  }
+
+  protected renderCellTimeDiff(departure: DeparturesDataRow): TemplateResult {
     let htmlText: TemplateResult = html``;
+    const time = departure.time;
 
     let classes = {
       arriving: false,
@@ -127,23 +188,29 @@ export abstract class Content extends LitElement {
       htmlText = html`${time.timeDiff} min`;
     }
 
-    return html`<div class="cell-time ${classMap(classes)}">${htmlText}</div>`;
+    return html`<div class="cell-time-diff ${classMap(classes)}">${htmlText}</div>`;
   }
 
-  protected renderDepartureLine(departure: DeparturesDataRow): TemplateResult {
-    let classes = this.getDepartureLineClasses(departure);
-    let styles = this.getDepartureLineStyles(departure);
+  protected renderDelay(departure: DeparturesDataRow): TemplateResult {
+    let htmlText: string = "";
+    const time = departure.time;
 
-    return html`
-      <div class="departure-line ${classMap(classes)}" style="${styleMap(styles)}">
-        ${this.renderTransportIcon(departure.icon)} ${this.renderCellLineName(departure.lineName, departure.lineColor)} ${this.renderCellDestination(departure.destinationName)}
-        ${this.renderCellTime(departure.time)} ${this.renderDelay(departure.time)}
-      </div>
-    `;
+    if (time.delay != undefined) {
+      if (time.isDelayed) {
+        htmlText = `+${time.delay}`;
+      } else if (time.isEarlier) {
+        htmlText = `-${time.delay}`;
+      }
+    }
+
+    return html`<div class="cell-delay">${htmlText}</div>`;
   }
 
   protected getDepartureLineStyles(departure: DeparturesDataRow) {
-    return {};
+    return {
+      "grid-template-columns": this.layout?.getColumns(),
+      // "grid-template-areas": '"' + this.layout?.getAreas() + '"',
+    };
   }
 
   protected getDepartureLineClasses(departure: DeparturesDataRow) {

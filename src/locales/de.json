@@ -5,9 +5,10 @@
       "icon": "Card Icon (optional)",
       "showCardHeader": "Card Header anzeigen",
       "showScrollButtons": "Scroll Buttons anzeigen",
-      "cardStyle": "Card Style",
+      "theme": "Card Theme",
       "departuresToShow": "Abfahrten pro Seite",
       "scrollBackTimeout": "Scrollback Zeit (Sekunden)",
+      "layout": "Ankunftszeile Layout",
       "addEntity": "Neue Entity",
       "entity": {
         "entity": "Entity",

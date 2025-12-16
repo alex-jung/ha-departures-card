@@ -3,16 +3,17 @@ import { Content } from "./content";
 import { contentBlackWhite } from "../styles";
 import { html, TemplateResult } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
+import { DeparturesDataRow } from "../types";
 
 @customElement("card-content-black-white")
 export abstract class ContentBlackWhite extends Content {
   static styles = [Content.styles, contentBlackWhite];
 
-  protected renderCellLineName(name: string | null, lineColor: string | null = null): TemplateResult {
+  protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {
     const styles = {
-      color: lineColor,
+      color: departure.lineColor,
     };
 
-    return html`<div class="cell-line" style="${styleMap(styles)}">${name}</div>`;
+    return html`<div class="cell-line" style="${styleMap(styles)}">${departure.lineName}</div>`;
   }
 }

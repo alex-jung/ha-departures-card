@@ -13,31 +13,15 @@ import { classMap } from "lit/directives/class-map.js";
 export abstract class ContentBlueSky extends Content {
   static styles = [Content.styles, contenBlueSky];
 
-  protected renderDepartureLine(departure: DeparturesDataRow): TemplateResult {
-    let classes = this.getDepartureLineClasses(departure);
-
-    return html`
-      <div class="departure-line ${classMap(classes)}">
-        ${this.renderCellLineName(departure.lineName, departure.lineColor)} ${this.renderCellDestination(departure.destinationName)} ${this.renderCellTime(departure.time)}
-        ${this.renderCellTimeEstimated(departure.time)}
-      </div>
-    `;
-  }
-
-  protected renderCellLineName(name: string | null, lineColor: string | null = null): TemplateResult {
-    const contrastTextColor = getContrastTextColor(lineColor ?? "#ffffff");
+  protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {
+    const contrastTextColor = getContrastTextColor(departure.lineColor ?? "#ffffff");
 
     const styles = {
-      backgroundColor: lineColor,
-      color: lineColor ? contrastTextColor : "",
-      width: "40px",
+      backgroundColor: departure.lineColor,
+      color: departure.lineColor ? contrastTextColor : "",
     };
 
-    return html`<div class="cell-line"><div style="${styleMap(styles)}">${name}</div></div>`;
-  }
-
-  protected renderCellTime(time: DepartureTime): TemplateResult {
-    return html`<div class="cell-time">${lightFormat(time.planned, "HH:mm")}</div>`;
+    return html`<div class="cell-line" style="${styleMap(styles)}">${departure.lineName}</div>`;
   }
 
   protected renderCellTimeEstimated(time: DepartureTime): TemplateResult {
