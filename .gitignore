@@ -3,4 +3,3 @@ node_modules
 dist/tsconfig.*
 dist/src
 coverage/
-package-lock.json
