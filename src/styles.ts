@@ -125,6 +125,9 @@ export const contentBlackWhite = css`
   .cell-line {
     font-weight: bold;
   }
+  .cell-time-diff {
+    min-width: 55px;
+  }
   .cell-destination {
     text-transform: uppercase;
     letter-spacing: 2px;

@@ -10,6 +10,18 @@ describe("DepartureTime", () => {
     expect(dt.time).toEqual(prepareDate(estimated));
   });
 
+  it("should throw an exeption if planned time is not correct", () => {
+    expect(() => {
+      new DepartureTime(undefined as unknown as Date, estimated);
+    }).toThrow();
+  });
+
+  it("should return planned and estimated times correctly", () => {
+    const dt = new DepartureTime(planned, estimated);
+    expect(dt.planned).toEqual(prepareDate(planned));
+    expect(dt.estimated).toEqual(prepareDate(estimated));
+  });
+
   it("should return planned time if estimated is null", () => {
     const dt = new DepartureTime(planned, undefined);
     expect(dt.time).toEqual(prepareDate(planned));
