@@ -174,6 +174,7 @@ export abstract class Content extends LitElement {
   protected renderCellTimeDiff(departure: DeparturesDataRow): TemplateResult {
     let htmlText: TemplateResult = html``;
     const time = departure.time;
+    const icon = departure.icon ?? "mdi:bus";
 
     let classes = {
       arriving: false,
@@ -181,7 +182,7 @@ export abstract class Content extends LitElement {
 
     if (time.isArriving) {
       classes.arriving = true;
-      htmlText = html`<ha-icon icon="mdi:bus"></ha-icon>`;
+      htmlText = html`<ha-icon icon=${icon}></ha-icon>`;
     } else if (time.timeDiff > 60) {
       htmlText = html`${lightFormat(time.time, "HH:mm")}`;
     } else {
