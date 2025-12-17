@@ -9,9 +9,11 @@ export abstract class ContentCappucino extends Content {
   static styles = [Content.styles, contentCappucino];
 
   protected getDepartureLineStyles(departure: DeparturesDataRow) {
+    const borderLeftColor = departure.lineColor ?? "grey";
+
     return {
       ...super.getDepartureLineStyles(departure),
-      "border-left": `5px solid ${departure.lineColor}`,
+      "border-left": `5px solid ${borderLeftColor}`,
     };
   }
 

@@ -19,9 +19,12 @@ export abstract class ContentBlueSky extends Content {
     const styles = {
       backgroundColor: departure.lineColor,
       color: departure.lineColor ? contrastTextColor : "",
+      padding: "0px 5px",
     };
 
-    return html`<div class="cell-line" style="${styleMap(styles)}">${departure.lineName}</div>`;
+    return html`<div class="cell-line">
+      <div style="${styleMap(styles)}">${departure.lineName}</div>
+    </div>`;
   }
 
   protected renderCellTimeEstimated(time: DepartureTime): TemplateResult {

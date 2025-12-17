@@ -57,6 +57,9 @@ export const contentCore = css`
   .departure-line.delayed > .cell-delay {
     color: var(--departures-delay-bad);
   }
+  .cell-transport-icon {
+    text-align: center;
+  }
   .cell-destination {
     flex-grow: 1;
     overflow: hidden;
@@ -65,6 +68,8 @@ export const contentCore = css`
   }
   .cell-line {
     text-align: center;
+    min-width: 40px;
+    padding: 0px 5px;
   }
   .cell-time-diff {
     text-align: center;
@@ -107,7 +112,7 @@ export const contentBasic = css`
     background-color: transparent;
   }
   .cell-line {
-    border-radius: 10px;
+    border-radius: 3px;
   }
   .departure-line {
     border-radius: 3px;
@@ -141,11 +146,9 @@ export const contentCappucino = css`
     background-color: transparent;
   }
   .cell-line {
-    font-size: 1.2em;
     font-weight: bold;
   }
   .departure-line {
-    border-left: 5px solid grey;
     background-color: #f5efe6;
     color: #6f4e37;
   }
@@ -168,11 +171,13 @@ export const contenBlueSky = css`
     padding-bottom: 3px;
     border-bottom: 1px solid white;
   }
+  .cell-line {
+    padding: 0px;
+  }
   .cell-estimated-time > div {
     background: lightgray;
     color: black;
   }
-
   .cell-estimated-time.delayed {
     color: var(--departures-delay-bad);
   }

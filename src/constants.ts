@@ -10,7 +10,7 @@ export const DEFAULT_CARD_THEME = CardTheme.BASIC;
 export const DEFAULT_CARD_ICON = "mdi:bus-multiple";
 export const DEFAULT_LAYOUT = new Map<string, string>([
   ["icon", "30px"],
-  ["line", "40px"],
+  ["line", "auto"],
   ["destination", "1fr"],
   ["time-diff", "50px"],
   ["planned-time", "50px"],
