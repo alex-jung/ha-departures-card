@@ -1,6 +1,6 @@
 import { customElement } from "lit/decorators.js";
 import { Content } from "./content";
-import { contenBlueSky } from "../styles";
+import { contenBlueOcean } from "../styles";
 import { html, TemplateResult } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import { getContrastTextColor } from "../helpers";
@@ -9,9 +9,9 @@ import { DepartureTime } from "../data/departure-time";
 import { lightFormat } from "date-fns";
 import { classMap } from "lit/directives/class-map.js";
 
-@customElement("card-content-blue-sky")
-export abstract class ContentBlueSky extends Content {
-  static styles = [Content.styles, contenBlueSky];
+@customElement("card-content-blue-ocean")
+export abstract class ContentBlueOcean extends Content {
+  static styles = [Content.styles, contenBlueOcean];
 
   protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {
     const contrastTextColor = getContrastTextColor(departure.lineColor ?? "#ffffff");

@@ -6,7 +6,14 @@ import { Config, DeparturesDataRow } from "../types";
 import { ClassTimer } from "../helpers";
 import { lightFormat } from "date-fns";
 import { contentCore } from "../styles";
-import { DEFAULT_DEPARTURE_ROW_GAP, DEFAULT_DEPARTURE_ROW_HEIGHT, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, DEFAULT_SHOW_SCROLLBUTTONS } from "../constants";
+import {
+  DEFAULT_DEPARTURE_ROW_GAP,
+  DEFAULT_DEPARTURE_ROW_HEIGHT,
+  DEFAULT_DEPARTURES_TO_SHOW,
+  DEFAULT_ENTITY_ICON,
+  DEFAULT_SCROLL_BACK_TIMEOUT,
+  DEFAULT_SHOW_SCROLLBUTTONS,
+} from "../constants";
 import { Layout } from "../data/layout";
 
 import Splide, { Options as SplideOptions } from "@splidejs/splide";
@@ -174,7 +181,7 @@ export abstract class Content extends LitElement {
   protected renderCellTimeDiff(departure: DeparturesDataRow): TemplateResult {
     let htmlText: TemplateResult = html``;
     const time = departure.time;
-    const icon = departure.icon ?? "mdi:bus";
+    const icon = departure.icon ?? DEFAULT_ENTITY_ICON;
 
     let classes = {
       arriving: false,

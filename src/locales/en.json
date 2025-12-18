@@ -15,8 +15,7 @@
         "destinationName": "Destination name",
         "lineName": "Line name",
         "lineColor": "Line color",
-        "nowIcon": "Now icon",
-        "timeStyle": "Departure time style",
+        "icon": "Icon",
         "remove": "Delete"
       }
     },

@@ -158,7 +158,7 @@ export const contentCappucino = css`
     align-items: center;
   }
 `;
-export const contenBlueSky = css`
+export const contenBlueOcean = css`
   .splide-root {
     padding: 10px;
     background-color: #0d2f55;

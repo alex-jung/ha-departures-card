@@ -49,6 +49,10 @@ export class DeparturesCardEntityEditor extends LitElement {
           name: "lineColor",
           selector: { text: {} },
         },
+        {
+          name: "icon",
+          selector: { icon: {} },
+        },
       ],
     },
   ] as const;

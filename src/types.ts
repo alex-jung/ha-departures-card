@@ -36,7 +36,7 @@ export enum CardTheme {
   BASIC = "basic",
   BLACK_WHITE = "black-white",
   CAPPUCINO = "cappucino",
-  BLUE_SKY = "blue-sky",
+  BLUE_OCEAN = "blue-ocean",
 }
 
 // ha-departures specific types

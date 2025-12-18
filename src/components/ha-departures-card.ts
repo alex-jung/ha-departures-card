@@ -7,7 +7,7 @@ import { DepartureTimesPool } from "../data/data-pool";
 import "./content-black-white";
 import "./content-cappucino";
 import "./content-basic";
-import "./content-blue-sky";
+import "./content-blue-ocean";
 
 import "../editor/departures-card-editor.js";
 
@@ -133,7 +133,7 @@ export class DeparturesCard extends LitElement {
     const basic = html`<card-content-basic .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-basic>`;
     const blackWhite = html`<card-content-black-white .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-black-white>`;
     const cappucino = html`<card-content-cappucino .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-cappucino>`;
-    const blueSky = html`<card-content-blue-sky .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-blue-sky>`;
+    const blueOcean = html`<card-content-blue-ocean .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-blue-ocean>`;
 
     switch (cardConfig.theme) {
       case CardTheme.BASIC:
@@ -142,8 +142,8 @@ export class DeparturesCard extends LitElement {
         return blackWhite;
       case CardTheme.CAPPUCINO:
         return cappucino;
-      case CardTheme.BLUE_SKY:
-        return blueSky;
+      case CardTheme.BLUE_OCEAN:
+        return blueOcean;
       default:
         return basic;
     }

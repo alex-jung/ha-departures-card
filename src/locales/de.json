@@ -15,8 +15,7 @@
         "destinationName": "Zielname",
         "lineName": "Linienname",
         "lineColor": "Linienfarbe",
-        "nowIcon": "Anfahrt Icon",
-        "timeStyle": "Ankunftszeit Stil",
+        "icon": "Icon",
         "remove": "Entfernen"
       }
     },

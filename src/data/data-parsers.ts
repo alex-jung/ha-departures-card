@@ -7,8 +7,6 @@ export class DataParser {
   public static getParser(entity: HassEntity): Parser {
     let parser: Parser | null = null;
 
-    // console.debug(entity.attributes);
-
     if (HaDeparturesEntityAttributes.TIMES in entity.attributes || HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME in entity.attributes) {
       console.debug("Detected 'ha-departures' attribute(s)", entity.attributes);
 

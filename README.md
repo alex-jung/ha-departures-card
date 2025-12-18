@@ -2,7 +2,6 @@
 
 ![GitHub Release](https://img.shields.io/github/v/release/alex-jung/ha-departures-card)
 ![GitHub License](https://img.shields.io/github/license/alex-jung/ha-departures-card)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/alex-jung/ha-departures-card/total)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/alex-jung/ha-departures-card)
 
 A card to display departure times provided by [Departures](https://github.com/alex-jung/ha-departures) custom integration.
@@ -26,22 +25,22 @@ A card to display departure times provided by [Departures](https://github.com/al
 
 1. Add this repository as a custom repository (HACS -> Custom repositories, type "Dashboard")
 2. Search for `Departures Card` and install it.
-3. Add new card to dashboard
+3. Add new card to the dashboard
 
 ## Card Properties
 
-| yaml attribute                              | Type            | Required | Default value            |
-| ------------------------------------------- | --------------- | -------- | ------------------------ |
-| type                                        | string          | yes      | `custom:departures-card` |
-| [title](#title)                             | string          | no       | Departures               |
-| [debug](#debug)                             | boolean         | no       | false                    |
-| [icon](#icon)                               | string          | no       | mdi:bus                  |
-| [showCardHeader](#showCardHeader)           | boolean         | no       | true                     |
-| [showAnimation](#showanimation)             | boolean         | no       | true                     |
-| [showTransportIcon](#showtransporticon)     | boolean         | no       | false                    |
-| [hideEmptyDepartures](#hideemptydepartures) | boolean         | no       | false                    |
-| [departuresToShow](#departurestoshow)       | number (max. 5) | no       | 1                        |
-| entities                                    | entity[]        | yes      | -                        |
+| yaml attribute                          | Type     | Required | Default value                                                     |
+| --------------------------------------- | -------- | -------- | ----------------------------------------------------------------- |
+| type                                    | string   | yes      | `custom:departures-card`                                          |
+| [title](#title)                         | string   | no       | Departures                                                        |
+| [icon](#icon)                           | string   | no       | mdi:bus-multiple                                                  |
+| [showCardHeader](#showCardHeader)       | boolean  | no       | true                                                              |
+| [showScrollButtons](#showScrollButtons) | boolean  | no       | true                                                              |
+| [scrollBackTimeout](#scrollBackTimeout) | number   | no       | 5                                                                 |
+| [departuresToShow](#departuresToShow)   | number   | no       | 5                                                                 |
+| [theme](#theme)                         | string   | no       | Basic                                                             |
+| [layout](#layout)                       | string   | no       | icon line destination time-diff planned-time estimated-time delay |
+| entities                                | entity[] | yes      | -                                                                 |
 
 ### "title"
 
@@ -55,24 +54,13 @@ type: custom:departures-card
 title: Frankenstr.
 ```
 
-| empty                                   | title: "Frankenstr."            |
+| empty                                   | title: "Plärrer"                |
 | --------------------------------------- | ------------------------------- |
 | ![card](assets/image_default_title.png) | ![card](assets/image_title.png) |
 
-### "debug"
-
-**Default**: false
-
-Provides an option to debug data returned by the API.
-
-```yaml
-type: custom:departures-card
-debug: true
-```
-
 ### "icon"
 
-**Default**: mdi:bus
+**Default**: mdi:bus-multiple
 
 Defines the icon displayed on the card.
 
@@ -81,7 +69,7 @@ type: custom:departures-card
 icon: mdi:bus-multiple
 ```
 
-| empty                                  | icon: mdi:bus-multiple                 |
+| empty                                  | icon: mdi:taxi                         |
 | -------------------------------------- | -------------------------------------- |
 | ![card](assets/image_default_icon.png) | ![card](assets/image_icon_defined.png) |
 
@@ -96,70 +84,112 @@ type: custom:departures-card
 showCardHeader: true
 ```
 
-| showCardHeader: true                     | showCardHeader: false                      |
-| ---------------------------------------- | ------------------------------------------ |
-| ![card](assets/image_showCardHeader.png) | ![card](assets/image_showNoCardHeader.png) |
+| showCardHeader: true                    | showCardHeader: false                      |
+| --------------------------------------- | ------------------------------------------ |
+| ![card](assets/image_default_title.png) | ![card](assets/image_showNoCardHeader.png) |
 
-### "departuresToShow"
-
-**Default**: 1
-
-This options specifies the number of departure entries to display on the card. By default, it is set to 1, meaning only the next departure will be shown.
-Users can increase this value up to 5 to show multiple upcoming departures, depending on their preferences or the available space on the dashboard.
-
-```yaml
-type: custom:departures-card
-departuresToShow: 3
-```
-
-| empty                                          | departuresToShow: 3                            |
-| ---------------------------------------------- | ---------------------------------------------- |
-| ![card](assets/image_departures_to_show_1.png) | ![card](assets/image_departures_to_show_3.png) |
-
-### "showAnimation"
+### "showScrollButtons"
 
 **Default**: true
 
-The showAnimation option enables a visual animation to highlight upcoming departures. When the remaining time until the arrival of a vehicle falls below 5 minutes, the corresponding display element will begin to pulse. This serves as a visual alert to draw the user's attention to the imminent departure.
+Controls whether scroll buttons are displayed for navigating through the departure list.
+
+When enabled, buttons are shown to allow manual scrolling up and down. When disabled, no scroll buttons are displayed.
+
+The list can always be scrolled by dragging, even when the scroll buttons are hidden.
 
 ```yaml
 type: custom:departures-card
-showAnimation: true
+showScrollButtons: true
 ```
 
-| showAnimation: true                |
-| ---------------------------------- |
-| ![card](assets/show_animation.gif) |
+| showScrollButtons: true                     | showScrollButtons: false                      |
+| ------------------------------------------- | --------------------------------------------- |
+| ![card](assets/image_showScrollButtons.png) | ![card](assets/image_showNoScrollButtons.png) |
 
-### "showTransportIcon"
+### "scrollBackTimeout"
 
-**Default**: false
+**Default**: 5 (sec)
 
-The showTransportIcon option controls whether an icon representing the type of vehicle (e.g., bus, subway, tram) is displayed.
+Defines the time after which the scrolling list automatically returns to the first position.
+
+If the list has been scrolled, it will reset to the beginning once this timeout expires.
+
+A value of 0 disables the timer and prevents the list from automatically scrolling back.
+
+The value is specified as a duration (in seconds).
 
 ```yaml
 type: custom:departures-card
-showTransportIcon: true
+scrollBackTimeout: 5
 ```
 
-| showTransportIcon: false                            | showTransportIcon: true                            |
-| --------------------------------------------------- | -------------------------------------------------- |
-| ![card](assets/image_show_transport_icon_false.png) | ![card](assets/image_show_transport_icon_true.png) |
+| scrollBackTimeout: 1                     | scrollBackTimeout: 5                     |
+| ---------------------------------------- | ---------------------------------------- |
+| ![card](assets/gif_scrollback_1_sec.gif) | ![card](assets/gif_scrollback_5_sec.gif) |
 
-### "hideEmptyDepartures"
+### "departuresToShow"
 
-**Default**: false
+**Default**: 5
 
-The hideEmptyDepartures option controls whether lines without any departure times are displayed.
+Specifies how many departures are displayed on a single page.
+
+This value determines the visible height of the card. If more departures are available than can be shown at once, the list becomes scrollable.
 
 ```yaml
 type: custom:departures-card
-hideEmptyDepartures: true
+departuresToShow: 5
 ```
 
-| hideEmptyDepartures: false                   | hideEmptyDepartures: true                    |
-| -------------------------------------------- | -------------------------------------------- |
-| ![card](assets/image_hide_empty_lines_0.png) | ![card](assets/image_hide_empty_lines_1.png) |
+| departuresToShow: 3                            | departuresToShow: 10                            |
+| ---------------------------------------------- | ----------------------------------------------- |
+| ![card](assets/image_departures_to_show_3.png) | ![card](assets/image_departures_to_show_10.png) |
+
+### "theme"
+
+**Default**: Basic
+
+Selects the color theme used to display the departure board.
+
+Different themes define the color scheme for elements such as background, text, icons and delay indicators. This allows the card to be visually adapted to different dashboards or lighting conditions.
+
+```yaml
+type: custom:departures-card
+theme: basic
+```
+
+| theme: Black-White                          | theme: Cappucino                          | theme: Blue Ocean                          |
+| ------------------------------------------- | ----------------------------------------- | ------------------------------------------ |
+| ![card](assets/image_theme_black-white.png) | ![card](assets/image_theme_cappucino.png) | ![card](assets/image_theme_blue-ocean.png) |
+
+### "layout"
+
+**Default**: "icon line destination time-diff planned-time estimated-time delay"
+
+Defines which cells are shown in each departure row and the order in which they appear.
+
+The layout is specified as a list of cell identifiers. Each identifier represents one column in the departure row. The order of the identifiers determines the left-to-right order of the cells.
+
+Available values:
+
+- `icon` – Transport icon
+- `line` – Line or route name
+- `destination` – Route destination
+- `time-diff` – Time remaining until departure
+- `planned-time` – Scheduled departure time
+- `estimated-time` – Estimated (real-time) departure time (if provided by API)
+- `delay` – Delay compared to the scheduled time
+
+Only the cells listed in layout will be displayed.
+
+```yaml
+type: custom:departures-card
+layout: icon line destination time-diff delay
+```
+
+| layout: icon line destination time-diff delay | layout: line destination planned-time estimated-time |
+| --------------------------------------------- | ---------------------------------------------------- |
+| ![card](assets/image_layout_0.png)            | ![card](assets/image_layout_1.png)                   |
 
 ## Entity Properties
 
@@ -167,97 +197,75 @@ hideEmptyDepartures: true
 | ----------------------------------- | ------ | -------- | ------------- |
 | [linecolor](#linecolor)             | string | no       | empty         |
 | [linename](#linename)               | string | no       | empty         |
-| [timestyle](#timestyle)             | string | no       | dynamic       |
 | [destinationname](#destinationname) | string | no       | empty         |
-| [nowIcon](#nowicon)                 | string | no       | empty         |
+| [icon](#icon-1)                     | string | no       | empty         |
 
 ### "lineColor"
 
 **Default**: empty (no background color)
 
-The "lineColor" option specifies the background color used to represent a vehicle line on the card. This allows users to visually distinguish different lines by assigning them unique colors. The color can be defined using standard formats like a hex code (e.g., "#FF5733") or a predefined color name.
+The "lineColor" option specifies the background color used to represent a vehicle line on the card. This allows users to visually distinguish different lines by assigning them unique colors. The color can be defined using standard formats like a hex code (e.g., "#D62246") or a predefined color name.
 
 ```yaml
 type: custom:departures-card
 entities:
-  - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-    lineColor: "#EB5A3C"
+  - entity: sensor.nurnberg_plarrer_tram_4_gibitzenhof
+    lineColor: "#D62246"
 ```
 
-| empty                                  | lineColor: "#EB5A3C"                        |
+| empty                                  | lineColor: "#D62246"                        |
 | -------------------------------------- | ------------------------------------------- |
 | ![card](assets/image_no_linecolor.png) | ![card](assets/image_linecolor_defined.png) |
 
 ### "lineName"
 
-**Default**: Name provided by the server.
+**Default**: Name provided by the API.
 
 The "lineName" option specifies the name or identifier of the vehicle line (e.g., bus number, train line, or tram route) displayed on the card.
 
 ```yaml
 type: custom:departures-card
 entities:
-  - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-    lineName: 45
+  - entity: sensor.nurnberg_plarrer_tram_4_gibitzenhof
+    lineName: 4
 ```
 
-| empty                                 | lineName: 45                               |
-| ------------------------------------- | ------------------------------------------ |
-| ![card](assets/image_no_linename.png) | ![card](assets/image_linename_defined.png) |
-
-### "timeStyle"
-
-**Default**: dynamic
-
-- "dynamic"
-  If the time to the next departure is less than 60 minutes, it is displayed as a relative time (e.g., "in 15 min").
-  If the time is 60 minutes or more, it is displayed as an absolute timestamp (e.g., "14:30").
-
-- "timestamp"
-  The departure time is always displayed as an absolute timestamp (e.g., "14:30"), regardless of how far in the future it is.
-
-```yaml
-type: custom:departures-card
-entities:
-  - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-    timeStyle: timestamp
-```
-
-| empty                                        | timeStyle: timestamp                     |
-| -------------------------------------------- | ---------------------------------------- |
-| ![card](assets/image_time_style_dynamic.png) | ![card](assets/time_style_timestamp.png) |
+| empty                                       | lineName: 4                                |
+| ------------------------------------------- | ------------------------------------------ |
+| ![card](assets/image_linecolor_defined.png) | ![card](assets/image_linename_defined.png) |
 
 ### "destinationName"
 
-**Default**: Destination name provided by the server.
+**Default**: Destination name provided by the API.
 
 Option to overwrite default destination name provided by API.
 
 ```yaml
 type: custom:departures-card
 entities:
-  - entity: sensor.nurnberg_frankenstr_bus_45_ziegelstein_u_mogeldorf
-    destinationName: Ziegelstein
+  - entity: sensor.nurnberg_plarrer_u_bahn_u1_furth_hardhohe
+    destinationName: Hardhöhe
 ```
 
-| empty                                         | destinationName: Ziegelstein                  |
-| --------------------------------------------- | --------------------------------------------- |
-| ![card](assets/image_no_destination_name.png) | ![card](assets/destination_named_defined.png) |
+| empty                                         | destinationName: Hardhöhe                           |
+| --------------------------------------------- | --------------------------------------------------- |
+| ![card](assets/image_no_destination_name.png) | ![card](assets/image_destination_named_defined.png) |
 
-### "nowIcon"
+### "icon"
 
 **Default**: empty
 
-With `nowIcon` the user can overwrite default icon shown for now arriving transports.
-If no custom icon is defined, the transport type icon provided by `ha-departures` is used.
+Allows the user to define a custom icon for a specific entity.
+
+If this option is set, the specified icon will be used instead of the default icon provided by API.
 
 ```yaml
 type: custom:departures-card
 entities:
-  - entity: sensor.frankenstr_u_bahn_u1_langwasser_sud
-    nowIcon: mdi:rv-truck
+  - entity: sensor.nurnberg_plarrer_u_bahn_u2_rothenbach
+    icon: mdi:lamp
 ```
 
-| empty                                     | nowIcon: mdi:rv-truck                    |
-| ----------------------------------------- | ---------------------------------------- |
-| ![card](assets/image_nowicon_default.png) | ![card](assets/image_nowicon_custom.png) |
+| empty                                  | icon: mdi:lamp                        |
+| -------------------------------------- | ------------------------------------- |
+| ![card](assets/image_icon_default.png) | ![card](assets/image_icon_custom.png) |
