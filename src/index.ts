@@ -1,4 +1,4 @@
-import { DeparturesCard } from "./departures-card";
+import { DeparturesCard } from "./components/ha-departures-card";
 
 declare global {
   interface Window {
@@ -7,7 +7,6 @@ declare global {
 }
 
 customElements.define("ha-departures-card", DeparturesCard);
-
 
 window.customCards = window.customCards || [];
 window.customCards.push({

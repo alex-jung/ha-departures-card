@@ -1,14 +1,16 @@
+import { HomeAssistant } from "custom-card-helpers";
+
 /**
  * Prepares a date by normalizing it to the nearest minute (seconds and milliseconds set to zero).
  *
  * @param date - The input date, which can be a `Date` object, a string representation of a date, or `null`.
- *               If the input is `null` or the string `"unknown"`, the function returns `null`.
+ *               If the input is `null` or the string `"unknown"`, the function returns `undefined`.
  *
- * @returns A `Date` object with seconds and milliseconds set to zero, or `null` if the input is invalid.
+ * @returns A `Date` object with seconds and milliseconds set to zero, or `undefined` if the input is invalid.
  */
-export function prepareDate(date: Date | string | null): Date | null {
-  if (!date || date === "unknown") {
-    return null;
+export function prepareDate(date: Date | string | null | undefined): Date {
+  if (!date || date === "unknown" || date === undefined) {
+    throw new Error("Provided date is invalid!");
   }
 
   let parsedDate = new Date(date);
@@ -36,4 +38,44 @@ export function getContrastTextColor(bgColor: string) {
 
   // if luminance is high, return black, else return white
   return luminance > 0.5 ? "black" : "white";
+}
+
+export class ClassTimer {
+  private timerId: number | null = null;
+  private callback: (() => void) | null = null;
+  private readonly duration: number;
+
+  constructor(duration: number) {
+    this.duration = duration;
+  }
+
+  public start(callback: () => void): void {
+    if (this.timerId === null) {
+      this.callback = callback;
+      this.timerId = window.setTimeout(() => {
+        callback();
+        this.callback = null;
+        this.timerId = null;
+      }, this.duration);
+    }
+  }
+
+  public stop(): void {
+    if (this.timerId !== null) {
+      clearTimeout(this.timerId);
+      this.timerId = null;
+    }
+  }
+
+  public restart(): void {
+    this.stop();
+
+    if (this.callback !== null) {
+      this.start(this.callback);
+    }
+  }
+
+  public isRunning(): boolean {
+    return this.timerId != null;
+  }
 }

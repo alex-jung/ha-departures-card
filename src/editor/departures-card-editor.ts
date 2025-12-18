@@ -1,23 +1,17 @@
 import { css, html, LitElement, nothing } from "lit";
 import { state, property, customElement } from "lit/decorators.js";
 import { Config } from "../types";
-import {
-  HomeAssistant,
-  fireEvent,
-  LovelaceCardEditor,
-} from "custom-card-helpers";
+import { HomeAssistant, fireEvent, LovelaceCardEditor } from "custom-card-helpers";
 import "./departures-entity-editor";
-import { localize } from "../localize";
+import { localize } from "../locales/localize";
 
 import { mdiPlus } from "@mdi/js";
 import { cardStyles } from "../styles";
-import { EntityTab } from "../data-classes";
+import { EntityTab } from "./entity-tab";
+import { DEFAULT_LAYOUT } from "../constants";
 
 @customElement("departures-card-editor")
-export class DeparturesCardEditor
-  extends LitElement
-  implements LovelaceCardEditor
-{
+export class DeparturesCardEditor extends LitElement implements LovelaceCardEditor {
   static styles = [
     cardStyles,
     css`
@@ -53,19 +47,13 @@ export class DeparturesCardEditor
   private _currTab: string = "1";
 
   public setConfig(config: Config) {
+    console.debug("Set config in card editor", config);
+
     this._config = config;
-    this._tabs =
-      config.entities?.map(
-        (config, index) => new EntityTab(Number(index + 1), config),
-      ) || [];
+    this._tabs = config.entities?.map((config, index) => new EntityTab(Number(index + 1), config)) || [];
   }
 
   private SCHEMA = [
-    {
-      name: "showCardHeader",
-      type: "boolean",
-      default: true,
-    },
     {
       name: "",
       type: "grid",
@@ -79,39 +67,62 @@ export class DeparturesCardEditor
         { name: "icon", selector: { icon: {} } },
       ],
     },
+
     {
       name: "",
       type: "grid",
       column_min_width: "100px",
       schema: [
         {
-          name: "showAnimation",
+          name: "showScrollButtons",
           type: "boolean",
         },
         {
-          name: "showTransportIcon",
+          name: "showCardHeader",
           type: "boolean",
-        },
-        {
-          name: "hideEmptyDepartures",
-          type: "boolean",
-        },
-        {
-          name: "debug",
-          type: "boolean",
+          default: true,
         },
       ],
+    },
+    {
+      name: "theme",
+      type: "select",
+      required: true,
+      options: [
+        ["basic", "Basic"],
+        ["black-white", "Black-White"],
+        ["cappucino", "Cappucino"],
+        ["blue-ocean", "Blue Ocean"],
+      ],
+      default: "basic",
     },
     {
       name: "departuresToShow",
       selector: {
         number: {
           min: 1,
-          max: 5,
+          max: 20,
           step: 1,
           mode: "slider",
         },
       },
+    },
+    {
+      name: "scrollBackTimeout",
+      selector: {
+        number: {
+          min: 0,
+          max: 20,
+          step: 1,
+          mode: "slider",
+        },
+      },
+    },
+    {
+      name: "layout",
+      type: "string",
+      required: false,
+      default: Array.from(DEFAULT_LAYOUT.keys()).join(" "),
     },
   ] as const;
 
@@ -125,14 +136,7 @@ export class DeparturesCardEditor
     }
 
     return html`
-      <ha-form
-        .schema="${this.SCHEMA}"
-        .data="${this._config}"
-        .hass="${this.hass}"
-        .computeLabel=${this.computeLabelCallback}
-        @value-changed=${this.configChanged}
-      >
-      </ha-form>
+      <ha-form .schema="${this.SCHEMA}" .data="${this._config}" .hass="${this.hass}" .computeLabel=${this.computeLabelCallback} @value-changed=${this.configChanged}> </ha-form>
 
       <ha-expansion-panel .leftChevron=${true}>
         <span slot="header">Entities</span>
@@ -140,32 +144,12 @@ export class DeparturesCardEditor
           <div class="toolbar">
             <ha-tab-group @wa-tab-show=${this.handleTabChanged}>
               ${this._tabs.map(
-                (tab) => html`
-                  <ha-tab-group-tab
-                    slot="nav"
-                    .panel=${tab.index}
-                    .active=${this._currTab === tab.index.toString()}
-                  >
-                    ${tab.index}
-                  </ha-tab-group-tab>
-                `,
+                (tab) => html` <ha-tab-group-tab slot="nav" .panel=${tab.index} .active=${this._currTab === tab.index.toString()}> ${tab.index} </ha-tab-group-tab> `,
               )}
             </ha-tab-group>
-            <ha-icon-button
-              .path=${mdiPlus}
-              .label=${localize(
-                "card.editor.addEntity",
-                this.hass.locale?.language,
-              )}
-              @click=${this.addEntity}
-            ></ha-icon-button>
+            <ha-icon-button .path=${mdiPlus} .label=${localize("card.editor.addEntity", this.hass.locale?.language)} @click=${this.addEntity}></ha-icon-button>
           </div>
-          <departures-entity-editor
-            .hass=${this.hass}
-            .data=${this.getTabData()}
-            @onDelete=${this.removeEntity}
-            @onChange=${this.updateEntity}
-          />
+          <departures-entity-editor .hass=${this.hass} .data=${this.getTabData()} @onDelete=${this.removeEntity} @onChange=${this.updateEntity}></departures-entity-editor>
         </div>
       </ha-expansion-panel>
     `;
@@ -179,18 +163,17 @@ export class DeparturesCardEditor
    *
    * @returns The `EntityTab` data for the selected tab, or `undefined` if the index is out of bounds.
    */
-  private getTabData(): EntityTab | undefined {
+  private getTabData(): EntityTab {
     const index = parseInt(this._currTab) - 1;
 
     if (index >= 0 && index < this._tabs.length) {
       return this._tabs[index];
     }
 
-    return undefined;
+    throw Error("No");
   }
 
-  private computeLabelCallback = (schema: any) =>
-    localize(`card.editor.${schema.name}`, this.hass.locale?.language);
+  private computeLabelCallback = (schema: any) => localize(`card.editor.${schema.name}`, this.hass.locale?.language);
 
   private addEntity() {
     if (!this._config) {
