@@ -6,7 +6,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { DeparturesDataRow } from "../types";
 
 @customElement("card-content-black-white")
-export abstract class ContentBlackWhite extends Content {
+export class ContentBlackWhite extends Content {
   static styles = [Content.styles, contentBlackWhite];
 
   protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {

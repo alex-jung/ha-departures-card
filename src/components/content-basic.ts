@@ -7,7 +7,7 @@ import { getContrastTextColor } from "../helpers";
 import { DeparturesDataRow } from "../types";
 
 @customElement("card-content-basic")
-export abstract class ContentBasic extends Content {
+export class ContentBasic extends Content {
   static styles = [Content.styles, contentBasic];
 
   protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {

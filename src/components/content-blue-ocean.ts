@@ -10,7 +10,7 @@ import { lightFormat } from "date-fns";
 import { classMap } from "lit/directives/class-map.js";
 
 @customElement("card-content-blue-ocean")
-export abstract class ContentBlueOcean extends Content {
+export class ContentBlueOcean extends Content {
   static styles = [Content.styles, contenBlueOcean];
 
   protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {

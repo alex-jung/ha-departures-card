@@ -5,7 +5,7 @@ import { html, TemplateResult } from "lit";
 import { DeparturesDataRow } from "../types";
 
 @customElement("card-content-cappucino")
-export abstract class ContentCappucino extends Content {
+export class ContentCappucino extends Content {
   static styles = [Content.styles, contentCappucino];
 
   protected getDepartureLineStyles(departure: DeparturesDataRow) {
