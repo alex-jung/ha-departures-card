@@ -18,6 +18,7 @@ import { Layout } from "../data/layout";
 
 import Splide, { Options as SplideOptions } from "@splidejs/splide";
 import cssText from "@splidejs/splide/dist/css/splide.min.css";
+import { localize } from "../locales/localize";
 
 export abstract class Content extends LitElement {
   static styles = [
@@ -29,6 +30,9 @@ export abstract class Content extends LitElement {
 
   @property({ attribute: false })
   departures!: Array<DeparturesDataRow>;
+
+  @property({ attribute: false })
+  language!: string;
 
   @property({ attribute: false })
   errors!: Array<string>;
@@ -76,6 +80,7 @@ export abstract class Content extends LitElement {
 
     return html`
     <div class="splide-root">
+      ${this.renderListHeader()}
       <div class="splide">
         <div style="position:relative">
           <div class="splide__arrows"></div>
@@ -90,6 +95,50 @@ export abstract class Content extends LitElement {
       ${this.errors ? html`${this._renderErrors()}` : nothing}
     </div>
     `;
+  }
+
+  protected renderListHeader() {
+    if (!this.cardConfig.showListHeader) {
+      return nothing;
+    }
+
+    let layoutCells = this.layout?.getCells();
+    let styles = this.getDepartureLineStyles(null);
+
+    if (!layoutCells) {
+      return html``;
+    }
+
+    let content: Array<TemplateResult> = [];
+
+    layoutCells.forEach((cell) => {
+      switch (cell) {
+        case "icon":
+          content.push(html`<div class="list-header-icon">${localize("card.list-header.icon", this.language)}</div>`);
+          break;
+        case "line":
+          content.push(html`<div class="list-header-line">${localize("card.list-header.line", this.language)}</div>`);
+          break;
+        case "destination":
+          content.push(html`<div class="list-header-destination">${localize("card.list-header.destination", this.language)}</div>`);
+          break;
+        case "time-diff":
+          content.push(html`<div class="list-header-time-diff">${localize("card.list-header.time-diff", this.language)}</div>`);
+          break;
+        case "planned-time":
+          content.push(html`<div class="list-header-planned-time">${localize("card.list-header.planned-time", this.language)}</div>`);
+          break;
+        case "estimated-time":
+          content.push(html`<div class="list-header-estimated-time">${localize("card.list-header.estimated-time", this.language)}</div>`);
+          break;
+        // case "delay":
+        //   content.push(html`<div class="list-header-delay">${localize("card.list-header.delay", this.language)}</div>`);
+        //   break;
+      }
+    });
+
+    return html` <div class="list-header" style="${styleMap(styles)}">${content}</div>
+      <hr />`;
   }
 
   protected renderDepartureLine(departure: DeparturesDataRow): TemplateResult {
@@ -130,24 +179,6 @@ export abstract class Content extends LitElement {
     });
 
     return html` <div class="departure-line ${classMap(classes)}" style="${styleMap(styles)}">${content}</div> `;
-
-    // return html`
-    //   <div class="departure-line ${classMap(classes)}" style="${styleMap(styles)}">
-    //     ${layoutCells.includes("icon") ? this.renderTransportIcon(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("line") ? this.renderCellLineName(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("destination") ? this.renderCellDestination(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("time-diff") ? this.renderCellTimeDiff(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("planned-time") ? this.renderCellPlannedTime(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("estimated-time") ? this.renderCellEstimatedTime(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("delay") ? this.renderDelay(departure) : nothing}
-    //   </div>
-    // `;
   }
 
   protected renderTransportIcon(departure: DeparturesDataRow): TemplateResult {
@@ -214,10 +245,9 @@ export abstract class Content extends LitElement {
     return html`<div class="cell-delay">${htmlText}</div>`;
   }
 
-  protected getDepartureLineStyles(departure: DeparturesDataRow) {
+  protected getDepartureLineStyles(departure: DeparturesDataRow | null) {
     return {
       "grid-template-columns": this.layout?.getColumns(),
-      // "grid-template-areas": '"' + this.layout?.getAreas() + '"',
     };
   }
 

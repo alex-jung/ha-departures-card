@@ -3,7 +3,6 @@ import { css } from "lit";
 export const cardStyles = css`
   .content[data-theme="dark"] {
     --departures-bg: #363636;
-    --departures-text: #cccccc;
     --departures-delay-ok: #23a043;
     --departures-delay-bad: #f44336;
     --departures-delay-none: #252525;
@@ -11,7 +10,6 @@ export const cardStyles = css`
   }
   .content[data-theme="light"] {
     --departures-bg: #ffffff;
-    --departures-text: #222;
     --departures-delay-ok: #23a043;
     --departures-delay-bad: #f44336;
     --departures-delay-none: #6b6b6b;
@@ -31,7 +29,7 @@ export const cardStyles = css`
     font-size: 2em;
   }
   .content {
-    padding: 16px 0px;
+    padding: 8px 0px;
   }
 `;
 
@@ -41,11 +39,38 @@ export const contentCore = css`
     background: var(--departures-bg);
     color: var(--departures-text);
   }
+  .list-header,
   .departure-line {
     display: grid;
     column-gap: 5px;
     width: 100%;
-    padding: 5px;
+    padding: 5px 5px;
+  }
+  .list-header {
+    font-size: 0.7em;
+    font-weight: bold;
+    width: 98%;
+  }
+  .list-header-icon,
+  .cell-transport-icon {
+    text-align: center;
+  }
+  .list-header-line,
+  .cell-line {
+    text-align: center;
+    min-width: 40px;
+    padding: 0px 5px;
+  }
+  .list-header-destination,
+  .cell-destination {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .list-header-time-diff,
+  .cell-time-diff {
+    text-align: center;
   }
   .splide__slide {
     display: flex;
@@ -54,35 +79,21 @@ export const contentCore = css`
   .departure-line.arriving {
     animation: flash 2s ease-in-out infinite;
   }
-  .departure-line.delayed > .cell-delay {
-    color: var(--departures-delay-bad);
-  }
-  .cell-transport-icon {
-    text-align: center;
-  }
-  .cell-destination {
-    flex-grow: 1;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .cell-line {
-    text-align: center;
-    min-width: 40px;
-    padding: 0px 5px;
-  }
-  .cell-time-diff {
-    text-align: center;
-  }
+  .list-header-planned-time,
   .cell-planned-time {
     text-align: center;
   }
+  .list-header-estimated-time,
   .cell-estimated-time {
     text-align: center;
   }
   .cell-delay {
     width: 100%;
     text-align: center;
+    border-radius: 1000px;
+  }
+  .departure-line.delayed > .cell-delay {
+    background-color: var(--departures-delay-bad);
   }
   .error {
     display: grid;
@@ -129,9 +140,6 @@ export const contentBlackWhite = css`
   }
   .cell-line {
     font-weight: bold;
-  }
-  .cell-time-diff {
-    min-width: 55px;
   }
   .cell-destination {
     text-transform: uppercase;
@@ -183,5 +191,73 @@ export const contenBlueOcean = css`
   }
   .cell-estimated-time.earlier {
     color: var(--departures-delay-ok);
+  }
+`;
+export const contentTable = css`
+  .tableContent {
+    /* background-color: tomato; */
+    display: flex;
+    flex-direction: column;
+  }
+  .tableRow {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    /* border: 1px solid black; */
+  }
+  .cell-destination {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 2;
+  }
+  .tableTimes {
+    display: flex;
+    /* background-color: lightseagreen; */
+  }
+  .tableTime {
+    display: flex;
+    flex-direction: column;
+    margin: 5px 5px;
+    min-width: 50px;
+    /* border: 1px solid gray; */
+    position: relative;
+  }
+  .tableTime.timestamp {
+    display: grid;
+    grid-template-columns: min-content;
+    grid-template-rows: min-content min-content;
+    grid-template-areas:
+      "time-delay"
+      "time-diff";
+    justify-self: end;
+    justify-content: end;
+  }
+  .tableTime.arriving {
+    display: flex;
+    align-items: end;
+  }
+  .timeDiff {
+    align-self: end;
+    font-weight: bold;
+    /* font-size: 1.3em;
+    line-height: 24px; */
+  }
+  .timeDelay {
+    position: absolute;
+    top: -13px;
+    right: 0px;
+    text-align: right;
+    font-size: 0.8em;
+    border-radius: 3px;
+    height: 16px;
+    padding: 0px 3px;
+    color: white;
+    background-color: var(--departures-delay-ok);
+  }
+
+  .tableTime.delayed > .timeDelay {
+    background-color: var(--departures-delay-bad);
   }
 `;

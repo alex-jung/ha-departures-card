@@ -82,6 +82,11 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
           type: "boolean",
           default: true,
         },
+        {
+          name: "showListHeader",
+          type: "boolean",
+          default: false,
+        },
       ],
     },
     {
@@ -93,6 +98,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
         ["black-white", "Black-White"],
         ["cappucino", "Cappucino"],
         ["blue-ocean", "Blue Ocean"],
+        ["table", "Table"],
       ],
       default: "basic",
     },
