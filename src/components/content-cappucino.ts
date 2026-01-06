@@ -1,36 +1,18 @@
 import { customElement } from "lit/decorators.js";
-import { Content } from "./content";
 import { contentCappucino } from "../styles";
-import { html, TemplateResult } from "lit";
 import { DeparturesDataRow } from "../types";
+import { ScrollableContent } from "./scrollable-content";
 
 @customElement("card-content-cappucino")
-export class ContentCappucino extends Content {
-  static styles = [Content.styles, contentCappucino];
+export class ContentCappucino extends ScrollableContent {
+  static styles = [ScrollableContent.styles, contentCappucino];
 
   protected getDepartureLineStyles(departure: DeparturesDataRow) {
-    const borderLeftColor = departure.lineColor ?? "grey";
+    const borderLeftColor = departure?.lineColor ?? "";
 
     return {
       ...super.getDepartureLineStyles(departure),
-      "border-left": `5px solid ${borderLeftColor}`,
+      "border-left": `8px solid ${borderLeftColor}`,
     };
-  }
-
-  protected renderDelay(departure: DeparturesDataRow): TemplateResult {
-    let delayColor = "var(--departures-delay-none)";
-    const time = departure.time;
-
-    if (time.isDelayed) {
-      delayColor = "var(--departures-delay-bad)";
-    } else if (time.isEarlier) {
-      delayColor = "var(--departures-delay-ok)";
-    } else {
-      delayColor = "grey";
-    }
-
-    return html` <div class="cell-delay">
-      <div style="border: 1px solid ${delayColor}; border-radius:50%;height:10px;width:10px;"></div>
-    </div>`;
   }
 }
