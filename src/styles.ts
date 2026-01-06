@@ -27,18 +27,13 @@ export const cardStyles = css`
     justify-content: space-between;
     align-items: center;
     font-size: 2em;
+    padding-bottom: 8px;
   }
   .content {
-    padding: 8px 0px;
+    padding: 0px 0px;
   }
 `;
-
 export const contentCore = css`
-  .splide-root {
-    border-radius: 5px;
-    background: var(--departures-bg);
-    color: var(--departures-text);
-  }
   .list-header,
   .departure-line {
     display: grid;
@@ -47,7 +42,7 @@ export const contentCore = css`
     padding: 5px 5px;
   }
   .list-header {
-    font-size: 0.7em;
+    font-size: 0.8em;
     font-weight: bold;
     width: 98%;
   }
@@ -72,10 +67,6 @@ export const contentCore = css`
   .cell-time-diff {
     text-align: center;
   }
-  .splide__slide {
-    display: flex;
-    align-items: center;
-  }
   .departure-line.arriving {
     animation: flash 2s ease-in-out infinite;
   }
@@ -91,8 +82,9 @@ export const contentCore = css`
     width: 100%;
     text-align: center;
     border-radius: 1000px;
+    color: white;
   }
-  .departure-line.delayed > .cell-delay {
+  .departure-line.delayed .cell-delay {
     background-color: var(--departures-delay-bad);
   }
   .error {
@@ -101,7 +93,7 @@ export const contentCore = css`
     border-left: 5px solid red;
     border: 1px solid red;
     padding: 5px;
-    margin: 10px 0px;
+    margin: 5px 0px;
     align-items: center;
   }
   .error span {
@@ -116,6 +108,17 @@ export const contentCore = css`
     50% {
       opacity: 0;
     }
+  }
+`;
+export const scrollableContent = css`
+  .splide-root {
+    border-radius: 5px;
+    background: var(--departures-bg);
+    color: var(--departures-text);
+  }
+  .splide__slide {
+    display: flex;
+    align-items: center;
   }
 `;
 export const contentBasic = css`
@@ -192,18 +195,26 @@ export const contenBlueOcean = css`
   .cell-estimated-time.earlier {
     color: var(--departures-delay-ok);
   }
+  .cell-delay {
+    border-radius: 0;
+  }
 `;
 export const contentTable = css`
-  .tableContent {
-    /* background-color: tomato; */
+  .table-content {
     display: flex;
     flex-direction: column;
   }
-  .tableRow {
+  .table-row {
     display: flex;
     align-items: center;
     height: 40px;
-    /* border: 1px solid black; */
+    gap: 5px;
+  }
+  .cell-line {
+    text-align: center;
+    min-width: 40px;
+    border-radius: 5px;
+    font-weight: bold;
   }
   .cell-destination {
     display: flex;
@@ -211,40 +222,26 @@ export const contentTable = css`
     white-space: nowrap;
     text-overflow: ellipsis;
     flex-grow: 2;
+    font-weight: bold;
   }
-  .tableTimes {
+  .table-times {
     display: flex;
-    /* background-color: lightseagreen; */
   }
-  .tableTime {
+  .table-time {
     display: flex;
-    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
     margin: 5px 5px;
     min-width: 50px;
-    /* border: 1px solid gray; */
     position: relative;
   }
-  .tableTime.timestamp {
-    display: grid;
-    grid-template-columns: min-content;
-    grid-template-rows: min-content min-content;
-    grid-template-areas:
-      "time-delay"
-      "time-diff";
-    justify-self: end;
-    justify-content: end;
+  .table-time.arriving {
+    justify-content: center;
   }
-  .tableTime.arriving {
-    display: flex;
-    align-items: end;
-  }
-  .timeDiff {
+  .table-time-diff {
     align-self: end;
-    font-weight: bold;
-    /* font-size: 1.3em;
-    line-height: 24px; */
   }
-  .timeDelay {
+  .table-time-delay {
     position: absolute;
     top: -13px;
     right: 0px;
@@ -256,8 +253,39 @@ export const contentTable = css`
     color: white;
     background-color: var(--departures-delay-ok);
   }
-
-  .tableTime.delayed > .timeDelay {
+  .table-time.delayed > .table-time-delay {
     background-color: var(--departures-delay-bad);
+  }
+
+  @media (min-width: 100px) and (max-width: 500px) {
+    .table-row {
+      display: flex;
+      gap: 10px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    .cell-transport-icon {
+      display: none;
+    }
+    .cell-line {
+      font-weight: bold;
+      background-color: none;
+    }
+    .cell-destination {
+      display: flex;
+      overflow: visible;
+    }
+    .table-times {
+      display: flex;
+      width: 100%;
+      justify-content: flex-start;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-content: center;
+      align-items: center;
+      background-color: rgba(218 215 205 / 20%);
+    }
   }
 `;
