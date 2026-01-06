@@ -83,6 +83,10 @@ export class DepartureTime {
     return this._delay != undefined && this._delay > 0;
   }
 
+  /**
+   * Determines whether the departure is earlier than scheduled.
+   * @returns `true` if a delay is defined and negative (indicating an early departure), `false` otherwise.
+   */
   public get isEarlier(): boolean {
     return this._delay != undefined && this._delay < 0;
   }

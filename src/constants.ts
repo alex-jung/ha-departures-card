@@ -1,4 +1,4 @@
-import { CardTheme } from "./types";
+import { CardTheme, LayoutCell } from "./types";
 
 // constants for card configuration
 export const DEFAULT_UPDATE_INTERVAL = 10000; // -> 10 sec
@@ -9,13 +9,13 @@ export const DEFAULT_SCROLL_BACK_TIMEOUT = 5;
 export const DEFAULT_CARD_THEME = CardTheme.BASIC;
 export const DEFAULT_CARD_ICON = "mdi:bus-multiple";
 export const DEFAULT_LAYOUT = new Map<string, string>([
-  ["icon", "30px"],
-  ["line", "auto"],
-  ["destination", "1fr"],
-  ["time-diff", "50px"],
-  ["planned-time", "50px"],
-  ["estimated-time", "50px"],
-  ["delay", "30px"],
+  [LayoutCell.ICON, "30px"],
+  [LayoutCell.LINE, "auto"],
+  [LayoutCell.DESTINATION, "1fr"],
+  [LayoutCell.TIME_DIFF, "55px"],
+  [LayoutCell.PLANNED_TIME, "55px"],
+  [LayoutCell.ESTIMATED_TIME, "55px"],
+  [LayoutCell.DELAY, "30px"],
 ]);
 
 // constants for entity configuration

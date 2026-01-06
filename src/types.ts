@@ -7,6 +7,7 @@ export interface Config extends LovelaceCardConfig {
   icon: string;
   departuresToShow: number;
   showCardHeader: boolean;
+  showListHeader: boolean;
   scrollBackTimeout: number;
   showScrollButtons: boolean;
   showArrivalAnimation: boolean;
@@ -37,6 +38,17 @@ export enum CardTheme {
   BLACK_WHITE = "black-white",
   CAPPUCINO = "cappucino",
   BLUE_OCEAN = "blue-ocean",
+  TABLE = "table",
+}
+
+export enum LayoutCell {
+  ICON = "icon",
+  LINE = "line",
+  DESTINATION = "destination",
+  TIME_DIFF = "time-diff",
+  PLANNED_TIME = "planned-time",
+  ESTIMATED_TIME = "estimated-time",
+  DELAY = "delay",
 }
 
 // ha-departures specific types

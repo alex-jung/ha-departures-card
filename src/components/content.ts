@@ -1,34 +1,23 @@
-import { css, unsafeCSS, html, LitElement, nothing, PropertyValues, TemplateResult, CSSResultGroup } from "lit-element";
+import { html, LitElement, nothing, TemplateResult, CSSResultGroup } from "lit-element";
 import { property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { Config, DeparturesDataRow } from "../types";
-import { ClassTimer } from "../helpers";
+import { Config, DeparturesDataRow, LayoutCell } from "../types";
 import { lightFormat } from "date-fns";
 import { contentCore } from "../styles";
-import {
-  DEFAULT_DEPARTURE_ROW_GAP,
-  DEFAULT_DEPARTURE_ROW_HEIGHT,
-  DEFAULT_DEPARTURES_TO_SHOW,
-  DEFAULT_ENTITY_ICON,
-  DEFAULT_SCROLL_BACK_TIMEOUT,
-  DEFAULT_SHOW_SCROLLBUTTONS,
-} from "../constants";
+import { DEFAULT_ENTITY_ICON } from "../constants";
 import { Layout } from "../data/layout";
 
-import Splide, { Options as SplideOptions } from "@splidejs/splide";
-import cssText from "@splidejs/splide/dist/css/splide.min.css";
+import { localize } from "../locales/localize";
 
 export abstract class Content extends LitElement {
-  static styles = [
-    css`
-      ${unsafeCSS(cssText)}
-    ` as CSSResultGroup,
-    contentCore as CSSResultGroup,
-  ];
+  static styles = [contentCore as CSSResultGroup];
 
   @property({ attribute: false })
   departures!: Array<DeparturesDataRow>;
+
+  @property({ attribute: false })
+  language!: string;
 
   @property({ attribute: false })
   errors!: Array<string>;
@@ -36,34 +25,11 @@ export abstract class Content extends LitElement {
   @property({ attribute: false })
   cardConfig!: Config;
 
-  private splide: Splide | null = null;
-
-  private scrollBackTimer: ClassTimer | null = null;
-
-  private layout: Layout | null = null;
-
-  protected firstUpdated(_changedProperties: PropertyValues): void {
-    this._initializeSplide();
-    this._initializeScrollbackTimer();
-  }
-
-  protected updated(_changedProperties: PropertyValues): void {
-    if (_changedProperties.get("cardConfig")) {
-      console.debug("Card config has been changed, reinitialze splide.");
-      this._initializeScrollbackTimer();
-      this._initializeSplide();
-    } else if (_changedProperties.get("departures")) {
-      console.debug("Departures have been changed, refresh splide.");
-      this.splide?.refresh();
-    }
-  }
-
-  public disconnectedCallback(): void {
-    super.disconnectedCallback();
-
-    this.scrollBackTimer?.stop();
-    this.scrollBackTimer = null;
-  }
+  /**
+   * The layout configuration for the departure rows.
+   * @type {Layout | null}
+   */
+  protected layout: Layout | null = null;
 
   public render(): TemplateResult {
     if (!this.cardConfig) {
@@ -74,24 +40,67 @@ export abstract class Content extends LitElement {
       this.layout = new Layout(this.cardConfig.layout);
     }
 
-    return html`
-    <div class="splide-root">
-      <div class="splide">
-        <div style="position:relative">
-          <div class="splide__arrows"></div>
-            <div class="splide__track">
-              <ul class="splide__list">
-                ${this.departures.map((entry) => html`<li class="splide__slide">${this.renderDepartureLine(entry)}</li>`)}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      ${this.errors ? html`${this._renderErrors()}` : nothing}
-    </div>
-    `;
+    return html` <div class="content">${this.renderContent()} ${this.errors ? html`${this._renderErrors()}` : nothing}</div> `;
   }
 
+  /**
+   * Renders the content.
+   * This function should be implemented in sub classes.
+   */
+  protected abstract renderContent(): TemplateResult;
+
+  /**
+   * Renders the list header.
+   * @returns A TemplateResult containing the rendered list header depending on configured layout.
+   */
+  protected renderListHeader(): TemplateResult {
+    if (!this.cardConfig.showListHeader) {
+      return html``;
+    }
+
+    let layoutCells = this.layout?.getCells();
+    let styles = {
+      "grid-template-columns": this.layout?.getColumns(),
+    };
+
+    if (!layoutCells) {
+      return html``;
+    }
+
+    let content: Array<TemplateResult> = [];
+
+    layoutCells.forEach((cell) => {
+      switch (cell) {
+        case LayoutCell.ICON:
+          content.push(html`<div class="list-header-icon">${localize("card.list-header.icon", this.language)}</div>`);
+          break;
+        case LayoutCell.LINE:
+          content.push(html`<div class="list-header-line">${localize("card.list-header.line", this.language)}</div>`);
+          break;
+        case LayoutCell.DESTINATION:
+          content.push(html`<div class="list-header-destination">${localize("card.list-header.destination", this.language)}</div>`);
+          break;
+        case LayoutCell.TIME_DIFF:
+          content.push(html`<div class="list-header-time-diff">${localize("card.list-header.time-diff", this.language)}</div>`);
+          break;
+        case LayoutCell.PLANNED_TIME:
+          content.push(html`<div class="list-header-planned-time">${localize("card.list-header.planned-time", this.language)}</div>`);
+          break;
+        case LayoutCell.ESTIMATED_TIME:
+          content.push(html`<div class="list-header-estimated-time">${localize("card.list-header.estimated-time", this.language)}</div>`);
+          break;
+      }
+    });
+
+    return html` <div class="list-header" style="${styleMap(styles)}">${content}</div>
+      <hr />`;
+  }
+
+  /**
+   * Renders a single departure line with the configured layout cells.
+   * @param departure - The departure data row to render
+   * @returns A TemplateResult containing the rendered departure line with applied classes and styles
+   */
   protected renderDepartureLine(departure: DeparturesDataRow): TemplateResult {
     let classes = this.getDepartureLineClasses(departure);
     let styles = this.getDepartureLineStyles(departure);
@@ -105,65 +114,67 @@ export abstract class Content extends LitElement {
 
     layoutCells.forEach((cell) => {
       switch (cell) {
-        case "icon":
+        case LayoutCell.ICON:
           content.push(this.renderTransportIcon(departure));
           break;
-        case "line":
+        case LayoutCell.LINE:
           content.push(this.renderCellLineName(departure));
           break;
-        case "destination":
+        case LayoutCell.DESTINATION:
           content.push(this.renderCellDestination(departure));
           break;
-        case "time-diff":
+        case LayoutCell.TIME_DIFF:
           content.push(this.renderCellTimeDiff(departure));
           break;
-        case "planned-time":
+        case LayoutCell.PLANNED_TIME:
           content.push(this.renderCellPlannedTime(departure));
           break;
-        case "estimated-time":
+        case LayoutCell.ESTIMATED_TIME:
           content.push(this.renderCellEstimatedTime(departure));
           break;
-        case "delay":
+        case LayoutCell.DELAY:
           content.push(this.renderDelay(departure));
           break;
       }
     });
 
     return html` <div class="departure-line ${classMap(classes)}" style="${styleMap(styles)}">${content}</div> `;
-
-    // return html`
-    //   <div class="departure-line ${classMap(classes)}" style="${styleMap(styles)}">
-    //     ${layoutCells.includes("icon") ? this.renderTransportIcon(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("line") ? this.renderCellLineName(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("destination") ? this.renderCellDestination(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("time-diff") ? this.renderCellTimeDiff(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("planned-time") ? this.renderCellPlannedTime(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("estimated-time") ? this.renderCellEstimatedTime(departure) : nothing}
-    //     <!-- prevent formatting -->
-    //     ${layoutCells.includes("delay") ? this.renderDelay(departure) : nothing}
-    //   </div>
-    // `;
   }
 
+  /**
+   * Renders a transport icon for a departure.
+   * @param departure - The departure data row containing icon information
+   * @returns A template result containing the rendered icon element
+   */
   protected renderTransportIcon(departure: DeparturesDataRow): TemplateResult {
     let icon = departure.icon ?? "mdi:train-bus";
 
     return html`<div class="cell-transport-icon"><ha-icon icon=${icon}></ha-icon></div>`;
   }
 
+  /**
+   * Renders a cell displaying the line name of a departure.
+   * @param departure - The departure data row containing line information
+   * @returns A template result containing the rendered line name cell
+   */
   protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {
     return html`<div class="cell-line">${departure.lineName}</div>`;
   }
 
+  /**
+   * Renders a destination cell for a departure row.
+   * @param departure - The departure data row containing destination information
+   * @returns A template result containing the rendered destination cell HTML
+   */
   protected renderCellDestination(departure: DeparturesDataRow): TemplateResult {
     return html`<div class="cell-destination">${departure.destinationName}</div>`;
   }
 
+  /**
+   * Renders the planned time cell for a departure row.
+   * @param departure - The departure data row containing time information
+   * @returns A template result containing the formatted planned time or a dash if unavailable
+   */
   protected renderCellPlannedTime(departure: DeparturesDataRow): TemplateResult {
     const time = departure.time.planned;
     const htmlText = time ? lightFormat(time, "HH:mm") : "-";
@@ -171,6 +182,11 @@ export abstract class Content extends LitElement {
     return html`<div class="cell-planned-time">${htmlText}</div>`;
   }
 
+  /**
+   * Renders the estimated time cell for a departure row.
+   * @param departure - The departure data row containing time information
+   * @returns A template result containing the formatted estimated time or a dash if unavailable
+   */
   protected renderCellEstimatedTime(departure: DeparturesDataRow): TemplateResult {
     const time = departure.time.estimated;
     const htmlText = time ? lightFormat(time, "HH:mm") : "-";
@@ -178,6 +194,17 @@ export abstract class Content extends LitElement {
     return html`<div class="cell-estimated-time">${htmlText}</div>`;
   }
 
+  /**
+   * Renders a departure time cell with conditional formatting based on arrival status.
+   *
+   * @param departure - The departure data row containing time and icon information
+   * @returns A template result containing the formatted time display with appropriate styling
+   *
+   * @remarks
+   * - If the departure is arriving, displays an icon with the "arriving" class
+   * - If the time difference is greater than 60 minutes, displays the time in HH:mm format
+   * - Otherwise, displays the time difference in minutes
+   */
   protected renderCellTimeDiff(departure: DeparturesDataRow): TemplateResult {
     let htmlText: TemplateResult = html``;
     const time = departure.time;
@@ -199,6 +226,11 @@ export abstract class Content extends LitElement {
     return html`<div class="cell-time-diff ${classMap(classes)}">${htmlText}</div>`;
   }
 
+  /**
+   * Renders the delay information for a departure.
+   * @param departure - The departure data containing time information
+   * @returns A TemplateResult containing a div with the delay value, prefixed with '+' for delays or '-' for earlier arrivals
+   */
   protected renderDelay(departure: DeparturesDataRow): TemplateResult {
     let htmlText: string = "";
     const time = departure.time;
@@ -214,13 +246,19 @@ export abstract class Content extends LitElement {
     return html`<div class="cell-delay">${htmlText}</div>`;
   }
 
-  protected getDepartureLineStyles(departure: DeparturesDataRow) {
+  protected getDepartureLineStyles(departure: DeparturesDataRow | null) {
     return {
       "grid-template-columns": this.layout?.getColumns(),
-      // "grid-template-areas": '"' + this.layout?.getAreas() + '"',
     };
   }
 
+  /**
+   * Gets the CSS classes to apply to a departure line based on its status.
+   * @param departure - The departure data row to get classes for
+   * @returns An object containing boolean flags for CSS classes:
+   *   - arriving: true if the departure is arriving
+   *   - delayed: true if the departure is delayed
+   */
   protected getDepartureLineClasses(departure: DeparturesDataRow) {
     let classes = {
       arriving: departure.time.isArriving,
@@ -230,12 +268,11 @@ export abstract class Content extends LitElement {
     return classes;
   }
 
-  private _getContentHeight(): number {
-    const depsToShow = this.cardConfig.departuresToShow ?? DEFAULT_DEPARTURES_TO_SHOW;
-
-    return depsToShow * DEFAULT_DEPARTURE_ROW_HEIGHT + depsToShow * DEFAULT_DEPARTURE_ROW_GAP;
-  }
-
+  /**
+   * Renders error messages for unsupported entities.
+   * @returns {TemplateResult} A template containing error messages for each unsupported entity,
+   * displaying an alert icon and a message indicating the entity is not supported.
+   */
   private _renderErrors() {
     return html`
       ${this.errors.map((entity) => {
@@ -245,84 +282,5 @@ export abstract class Content extends LitElement {
         </div>`;
       })}
     `;
-  }
-
-  private _restartscrollBackTimer() {
-    if (this.scrollBackTimer == null) {
-      this._initializeScrollbackTimer();
-    }
-
-    if (!this.scrollBackTimer) {
-      return;
-    }
-
-    if (!this.scrollBackTimer.isRunning()) {
-      this.scrollBackTimer.start(() => {
-        this.splide?.go(0);
-      });
-    } else {
-      this.scrollBackTimer.restart();
-    }
-  }
-
-  private _initializeScrollbackTimer() {
-    if (this.scrollBackTimer) {
-      this.scrollBackTimer.stop();
-      this.scrollBackTimer = null;
-    }
-
-    if (this.cardConfig.scrollBackTimeout == 0) {
-      return;
-    }
-
-    const timeout = (this.cardConfig.scrollBackTimeout || DEFAULT_SCROLL_BACK_TIMEOUT) * 1000;
-
-    console.debug("Initialize scrollback timer with timeout", timeout);
-
-    this.scrollBackTimer = new ClassTimer(timeout);
-  }
-
-  private _initializeSplide(): void {
-    if (this.splide) {
-      console.debug("Splide object already exists, destroy it!");
-      this.splide.destroy();
-    }
-
-    const root = this.renderRoot.querySelector(".splide") as HTMLElement;
-    const visibleRows = this.cardConfig.departuresToShow ?? DEFAULT_DEPARTURES_TO_SHOW;
-
-    if (!root || root === undefined) {
-      console.debug("Splide root element not found.");
-      return;
-    }
-
-    const options: SplideOptions = {
-      type: "slide",
-      perPage: visibleRows,
-      autoplay: false,
-      pagination: false,
-      arrows: this.cardConfig.showScrollButtons ?? DEFAULT_SHOW_SCROLLBUTTONS,
-      gap: DEFAULT_DEPARTURE_ROW_GAP,
-      direction: "ttb",
-      height: this._getContentHeight(),
-      drag: true,
-      wheel: true,
-    };
-
-    console.debug("Create new splide with following options", options);
-
-    this.splide = new Splide(root, options);
-
-    this.splide.on("moved scrolled dragged", (newIndex) => {
-      console.debug("Splide moved to ", newIndex);
-
-      if (newIndex == 0) {
-        this.scrollBackTimer?.stop();
-      } else {
-        this._restartscrollBackTimer();
-      }
-    });
-
-    this.splide.mount();
   }
 }

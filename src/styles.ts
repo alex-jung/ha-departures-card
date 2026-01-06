@@ -3,7 +3,6 @@ import { css } from "lit";
 export const cardStyles = css`
   .content[data-theme="dark"] {
     --departures-bg: #363636;
-    --departures-text: #cccccc;
     --departures-delay-ok: #23a043;
     --departures-delay-bad: #f44336;
     --departures-delay-none: #252525;
@@ -11,7 +10,6 @@ export const cardStyles = css`
   }
   .content[data-theme="light"] {
     --departures-bg: #ffffff;
-    --departures-text: #222;
     --departures-delay-ok: #23a043;
     --departures-delay-bad: #f44336;
     --departures-delay-none: #6b6b6b;
@@ -29,60 +27,65 @@ export const cardStyles = css`
     justify-content: space-between;
     align-items: center;
     font-size: 2em;
+    padding-bottom: 8px;
   }
   .content {
-    padding: 16px 0px;
+    padding: 0px 0px;
   }
 `;
-
 export const contentCore = css`
-  .splide-root {
-    border-radius: 5px;
-    background: var(--departures-bg);
-    color: var(--departures-text);
-  }
+  .list-header,
   .departure-line {
     display: grid;
     column-gap: 5px;
     width: 100%;
-    padding: 5px;
+    padding: 5px 5px;
   }
-  .splide__slide {
-    display: flex;
-    align-items: center;
+  .list-header {
+    font-size: 0.8em;
+    font-weight: bold;
+    width: 98%;
   }
-  .departure-line.arriving {
-    animation: flash 2s ease-in-out infinite;
-  }
-  .departure-line.delayed > .cell-delay {
-    color: var(--departures-delay-bad);
-  }
+  .list-header-icon,
   .cell-transport-icon {
     text-align: center;
   }
+  .list-header-line,
+  .cell-line {
+    text-align: center;
+    min-width: 40px;
+    padding: 0px 5px;
+  }
+  .list-header-destination,
   .cell-destination {
     flex-grow: 1;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  .cell-line {
-    text-align: center;
-    min-width: 40px;
-    padding: 0px 5px;
-  }
+  .list-header-time-diff,
   .cell-time-diff {
     text-align: center;
   }
+  .departure-line.arriving {
+    animation: flash 2s ease-in-out infinite;
+  }
+  .list-header-planned-time,
   .cell-planned-time {
     text-align: center;
   }
+  .list-header-estimated-time,
   .cell-estimated-time {
     text-align: center;
   }
   .cell-delay {
     width: 100%;
     text-align: center;
+    border-radius: 1000px;
+    color: white;
+  }
+  .departure-line.delayed .cell-delay {
+    background-color: var(--departures-delay-bad);
   }
   .error {
     display: grid;
@@ -90,7 +93,7 @@ export const contentCore = css`
     border-left: 5px solid red;
     border: 1px solid red;
     padding: 5px;
-    margin: 10px 0px;
+    margin: 5px 0px;
     align-items: center;
   }
   .error span {
@@ -105,6 +108,17 @@ export const contentCore = css`
     50% {
       opacity: 0;
     }
+  }
+`;
+export const scrollableContent = css`
+  .splide-root {
+    border-radius: 5px;
+    background: var(--departures-bg);
+    color: var(--departures-text);
+  }
+  .splide__slide {
+    display: flex;
+    align-items: center;
   }
 `;
 export const contentBasic = css`
@@ -129,9 +143,6 @@ export const contentBlackWhite = css`
   }
   .cell-line {
     font-weight: bold;
-  }
-  .cell-time-diff {
-    min-width: 55px;
   }
   .cell-destination {
     text-transform: uppercase;
@@ -183,5 +194,98 @@ export const contenBlueOcean = css`
   }
   .cell-estimated-time.earlier {
     color: var(--departures-delay-ok);
+  }
+  .cell-delay {
+    border-radius: 0;
+  }
+`;
+export const contentTable = css`
+  .table-content {
+    display: flex;
+    flex-direction: column;
+  }
+  .table-row {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    gap: 5px;
+  }
+  .cell-line {
+    text-align: center;
+    min-width: 40px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  .cell-destination {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex-grow: 2;
+    font-weight: bold;
+  }
+  .table-times {
+    display: flex;
+  }
+  .table-time {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    margin: 5px 5px;
+    min-width: 50px;
+    position: relative;
+  }
+  .table-time.arriving {
+    justify-content: center;
+  }
+  .table-time-diff {
+    align-self: end;
+  }
+  .table-time-delay {
+    position: absolute;
+    top: -13px;
+    right: 0px;
+    text-align: right;
+    font-size: 0.8em;
+    border-radius: 3px;
+    height: 16px;
+    padding: 0px 3px;
+    color: white;
+    background-color: var(--departures-delay-ok);
+  }
+  .table-time.delayed > .table-time-delay {
+    background-color: var(--departures-delay-bad);
+  }
+
+  @media (min-width: 100px) and (max-width: 500px) {
+    .table-row {
+      display: flex;
+      gap: 10px;
+      flex-direction: row;
+      flex-wrap: wrap;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    .cell-transport-icon {
+      display: none;
+    }
+    .cell-line {
+      font-weight: bold;
+      background-color: none;
+    }
+    .cell-destination {
+      display: flex;
+      overflow: visible;
+    }
+    .table-times {
+      display: flex;
+      width: 100%;
+      justify-content: flex-start;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-content: center;
+      align-items: center;
+      background-color: rgba(218 215 205 / 20%);
+    }
   }
 `;

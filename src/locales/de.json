@@ -4,6 +4,7 @@
       "title": "Card Header text (optional)",
       "icon": "Card Icon (optional)",
       "showCardHeader": "Card Header anzeigen",
+      "showListHeader": "List Header anzeigen",
       "showScrollButtons": "Scroll Buttons anzeigen",
       "theme": "Card Theme",
       "departuresToShow": "Abfahrten pro Seite",
@@ -18,6 +19,15 @@
         "icon": "Icon",
         "remove": "Entfernen"
       }
+    },
+    "list-header": {
+      "icon": "Icon",
+      "line": "Linie",
+      "destination": "Ziel",
+      "time-diff": "Ankunft in",
+      "planned-time": "Geplante Ankunft",
+      "estimated-time": "Erwarterte Ankunft",
+      "delay": "Verzögerung"
     },
     "departures": "Abfahrten",
     "line": "Linie",

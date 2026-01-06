@@ -18,6 +18,7 @@ export function getConfigStub(): Config {
     icon: "mdi:bus",
     departuresToShow: 10,
     showCardHeader: true,
+    showListHeader: false,
     scrollBackTimeout: 3,
     theme: CardTheme.BLACK_WHITE,
     layout: "",

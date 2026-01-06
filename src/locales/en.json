@@ -4,6 +4,7 @@
       "title": "Card header text (optional)",
       "icon": "Card icon (optional)",
       "showCardHeader": "Show card header",
+      "showListHeader": "Show list header",
       "showScrollButtons": "Show scroll buttons",
       "theme": "Card Theme",
       "departuresToShow": "Departures to show per page",
@@ -18,6 +19,15 @@
         "icon": "Icon",
         "remove": "Delete"
       }
+    },
+    "list-header": {
+      "icon": "Icon",
+      "line": "Line",
+      "destination": "Destination",
+      "time-diff": "Departure in",
+      "planned-time": "Planned departure",
+      "estimated-time": "Estimated departure",
+      "delay": "Delay"
     },
     "departures": "Departures",
     "line": "Line",

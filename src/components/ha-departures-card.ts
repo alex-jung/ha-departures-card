@@ -8,6 +8,7 @@ import "./content-black-white";
 import "./content-cappucino";
 import "./content-basic";
 import "./content-blue-ocean";
+import "./content-table";
 
 import "../editor/departures-card-editor.js";
 
@@ -30,7 +31,7 @@ import {
   description: "Display departure times for different public transports",
 });
 
-const version = "3.0.0";
+const version = "3.1.0";
 const repoUrl = "https://github.com/alex-jung/ha-departures-card";
 
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;");
@@ -130,10 +131,33 @@ export class DeparturesCard extends LitElement {
   }
 
   private _getCardContent(cardConfig: Config, departures: Array<DeparturesDataRow>): TemplateResult {
-    const basic = html`<card-content-basic .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-basic>`;
-    const blackWhite = html`<card-content-black-white .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-black-white>`;
-    const cappucino = html`<card-content-cappucino .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-cappucino>`;
-    const blueOcean = html`<card-content-blue-ocean .departures=${departures} .cardConfig=${cardConfig} .errors=${this.dataPool.unsupportedEntities}></card-content-blue-ocean>`;
+    let language = this.hass.locale?.language ?? "en";
+
+    const basic = html`<card-content-basic
+      .language=${language}
+      .departures=${departures}
+      .cardConfig=${cardConfig}
+      .errors=${this.dataPool.unsupportedEntities}></card-content-basic>`;
+    const blackWhite = html`<card-content-black-white
+      .language=${language}
+      .departures=${departures}
+      .cardConfig=${cardConfig}
+      .errors=${this.dataPool.unsupportedEntities}></card-content-black-white>`;
+    const cappucino = html`<card-content-cappucino
+      .language=${language}
+      .departures=${departures}
+      .cardConfig=${cardConfig}
+      .errors=${this.dataPool.unsupportedEntities}></card-content-cappucino>`;
+    const blueOcean = html`<card-content-blue-ocean
+      .language=${language}
+      .departures=${departures}
+      .cardConfig=${cardConfig}
+      .errors=${this.dataPool.unsupportedEntities}></card-content-blue-ocean>`;
+    const table = html`<card-content-table
+      .language=${language}
+      .departures=${departures}
+      .cardConfig=${cardConfig}
+      .errors=${this.dataPool.unsupportedEntities}></card-content-table>`;
 
     switch (cardConfig.theme) {
       case CardTheme.BASIC:
@@ -144,6 +168,8 @@ export class DeparturesCard extends LitElement {
         return cappucino;
       case CardTheme.BLUE_OCEAN:
         return blueOcean;
+      case CardTheme.TABLE:
+        return table;
       default:
         return basic;
     }

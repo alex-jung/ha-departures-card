@@ -1,5 +1,4 @@
 import { customElement } from "lit/decorators.js";
-import { Content } from "./content";
 import { contenBlueOcean } from "../styles";
 import { html, TemplateResult } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
@@ -8,10 +7,11 @@ import { DeparturesDataRow } from "../types";
 import { DepartureTime } from "../data/departure-time";
 import { lightFormat } from "date-fns";
 import { classMap } from "lit/directives/class-map.js";
+import { ScrollableContent } from "./scrollable-content";
 
 @customElement("card-content-blue-ocean")
-export abstract class ContentBlueOcean extends Content {
-  static styles = [Content.styles, contenBlueOcean];
+export class ContentBlueOcean extends ScrollableContent {
+  static styles = [ScrollableContent.styles, contenBlueOcean];
 
   protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {
     const contrastTextColor = getContrastTextColor(departure.lineColor ?? "#ffffff");
@@ -25,6 +25,10 @@ export abstract class ContentBlueOcean extends Content {
     return html`<div class="cell-line">
       <div style="${styleMap(styles)}">${departure.lineName}</div>
     </div>`;
+  }
+
+  protected renderDelay(departure: DeparturesDataRow): TemplateResult {
+    return html`<div class="delay-wrapper">${super.renderDelay(departure)}</div>`;
   }
 
   protected renderCellTimeEstimated(time: DepartureTime): TemplateResult {

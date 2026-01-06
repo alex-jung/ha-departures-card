@@ -23,9 +23,10 @@ A card to display departure times provided by [Departures](https://github.com/al
 
 #### HACS (recommended)
 
-1. Add this repository as a custom repository (HACS -> Custom repositories, type "Dashboard")
-2. Search for `Departures Card` and install it.
-3. Add new card to the dashboard
+1. Open `HACS`
+2. Add this repository as a custom repository (HACS -> Custom repositories, type "Dashboard")
+3. Search for `Departures Card` integration and download it.
+4. Add a new card to the dashboard
 
 ## Card Properties
 
@@ -35,6 +36,7 @@ A card to display departure times provided by [Departures](https://github.com/al
 | [title](#title)                         | string   | no       | Departures                                                        |
 | [icon](#icon)                           | string   | no       | mdi:bus-multiple                                                  |
 | [showCardHeader](#showCardHeader)       | boolean  | no       | true                                                              |
+| [showListHeader](#showListHeader)       | boolean  | no       | false                                                             |
 | [showScrollButtons](#showScrollButtons) | boolean  | no       | true                                                              |
 | [scrollBackTimeout](#scrollBackTimeout) | number   | no       | 5                                                                 |
 | [departuresToShow](#departuresToShow)   | number   | no       | 5                                                                 |
@@ -62,7 +64,7 @@ title: Frankenstr.
 
 **Default**: mdi:bus-multiple
 
-Defines the icon displayed on the card.
+Defines the icon displayed on the card header.
 
 ```yaml
 type: custom:departures-card
@@ -88,9 +90,32 @@ showCardHeader: true
 | --------------------------------------- | ------------------------------------------ |
 | ![card](assets/image_default_title.png) | ![card](assets/image_showNoCardHeader.png) |
 
+### "showListHeader"
+
+**Default**: false
+
+> [!WARNING]
+>
+> This options is not available for card theme `Table`.
+
+Defines the list header to show or not.
+
+```yaml
+type: custom:departures-card
+showListHeader: true
+```
+
+| showListHeader: true                       | showListHeader: false                         |
+| ------------------------------------------ | --------------------------------------------- |
+| ![card](assets/image_show_list_header.png) | ![card](assets/image_show_no_list_header.png) |
+
 ### "showScrollButtons"
 
 **Default**: true
+
+> [!WARNING]
+>
+> This options is not available for card theme `Table`.
 
 Controls whether scroll buttons are displayed for navigating through the departure list.
 
@@ -110,6 +135,10 @@ showScrollButtons: true
 ### "scrollBackTimeout"
 
 **Default**: 5 (sec)
+
+> [!WARNING]
+>
+> This options is not available for card theme `Table`.
 
 Defines the time after which the scrolling list automatically returns to the first position.
 
@@ -165,6 +194,10 @@ theme: basic
 ### "layout"
 
 **Default**: "icon line destination time-diff planned-time estimated-time delay"
+
+> [!WARNING]
+>
+> This options is not available for card theme `Table`.
 
 Defines which cells are shown in each departure row and the order in which they appear.
 
