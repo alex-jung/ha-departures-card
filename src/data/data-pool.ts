@@ -13,6 +13,19 @@ export class DepartureTimesPool {
     return this._unsupportedEntities;
   }
 
+  /**
+   * Updates the data pool with the latest entity information from Home Assistant.
+   *
+   * @param hass - The Home Assistant instance containing current entity states
+   * @param entities - Array of entity configurations to update, or undefined to skip update
+   *
+   * @remarks
+   * This method performs two operations:
+   * 1. Removes any obsolete data entries for entities that no longer exist
+   * 2. Creates or updates data entries for the provided entities
+   *
+   * If either `hass` or `entities` is not provided, the update is skipped.
+   */
   public update(hass: HomeAssistant, entities: Array<EntityConfig> | undefined) {
     if (!entities) {
       console.debug("No entities provided, ignore data update.");
