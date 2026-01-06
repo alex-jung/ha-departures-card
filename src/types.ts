@@ -41,6 +41,16 @@ export enum CardTheme {
   TABLE = "table",
 }
 
+export enum LayoutCell {
+  ICON = "icon",
+  LINE = "line",
+  DESTINATION = "destination",
+  TIME_DIFF = "time-diff",
+  PLANNED_TIME = "planned-time",
+  ESTIMATED_TIME = "estimated-time",
+  DELAY = "delay",
+}
+
 // ha-departures specific types
 export enum HaDeparturesEntityAttributes {
   TIMES = "times",
