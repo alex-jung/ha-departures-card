@@ -94,11 +94,11 @@ showCardHeader: true
 
 **Default**: false
 
-Defines the list header to show or not.
-
 > [!WARNING]
 >
-> This options is not available for theme `Table`.
+> This options is not available for card theme `Table`.
+
+Defines the list header to show or not.
 
 ```yaml
 type: custom:departures-card
@@ -112,6 +112,10 @@ showListHeader: true
 ### "showScrollButtons"
 
 **Default**: true
+
+> [!WARNING]
+>
+> This options is not available for card theme `Table`.
 
 Controls whether scroll buttons are displayed for navigating through the departure list.
 
@@ -131,6 +135,10 @@ showScrollButtons: true
 ### "scrollBackTimeout"
 
 **Default**: 5 (sec)
+
+> [!WARNING]
+>
+> This options is not available for card theme `Table`.
 
 Defines the time after which the scrolling list automatically returns to the first position.
 
@@ -186,6 +194,10 @@ theme: basic
 ### "layout"
 
 **Default**: "icon line destination time-diff planned-time estimated-time delay"
+
+> [!WARNING]
+>
+> This options is not available for card theme `Table`.
 
 Defines which cells are shown in each departure row and the order in which they appear.
 
