@@ -1,9 +1,10 @@
-import { DEFAULT_LAYOUT } from "../constants";
+import { LAYOUT_VERTICAL, LAYOUT_HORIZONTAL } from "../constants";
+import { CardOrientation, LayoutCell } from "../types";
 
 /**
  * Manages the grid layout configuration for a departure row.
  *
- * Parses and validates a layout string, providing access to individual layout cells
+ * Parses and validates a layout string or array of strings / LayoutCell, providing access to individual layout cells
  * and their corresponding CSS grid column definitions.
  *
  * @example
@@ -15,9 +16,11 @@ import { DEFAULT_LAYOUT } from "../constants";
  */
 export class Layout {
   _layoutCells: Array<string>;
+  _cardOrientation: CardOrientation;
 
-  constructor(layout: string | undefined) {
-    this._layoutCells = this._parseCardLayout(layout);
+  constructor(cells: Array<LayoutCell | string> | string | undefined, cardOrientation: CardOrientation) {
+    this._layoutCells = this._parseCardLayout(cells, cardOrientation);
+    this._cardOrientation = cardOrientation;
   }
 
   /**
@@ -30,34 +33,42 @@ export class Layout {
 
   /**
    * Gets the layout columns.
+   * @param layout String containing current card layout. Possible values are "list" and "table"
    * @returns A string representing the current grid layout columns sizes.
    */
   public getColumns(): string {
+    const layoutValues = this._cardOrientation == CardOrientation.VERTICAL ? LAYOUT_VERTICAL : LAYOUT_HORIZONTAL;
+
     return this._layoutCells
       .map((cell) => {
-        return DEFAULT_LAYOUT.get(cell);
+        return layoutValues.get(cell);
       })
       .join(" ");
   }
 
   /**
    * Parses the layout provided by the user
-   * @param layout String containing current layout configuration.
-   * @returns An array of cells (provided by user or default layout).
+   * @param cells String/Array containing current layout configuration.
+   * @param orientation Card orientation.
+   * @returns An array of cells.
    */
-  private _parseCardLayout(layout: string | undefined): Array<string> {
-    let cardLayout;
+  private _parseCardLayout(cells: Array<LayoutCell | string> | undefined | string, orientation: CardOrientation): Array<string> {
+    const layoutValues = orientation == CardOrientation.VERTICAL ? LAYOUT_VERTICAL : LAYOUT_HORIZONTAL;
 
-    if (!layout || layout == undefined) {
-      cardLayout = Array.from(DEFAULT_LAYOUT.keys());
+    let cardLayout: Array<string> = [];
+
+    if (!cells || cells == undefined) {
+      cardLayout = Array.from(layoutValues.keys());
+    } else if (cells instanceof Array) {
+      cardLayout = cells;
     } else {
-      cardLayout = layout.toLowerCase().split(" ");
+      cardLayout = cells.toLowerCase().split(" ");
     }
 
-    let cells = cardLayout.filter((value) => {
-      return DEFAULT_LAYOUT.has(value);
+    let gridCells = cardLayout.filter((value) => {
+      return layoutValues.has(value);
     });
 
-    return cells;
+    return gridCells;
   }
 }

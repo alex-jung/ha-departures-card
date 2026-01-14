@@ -1,11 +1,15 @@
 import { HassEntity } from "home-assistant-js-websocket";
 import { DepartureTime } from "./departure-time";
-import { UnsupportedEntityError } from "../exceptions";
+import { EntityNotAvailable, UnsupportedEntityError } from "../exceptions";
 import { DbInfoEntityAttributes, HaDeparturesEntityAttributes } from "../types";
 
 export class DataParser {
   public static getParser(entity: HassEntity): Parser {
     let parser: Parser | null = null;
+
+    if (entity.state === "unavailable") {
+      throw new EntityNotAvailable("Entity is not available!", entity.entity_id);
+    }
 
     if (HaDeparturesEntityAttributes.TIMES in entity.attributes || HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME in entity.attributes) {
       console.debug("Detected 'ha-departures' attribute(s)", entity.attributes);
@@ -16,7 +20,7 @@ export class DataParser {
 
       parser = new ParserDbInfoscreen(entity);
     } else {
-      throw new UnsupportedEntityError("No data parser found for entity '" + entity.entity_id + "'", entity.entity_id);
+      throw new UnsupportedEntityError("No valid data parser found!", entity.entity_id);
     }
 
     return parser;

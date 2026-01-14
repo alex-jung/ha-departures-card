@@ -1,14 +1,16 @@
-import { html, LitElement, nothing, TemplateResult, CSSResultGroup } from "lit-element";
+import { html, LitElement, nothing, TemplateResult, CSSResultGroup, PropertyValues } from "lit-element";
 import { property } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { Config, DeparturesDataRow, LayoutCell } from "../types";
+import { CardTheme, Config, DeparturesDataRow, LayoutCell } from "../types";
 import { lightFormat } from "date-fns";
 import { contentCore } from "../styles";
 import { DEFAULT_ENTITY_ICON } from "../constants";
 import { Layout } from "../data/layout";
 
 import { localize } from "../locales/localize";
+import { getContrastTextColor } from "../helpers";
+import { animatePresets } from "../animate-presets";
 
 export abstract class Content extends LitElement {
   static styles = [contentCore as CSSResultGroup];
@@ -20,16 +22,29 @@ export abstract class Content extends LitElement {
   language!: string;
 
   @property({ attribute: false })
-  errors!: Array<string>;
+  errors!: Array<Error>;
 
   @property({ attribute: false })
   cardConfig!: Config;
 
+  @property({ attribute: false })
+  theme: CardTheme = CardTheme.BASIC;
+
   /**
    * The layout configuration for the departure rows.
-   * @type {Layout | null}
+   * @type {Layout}
    */
-  protected layout: Layout | null = null;
+  protected layout!: Layout;
+
+  protected updated(_changedProperties: PropertyValues): void {
+    super.updated(_changedProperties);
+    this._animateArriving();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._animateArriving();
+  }
 
   public render(): TemplateResult {
     if (!this.cardConfig) {
@@ -37,10 +52,46 @@ export abstract class Content extends LitElement {
     }
 
     if (!this.layout) {
-      this.layout = new Layout(this.cardConfig.layout);
+      this.layout = this.createLayout();
     }
 
-    return html` <div class="content">${this.renderContent()} ${this.errors ? html`${this._renderErrors()}` : nothing}</div> `;
+    return html` <div class="content" theme=${this.theme}>${this.renderContent()} ${this.errors ? html`${this._renderErrors()}` : nothing}</div> `;
+  }
+
+  private _animateArriving() {
+    const animation = this.cardConfig?.departureAnimation ?? "none";
+    const animateLine = this.cardConfig?.animateLine ?? false;
+
+    if (animation === "none") {
+      return;
+    }
+
+    if (!(animation in animatePresets)) {
+      console.error("Unknown animation type", animation);
+      return;
+    }
+
+    const preset = animatePresets[animation];
+
+    let elements;
+
+    if (animateLine) {
+      elements = this.shadowRoot?.querySelectorAll(this.getQueryLineElements());
+    } else {
+      elements = this.shadowRoot?.querySelectorAll(this.getQueryTimeElements());
+    }
+
+    elements?.forEach((element) => {
+      if (element.classList.contains("arriving")) {
+        if (element.getAnimations().length == 0) {
+          element.animate(preset.keyframes, preset.options);
+        }
+      } else {
+        element.getAnimations().forEach((animation) => {
+          animation.cancel();
+        });
+      }
+    });
   }
 
   /**
@@ -48,6 +99,12 @@ export abstract class Content extends LitElement {
    * This function should be implemented in sub classes.
    */
   protected abstract renderContent(): TemplateResult;
+
+  protected abstract createLayout(): Layout;
+
+  protected abstract getQueryLineElements(): string;
+
+  protected abstract getQueryTimeElements(): string;
 
   /**
    * Renders the list header.
@@ -89,11 +146,16 @@ export abstract class Content extends LitElement {
         case LayoutCell.ESTIMATED_TIME:
           content.push(html`<div class="list-header-estimated-time">${localize("card.list-header.estimated-time", this.language)}</div>`);
           break;
+        case LayoutCell.DELAY:
+          content.push(html`<div class="list-header-delay">${localize("card.list-header.delay", this.language)}</div>`);
+          break;
       }
     });
 
-    return html` <div class="list-header" style="${styleMap(styles)}">${content}</div>
-      <hr />`;
+    return html`<div class="list-header">
+      <div class="list-header-content" theme=${this.theme} style="${styleMap(styles)}">${content}</div>
+      <hr />
+    </div>`;
   }
 
   /**
@@ -102,12 +164,23 @@ export abstract class Content extends LitElement {
    * @returns A TemplateResult containing the rendered departure line with applied classes and styles
    */
   protected renderDepartureLine(departure: DeparturesDataRow): TemplateResult {
-    let classes = this.getDepartureLineClasses(departure);
-    let styles = this.getDepartureLineStyles(departure);
-    let layoutCells = this.layout?.getCells();
+    let classes = {
+      arriving: departure.time.isArriving(this.cardConfig.arrivalTimeOffset),
+      delayed: departure.time.isDelayed,
+      earlier: departure.time.isEarlier,
+    };
+    let styles = {};
+    const layoutCells = this.layout?.getCells();
 
     if (!layoutCells) {
       return html``;
+    }
+
+    styles = { ...styles, "grid-template-columns": this.layout?.getColumns() };
+
+    switch (this.theme) {
+      case CardTheme.CAPPUCINO:
+        styles = { ...styles, borderLeft: `8px solid ${departure.lineColor ?? ""}` };
     }
 
     let content: Array<TemplateResult> = [];
@@ -138,7 +211,7 @@ export abstract class Content extends LitElement {
       }
     });
 
-    return html` <div class="departure-line ${classMap(classes)}" style="${styleMap(styles)}">${content}</div> `;
+    return html` <div class="departure-line  ${classMap(classes)}" theme=${this.theme} style="${styleMap(styles)}">${content}</div> `;
   }
 
   /**
@@ -147,9 +220,9 @@ export abstract class Content extends LitElement {
    * @returns A template result containing the rendered icon element
    */
   protected renderTransportIcon(departure: DeparturesDataRow): TemplateResult {
-    let icon = departure.icon ?? "mdi:train-bus";
+    const icon = departure.icon ?? DEFAULT_ENTITY_ICON;
 
-    return html`<div class="cell-transport-icon"><ha-icon icon=${icon}></ha-icon></div>`;
+    return html`<div class="cell-transport-icon" theme=${this.theme}><ha-icon icon=${icon}></ha-icon></div>`;
   }
 
   /**
@@ -158,7 +231,27 @@ export abstract class Content extends LitElement {
    * @returns A template result containing the rendered line name cell
    */
   protected renderCellLineName(departure: DeparturesDataRow): TemplateResult {
-    return html`<div class="cell-line">${departure.lineName}</div>`;
+    let styles = {};
+
+    let contrastTextColor = "";
+
+    if (departure.lineColor) {
+      contrastTextColor = getContrastTextColor(departure.lineColor);
+    }
+
+    switch (this.theme) {
+      case CardTheme.BLUE_OCEAN:
+      case CardTheme.BASIC:
+        styles = { backgroundColor: departure.lineColor, color: contrastTextColor };
+        break;
+      case CardTheme.BLACK_WHITE:
+        styles = {
+          color: departure.lineColor ?? "white",
+        };
+        break;
+    }
+
+    return html`<div><div class="cell-line" theme=${this.theme} style=${styleMap(styles)}>${departure.lineName}</div></div>`;
   }
 
   /**
@@ -167,7 +260,7 @@ export abstract class Content extends LitElement {
    * @returns A template result containing the rendered destination cell HTML
    */
   protected renderCellDestination(departure: DeparturesDataRow): TemplateResult {
-    return html`<div class="cell-destination">${departure.destinationName}</div>`;
+    return html`<div class="cell-destination" theme=${this.theme}>${departure.destinationName}</div>`;
   }
 
   /**
@@ -179,7 +272,7 @@ export abstract class Content extends LitElement {
     const time = departure.time.planned;
     const htmlText = time ? lightFormat(time, "HH:mm") : "-";
 
-    return html`<div class="cell-planned-time">${htmlText}</div>`;
+    return html`<div class="cell-planned-time" theme=${this.theme}>${htmlText}</div>`;
   }
 
   /**
@@ -191,7 +284,7 @@ export abstract class Content extends LitElement {
     const time = departure.time.estimated;
     const htmlText = time ? lightFormat(time, "HH:mm") : "-";
 
-    return html`<div class="cell-estimated-time">${htmlText}</div>`;
+    return html`<div class="cell-estimated-time" theme=${this.theme}>${htmlText}</div>`;
   }
 
   /**
@@ -208,14 +301,14 @@ export abstract class Content extends LitElement {
   protected renderCellTimeDiff(departure: DeparturesDataRow): TemplateResult {
     let htmlText: TemplateResult = html``;
     const time = departure.time;
-    const icon = departure.icon ?? DEFAULT_ENTITY_ICON;
+    const icon = this.getDepartureIcon() ?? departure.icon ?? DEFAULT_ENTITY_ICON;
+    const arriving = time.isArriving(this.cardConfig.arrivalTimeOffset);
 
     let classes = {
-      arriving: false,
+      arriving: arriving,
     };
 
-    if (time.isArriving) {
-      classes.arriving = true;
+    if (time.timeDiff == 0) {
       htmlText = html`<ha-icon icon=${icon}></ha-icon>`;
     } else if (time.timeDiff > 60) {
       htmlText = html`${lightFormat(time.time, "HH:mm")}`;
@@ -223,7 +316,7 @@ export abstract class Content extends LitElement {
       htmlText = html`${time.timeDiff} min`;
     }
 
-    return html`<div class="cell-time-diff ${classMap(classes)}">${htmlText}</div>`;
+    return html`<div><div class="cell-time-diff ${classMap(classes)}" theme=${this.theme}>${htmlText}</div></div>`;
   }
 
   /**
@@ -234,51 +327,46 @@ export abstract class Content extends LitElement {
   protected renderDelay(departure: DeparturesDataRow): TemplateResult {
     let htmlText: string = "";
     const time = departure.time;
+    const arriving = departure.time.isArriving(this.cardConfig.arrivalTimeOffset);
+
+    let classes = {
+      arriving: arriving,
+      delayed: time.isDelayed,
+      earlier: time.isEarlier,
+    };
 
     if (time.delay != undefined) {
       if (time.isDelayed) {
         htmlText = `+${time.delay}`;
       } else if (time.isEarlier) {
-        htmlText = `-${time.delay}`;
+        htmlText = `${time.delay}`;
       }
     }
 
-    return html`<div class="cell-delay">${htmlText}</div>`;
+    return html`<div><div class="cell-delay ${classMap(classes)}" theme=${this.theme}>${htmlText}</div></div>`;
   }
 
-  protected getDepartureLineStyles(departure: DeparturesDataRow | null) {
-    return {
-      "grid-template-columns": this.layout?.getColumns(),
-    };
-  }
+  protected getDepartureIcon(): string | undefined {
+    let icon = this.cardConfig.departureIcon;
 
-  /**
-   * Gets the CSS classes to apply to a departure line based on its status.
-   * @param departure - The departure data row to get classes for
-   * @returns An object containing boolean flags for CSS classes:
-   *   - arriving: true if the departure is arriving
-   *   - delayed: true if the departure is delayed
-   */
-  protected getDepartureLineClasses(departure: DeparturesDataRow) {
-    let classes = {
-      arriving: departure.time.isArriving,
-      delayed: departure.time.isDelayed,
-    };
+    if (icon && icon != undefined && icon != "") {
+      return icon;
+    }
 
-    return classes;
+    return undefined;
   }
 
   /**
-   * Renders error messages for unsupported entities.
-   * @returns {TemplateResult} A template containing error messages for each unsupported entity,
-   * displaying an alert icon and a message indicating the entity is not supported.
+   * Renders error messages.
+   * @returns {TemplateResult} A template containing error messages,
+   * displaying an alert icon and a message indicating the entity error.
    */
   private _renderErrors() {
     return html`
-      ${this.errors.map((entity) => {
+      ${this.errors.map((error) => {
         return html`<div class="error">
           <ha-icon icon="mdi:alert"></ha-icon>
-          <div>The entity '<span>${entity}</span>' is not supported!</div>
+          <div>'<span>${error.name}</span>': ${error.message}</div>
         </div>`;
       })}
     `;

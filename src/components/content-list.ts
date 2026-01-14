@@ -1,18 +1,21 @@
 import Splide, { Options as SplideOptions } from "@splidejs/splide";
 import { Content } from "./content";
 import { ClassTimer } from "../helpers";
-import { scrollableContent } from "../styles";
 import { css, CSSResultGroup, html, PropertyValues, unsafeCSS } from "lit";
-import cssText from "@splidejs/splide/dist/css/splide.min.css";
 import { DEFAULT_DEPARTURE_ROW_GAP, DEFAULT_DEPARTURE_ROW_HEIGHT, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, DEFAULT_SHOW_SCROLLBUTTONS } from "../constants";
+import { customElement } from "lit/decorators.js";
+import { Layout } from "../data/layout";
+import { CardOrientation } from "../types";
 
-export class ScrollableContent extends Content {
+import cssText from "@splidejs/splide/dist/css/splide.min.css";
+
+@customElement("card-content-list")
+export class ContentList extends Content {
   static styles = [
     css`
       ${unsafeCSS(cssText)}
     ` as CSSResultGroup,
     Content.styles,
-    scrollableContent,
   ];
   private splide: Splide | null = null;
 
@@ -24,6 +27,8 @@ export class ScrollableContent extends Content {
   }
 
   protected updated(_changedProperties: PropertyValues): void {
+    super.updated(_changedProperties);
+
     if (_changedProperties.get("cardConfig")) {
       console.debug("Card config has been changed, reinitialze splide.");
       this._initializeScrollbackTimer();
@@ -32,6 +37,10 @@ export class ScrollableContent extends Content {
       console.debug("Departures have been changed, refresh splide.");
       this.splide?.refresh();
     }
+  }
+
+  protected createLayout(): Layout {
+    return new Layout(this.cardConfig.layout, CardOrientation.VERTICAL);
   }
 
   public disconnectedCallback(): void {
@@ -43,7 +52,7 @@ export class ScrollableContent extends Content {
 
   protected renderContent() {
     return html`
-    <div class="splide-root">
+    <div class="splide-root" id="content-background" theme=${this.theme}>
       ${this.renderListHeader()}
       <div class="splide">
         <div style="position:relative">
@@ -60,12 +69,22 @@ export class ScrollableContent extends Content {
     `;
   }
 
+  protected getQueryLineElements(): string {
+    return ".departure-line";
+  }
+
+  protected getQueryTimeElements(): string {
+    return ".cell-time-diff";
+  }
+
   private _restartscrollBackTimer() {
     if (this.scrollBackTimer == null) {
+      console.log("Scrollback timer is null, create a new instance");
       this._initializeScrollbackTimer();
     }
 
     if (!this.scrollBackTimer) {
+      console.error("Scrollback timer has not been created!");
       return;
     }
 

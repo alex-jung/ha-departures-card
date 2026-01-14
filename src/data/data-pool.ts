@@ -2,15 +2,15 @@ import { HomeAssistant } from "custom-card-helpers";
 import { EntityConfig, DeparturesDataRow, DeparturesData } from "../types";
 import { DataParser, Parser } from "./data-parsers";
 import { HassEntity } from "home-assistant-js-websocket";
-import { UnsupportedEntityError } from "../exceptions";
+import { EntityNotAvailable, UnsupportedEntityError } from "../exceptions";
 import { DEFAULT_ENTITY_ICON } from "../constants";
 
 export class DepartureTimesPool {
   private _data = new Map<string, DeparturesData>();
-  private _unsupportedEntities: Array<string> = [];
+  private _errors: Array<Error> = [];
 
-  public get unsupportedEntities() {
-    return this._unsupportedEntities;
+  public get errors() {
+    return this._errors;
   }
 
   /**
@@ -97,7 +97,7 @@ export class DepartureTimesPool {
   }
 
   private _updateData(hass: HomeAssistant, configs: Array<EntityConfig>): void {
-    this._unsupportedEntities = [];
+    this._errors = [];
 
     configs.forEach((config) => {
       const state = hass.states[config.entity] as HassEntity;
@@ -110,7 +110,11 @@ export class DepartureTimesPool {
         if (e instanceof UnsupportedEntityError) {
           console.warn("Not supported entity found:" + e.entityId);
 
-          this._unsupportedEntities.push(e.entityId);
+          this._errors.push(e);
+        } else if (e instanceof EntityNotAvailable) {
+          console.warn("Entity is not available:" + e.entityId);
+
+          this._errors.push(e);
         }
       }
     });

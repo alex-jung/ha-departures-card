@@ -58,11 +58,12 @@ export class DepartureTime {
   }
 
   /**
-   * Determines whether the departure time represents an arrival (current time).
-   * @returns {boolean} True if the time difference is zero (arriving), false otherwise.
+   * Determines whether the departure time represents an arrival (incl. optional offset time).
+   * @param offset Optional offset (min) to mark time as arriving. Default is 0.
+   * @returns {boolean} True if the time difference is less as offset, false otherwise.
    */
-  public get isArriving(): boolean {
-    return this.timeDiff == 0;
+  public isArriving(offset: number = 0): boolean {
+    return this.timeDiff <= offset;
   }
 
   /**

@@ -10,9 +10,14 @@ export interface Config extends LovelaceCardConfig {
   showListHeader: boolean;
   scrollBackTimeout: number;
   showScrollButtons: boolean;
-  showArrivalAnimation: boolean;
+  cardOrientation: CardOrientation;
   theme: CardTheme;
-  layout: string;
+  sortDepartures: boolean;
+  departureIcon: string;
+  animateLine: boolean;
+  departureAnimation: string;
+  arrivalTimeOffset: number;
+  layout: Array<LayoutCell | string>;
   entities?: EntityConfig[];
 }
 
@@ -39,6 +44,11 @@ export enum CardTheme {
   CAPPUCINO = "cappucino",
   BLUE_OCEAN = "blue-ocean",
   TABLE = "table",
+}
+
+export enum CardOrientation {
+  VERTICAL = "vertical",
+  HORIZONTAL = "horizontal",
 }
 
 export enum LayoutCell {
