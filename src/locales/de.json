@@ -1,23 +1,64 @@
 {
   "card": {
     "editor": {
-      "title": "Card Header text (optional)",
-      "icon": "Card Icon (optional)",
-      "showCardHeader": "Card Header anzeigen",
-      "showListHeader": "List Header anzeigen",
-      "showScrollButtons": "Scroll Buttons anzeigen",
+      "title": "Kartenüberschrift (optional)",
+      "icon": "Kartensymbol  (optional)",
+      "showCardHeader": "Kartenüberschrift anzeigen",
+
+      "design-expandable": "Design & Inhalt",
+      "cardOrientation": "Kartenausrichtung",
+      "cardOrientationVerticalDescription": "Zeigt die Ankünfte in einer scrollbaren Liste",
+      "cardOrientationHorizontalDescription": "Zeigt die Ankünfte in einer Tabellenansicht",
       "theme": "Card Theme",
-      "departuresToShow": "Abfahrten pro Seite",
-      "scrollBackTimeout": "Scrollback Zeit (Sekunden)",
-      "layout": "Ankunftszeile Layout",
-      "addEntity": "Neue Entity",
+      "showListHeader": "Listenüberschrift anzeigen",
+      "showScrollButtons": "Scroll-Schaltflächen anzeigen",
+      "departuresToShow": "Anzahl der Ankünfte zu anzeigen",
+      "scrollBackTimeout": "Zurückscroll-Zeit (Sekunden)",
+      "sortDepartures": "Entitäten nach geplanter Ankunft sortieren",
+
+      "layout-expandable": "Layout der Ankunftszeile",
+      "layout": "Zelle hinzufügen",
+      "layout-cells": {
+        "icon": "Transport icon",
+        "line": "Linie",
+        "destination": "Ziel",
+        "time-diff": "Ankunft in",
+        "planned-time": "Geplante Zeit",
+        "estimated-time": "Geschätzte Zeit",
+        "delay": "Verspätung"
+      },
+      "layoutWarning": "Die folgenden Zellen werden bei horizontaler Kartenausrichtung ignoriert",
+
+      "animation-expandable": "Ankunftssymbol & Animation",
+      "departureIcon": "Benutzerdefiniertes Ankunftssymbol",
+      "animateLine": "Ankunftszeile animieren",
+      "arrivalTimeOffset": "Ankunftszeit-Versatz",
+      "departureAnimation": "Ankunftsanimation",
+
+      "noAnimation": "Keine",
+
+      "interactions-expandable": "Interaktionen",
+
+      "entities-expandable": "Entitäten (erforderlich)",
+      "addEntity": "Entität hinzufügen",
+
       "entity": {
-        "entity": "Entity",
+        "entity": "Entität",
         "destinationName": "Zielname",
         "lineName": "Linienname",
         "lineColor": "Linienfarbe",
-        "icon": "Icon",
+        "icon": "Transport Icon",
         "remove": "Entfernen"
+      },
+      "help": {
+        "showListHeader": "Zeigt die Spaltenüberschriften der Ankunftsliste an",
+        "showScrollButtons": "Zeigt Schaltflächen zum Hoch- und Runterscrollen der Liste an",
+        "sortDepartures": "Sortiert die Ankünfte nach ihrer geplanten Zeit",
+        "scrollBackTimeout": "Zeit in Sekunden, nach der automatisch zum Listenanfang zurückgescrollt wird",
+        "layout": "Konfiguration der angezeigten Zellen und ihrer Reihenfolge in einer Ankunftszeile",
+        "departureIcon": "Wenn kein benutzerdefiniertes Symbol festgelegt ist, wird das transport icon der Entität für die Animation verwendet",
+        "animateLine": "Wenn deaktiviert, wird nur die Zelle 'Ankunft in' animiert",
+        "arrivalTimeOffset": "Zeit in Minuten vor der geplanten Ankunft, ab der die Animation startet"
       }
     },
     "list-header": {
@@ -25,12 +66,12 @@
       "line": "Linie",
       "destination": "Ziel",
       "time-diff": "Ankunft in",
-      "planned-time": "Geplante Ankunft",
-      "estimated-time": "Erwarterte Ankunft",
-      "delay": "Verzögerung"
+      "planned-time": "Geplant",
+      "estimated-time": "Geschätzt",
+      "delay": "Verspät."
     },
-    "departures": "Abfahrten",
-    "line": "Linie",
-    "destination": "Ziel"
+    "errors": {
+      "no-card-orientation-set": "Bitte die Option \"Kartenausrichtung\" setzen"
+    }
   }
 }

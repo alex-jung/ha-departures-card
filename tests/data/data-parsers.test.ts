@@ -83,7 +83,20 @@ describe("DataParser", () => {
         context: { id: "test", parent_id: null, user_id: null },
       };
 
-      expect(() => DataParser.getParser(entity)).toThrow("No data parser found for entity 'sensor.unsupported'");
+      expect(() => DataParser.getParser(entity)).toThrow("No valid data parser found!");
+    });
+
+    it("should throw EntityNotAvailable", () => {
+      const entity: HassEntity = {
+        entity_id: "sensor.unsupported",
+        state: "unavailable",
+        attributes: {},
+        last_changed: "2023-01-01T00:00:00Z",
+        last_updated: "2023-01-01T00:00:00Z",
+        context: { id: "test", parent_id: null, user_id: null },
+      };
+
+      expect(() => DataParser.getParser(entity)).toThrow("Entity is not available!");
     });
 
     describe("ParserHaDepartures", () => {

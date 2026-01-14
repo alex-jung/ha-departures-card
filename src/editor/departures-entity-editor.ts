@@ -14,11 +14,16 @@ export class DeparturesCardEntityEditor extends LitElement {
       .entity-editor-content {
         border: 1px solid var(--divider-color);
         padding: 10px;
+        margin-bottom: 24px;
       }
       #card-options {
         display: flex;
         justify-content: flex-end;
         width: 100%;
+      }
+      ha-form {
+        display: block;
+        padding: 10px;
       }
     `,
   ];
@@ -31,7 +36,7 @@ export class DeparturesCardEntityEditor extends LitElement {
   private _schema = [
     {
       name: "entity",
-      selector: { entity: {}, domain: "sensor" },
+      selector: { entity: {}, domain: "ha_departures" },
     },
     {
       name: "destinationName",
@@ -49,11 +54,11 @@ export class DeparturesCardEntityEditor extends LitElement {
           name: "lineColor",
           selector: { text: {} },
         },
-        {
-          name: "icon",
-          selector: { icon: {} },
-        },
       ],
+    },
+    {
+      name: "icon",
+      selector: { icon: {} },
     },
   ] as const;
 

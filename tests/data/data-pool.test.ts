@@ -2,7 +2,7 @@ import { DepartureTimesPool } from "../../src/data/data-pool";
 import { HomeAssistant } from "custom-card-helpers";
 import { EntityConfig } from "../../src/types";
 import { DataParser, Parser } from "../../src/data/data-parsers";
-import { UnsupportedEntityError } from "../../src/exceptions";
+import { EntityNotAvailable, UnsupportedEntityError } from "../../src/exceptions";
 import { DepartureTime } from "../../src/data/departure-time";
 import { HassEntity } from "home-assistant-js-websocket";
 
@@ -42,9 +42,9 @@ describe("DepartureTimesPool", () => {
     jest.clearAllMocks();
   });
 
-  describe("unsupportedEntities", () => {
+  describe("errors", () => {
     it("should return empty array initially", () => {
-      expect(pool.unsupportedEntities).toEqual([]);
+      expect(pool.errors).toEqual([]);
     });
   });
 
@@ -79,7 +79,7 @@ describe("DepartureTimesPool", () => {
       pool.update(mockHass, [mockEntityConfig]);
 
       expect(DataParser.getParser).toHaveBeenCalled();
-      expect(pool.unsupportedEntities).toEqual([]);
+      expect(pool.errors).toEqual([]);
 
       spy.mockRestore();
     });
@@ -95,7 +95,23 @@ describe("DepartureTimesPool", () => {
       mockHass.states[mockEntityConfig.entity] = {} as any;
       pool.update(mockHass, [mockEntityConfig]);
 
-      expect(pool.unsupportedEntities).toContain("sensor.test_entity");
+      expect(pool.errors).toContain(error);
+      consoleSpy.mockRestore();
+      spy.mockRestore();
+    });
+
+    it("should handle not available entities", () => {
+      const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
+      const error = new EntityNotAvailable("Entity not available", "sensor.test_entity");
+
+      const spy = jest.spyOn(DataParser, "getParser").mockImplementation(() => {
+        throw error;
+      });
+
+      mockHass.states[mockEntityConfig.entity] = {} as any;
+      pool.update(mockHass, [mockEntityConfig]);
+
+      expect(pool.errors).toContain(error);
       consoleSpy.mockRestore();
       spy.mockRestore();
     });

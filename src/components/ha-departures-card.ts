@@ -1,28 +1,34 @@
 import { LitElement, TemplateResult, html } from "lit-element";
-import { CardTheme, Config, DeparturesDataRow } from "../types";
+import { CardOrientation, Config, DeparturesDataRow } from "../types";
 import { HomeAssistant } from "custom-card-helpers";
 import { cardStyles } from "../styles";
 import { DepartureTimesPool } from "../data/data-pool";
 
-import "./content-black-white";
-import "./content-cappucino";
-import "./content-basic";
-import "./content-blue-ocean";
 import "./content-table";
+import "./content-list";
 
 import "../editor/departures-card-editor.js";
 
 import { customElement, property, state } from "lit/decorators.js";
-import { localize } from "../locales/localize";
 import {
+  DEFAULT_ANIMATE_LINE,
+  DEFAULT_ARRIVAL_OFFSET,
   DEFAULT_CARD_ICON,
+  DEFAULT_CARD_ORIENTATION,
   DEFAULT_CARD_THEME,
+  DEFAULT_CARD_TITLE,
+  DEFAULT_DEPARTURE_ANIMATION,
+  DEFAULT_DEPARTURE_ICON,
   DEFAULT_DEPARTURES_TO_SHOW,
+  DEFAULT_LAYOUT,
   DEFAULT_SCROLL_BACK_TIMEOUT,
   DEFAULT_SHOW_CARD_HEADER,
+  DEFAULT_SHOW_LIST_HEADER,
   DEFAULT_SHOW_SCROLLBUTTONS,
+  DEFAULT_SORT_DEPARTURES,
   DEFAULT_UPDATE_INTERVAL,
 } from "../constants";
+import { localize } from "../locales/localize";
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
@@ -31,7 +37,7 @@ import {
   description: "Display departure times for different public transports",
 });
 
-const version = "3.1.0";
+const version = "3.2.0";
 const repoUrl = "https://github.com/alex-jung/ha-departures-card";
 
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;");
@@ -59,19 +65,28 @@ export class DeparturesCard extends LitElement {
   public static getStubConfig(hass: HomeAssistant): Record<string, unknown> {
     return {
       type: "custom:departures-card",
-      title: localize("card.departures", hass.locale?.language) || "Departures",
-      showCardHeader: DEFAULT_SHOW_CARD_HEADER,
+      title: DEFAULT_CARD_TITLE,
+      icon: DEFAULT_CARD_ICON,
       departuresToShow: DEFAULT_DEPARTURES_TO_SHOW,
-      showScrollButtons: DEFAULT_SHOW_SCROLLBUTTONS,
+      showCardHeader: DEFAULT_SHOW_CARD_HEADER,
+      showListHeader: DEFAULT_SHOW_LIST_HEADER,
       scrollBackTimeout: DEFAULT_SCROLL_BACK_TIMEOUT,
+      showScrollButtons: DEFAULT_SHOW_SCROLLBUTTONS,
+      cardOrientation: DEFAULT_CARD_ORIENTATION,
       theme: DEFAULT_CARD_THEME,
+      sortDepartures: DEFAULT_SORT_DEPARTURES,
+      departureIcon: DEFAULT_DEPARTURE_ICON,
+      animateLine: DEFAULT_ANIMATE_LINE,
+      departureAnimation: DEFAULT_DEPARTURE_ANIMATION,
+      arrivalTimeOffset: DEFAULT_ARRIVAL_OFFSET,
+      layout: DEFAULT_LAYOUT,
       entities: [],
     };
   }
 
   public setConfig(config: Config) {
     if (!config) {
-      throw new Error("No configuration object provided!");
+      throw new Error("No configuration provided!");
     }
 
     this.config = config;
@@ -92,8 +107,8 @@ export class DeparturesCard extends LitElement {
   public render() {
     const cardConfig = this.config || DeparturesCard.getStubConfig(this.hass);
     const darkTheme = Object(this.hass?.selectedTheme)["dark"] ?? false;
-    const cardTitle = cardConfig.title || localize("card.departures", this.hass.locale?.language);
-    const cardIcon = cardConfig.icon || DEFAULT_CARD_ICON;
+    const cardTitle = cardConfig.title ?? DEFAULT_CARD_TITLE;
+    const cardIcon = cardConfig.icon ?? DEFAULT_CARD_ICON;
 
     console.debug("Card configuration", cardConfig);
 
@@ -131,47 +146,27 @@ export class DeparturesCard extends LitElement {
   }
 
   private _getCardContent(cardConfig: Config, departures: Array<DeparturesDataRow>): TemplateResult {
-    let language = this.hass.locale?.language ?? "en";
+    const language = this.hass.locale?.language ?? "en";
+    const cardTheme = cardConfig.theme;
+    const cardOrientation = cardConfig.cardOrientation;
 
-    const basic = html`<card-content-basic
-      .language=${language}
-      .departures=${departures}
-      .cardConfig=${cardConfig}
-      .errors=${this.dataPool.unsupportedEntities}></card-content-basic>`;
-    const blackWhite = html`<card-content-black-white
-      .language=${language}
-      .departures=${departures}
-      .cardConfig=${cardConfig}
-      .errors=${this.dataPool.unsupportedEntities}></card-content-black-white>`;
-    const cappucino = html`<card-content-cappucino
-      .language=${language}
-      .departures=${departures}
-      .cardConfig=${cardConfig}
-      .errors=${this.dataPool.unsupportedEntities}></card-content-cappucino>`;
-    const blueOcean = html`<card-content-blue-ocean
-      .language=${language}
-      .departures=${departures}
-      .cardConfig=${cardConfig}
-      .errors=${this.dataPool.unsupportedEntities}></card-content-blue-ocean>`;
-    const table = html`<card-content-table
-      .language=${language}
-      .departures=${departures}
-      .cardConfig=${cardConfig}
-      .errors=${this.dataPool.unsupportedEntities}></card-content-table>`;
-
-    switch (cardConfig.theme) {
-      case CardTheme.BASIC:
-        return basic;
-      case CardTheme.BLACK_WHITE:
-        return blackWhite;
-      case CardTheme.CAPPUCINO:
-        return cappucino;
-      case CardTheme.BLUE_OCEAN:
-        return blueOcean;
-      case CardTheme.TABLE:
-        return table;
+    switch (cardOrientation) {
+      case CardOrientation.VERTICAL:
+        return html`<card-content-list
+          .language=${language}
+          .theme=${cardTheme}
+          .departures=${departures}
+          .cardConfig=${cardConfig}
+          .errors=${this.dataPool.errors}></card-content-list>`;
+      case CardOrientation.HORIZONTAL:
+        return html`<card-content-table
+          .language=${language}
+          .theme=${cardTheme}
+          .departures=${departures}
+          .cardConfig=${cardConfig}
+          .errors=${this.dataPool.errors}></card-content-table>`;
       default:
-        return basic;
+        return html`<div>${localize("card.errors.no-card-orientation-set", this.hass.locale?.language)}</div>`;
     }
   }
 }

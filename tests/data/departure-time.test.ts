@@ -38,7 +38,7 @@ describe("DepartureTime", () => {
   it("should return isArraving true if planned time is the same like now (without seconds)", () => {
     const dt = new DepartureTime(new Date(), undefined);
 
-    expect(dt.isArriving).toBe(true);
+    expect(dt.isArriving()).toBe(true);
   });
 
   it("should calculate delay in minutes when estimated is provided", () => {

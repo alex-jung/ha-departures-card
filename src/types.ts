@@ -3,26 +3,31 @@ import { DepartureTime } from "./data/departure-time";
 
 // ha-departures-card specific configuration types
 export interface Config extends LovelaceCardConfig {
-  title: string;
-  icon: string;
+  animateLine: boolean;
+  arrivalTimeOffset: number;
+  cardOrientation: CardOrientation;
+  departureAnimation: string;
+  departureIcon: string;
   departuresToShow: number;
+  entities?: EntityConfig[];
+  icon: string;
+  layout: Array<LayoutCell | string>;
+  scrollBackTimeout: number;
   showCardHeader: boolean;
   showListHeader: boolean;
-  scrollBackTimeout: number;
   showScrollButtons: boolean;
-  showArrivalAnimation: boolean;
+  sortDepartures: boolean;
   theme: CardTheme;
-  layout: string;
-  entities?: EntityConfig[];
+  title: string;
 }
 
 // An entity configuration within the card configuration
 export interface EntityConfig {
+  destinationName: string | null;
   entity: string;
+  icon: string | null;
   lineColor: string | null;
   lineName: string | null;
-  destinationName: string | null;
-  icon: string | null;
 }
 
 export type DeparturesData = EntityConfig & {
@@ -36,30 +41,35 @@ export type DeparturesDataRow = EntityConfig & {
 export enum CardTheme {
   BASIC = "basic",
   BLACK_WHITE = "black-white",
-  CAPPUCINO = "cappucino",
   BLUE_OCEAN = "blue-ocean",
+  CAPPUCINO = "cappucino",
   TABLE = "table",
 }
 
+export enum CardOrientation {
+  HORIZONTAL = "horizontal",
+  VERTICAL = "vertical",
+}
+
 export enum LayoutCell {
+  DELAY = "delay",
+  DESTINATION = "destination",
+  ESTIMATED_TIME = "estimated-time",
   ICON = "icon",
   LINE = "line",
-  DESTINATION = "destination",
-  TIME_DIFF = "time-diff",
   PLANNED_TIME = "planned-time",
-  ESTIMATED_TIME = "estimated-time",
-  DELAY = "delay",
+  TIME_DIFF = "time-diff",
 }
 
 // ha-departures specific types
 export enum HaDeparturesEntityAttributes {
-  TIMES = "times",
-  LINE_NAME = "line_name",
-  LINE_ID = "line_id",
   DIRECTION = "direction",
-  TRANSPORT = "transport",
   FRIENDLY_NAME = "friendly_name",
   ICON = "icon",
+  LINE_ID = "line_id",
+  LINE_NAME = "line_name",
+  TIMES = "times",
+  TRANSPORT = "transport",
 
   // deprecated attributes
   PLANNED_DEPARTURE_TIME = "planned_departure_time",
