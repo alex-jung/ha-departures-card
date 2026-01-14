@@ -68,6 +68,9 @@
       "planned-time": "Planned",
       "estimated-time": "Estimated",
       "delay": "Delay"
+    },
+    "errors": {
+      "no-card-orientation-set": "Please set \"Card orientation\" option"
     }
   }
 }

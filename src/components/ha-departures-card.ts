@@ -28,6 +28,7 @@ import {
   DEFAULT_SORT_DEPARTURES,
   DEFAULT_UPDATE_INTERVAL,
 } from "../constants";
+import { localize } from "../locales/localize";
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
@@ -165,7 +166,7 @@ export class DeparturesCard extends LitElement {
           .cardConfig=${cardConfig}
           .errors=${this.dataPool.errors}></card-content-table>`;
       default:
-        return html`<div>Please set card orientation</div>`;
+        return html`<div>${localize("card.errors.no-card-orientation-set", this.hass.locale?.language)}</div>`;
     }
   }
 }

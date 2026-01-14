@@ -69,6 +69,9 @@
       "planned-time": "Geplant",
       "estimated-time": "Geschätzt",
       "delay": "Verspät."
+    },
+    "errors": {
+      "no-card-orientation-set": "Bitte die Option \"Kartenausrichtung\" setzen"
     }
   }
 }
