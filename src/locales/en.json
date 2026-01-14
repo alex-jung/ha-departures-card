@@ -4,20 +4,60 @@
       "title": "Card header text (optional)",
       "icon": "Card icon (optional)",
       "showCardHeader": "Show card header",
+
+      "design-expandable": "Design & content",
+      "cardOrientation": "Card orientation",
+      "cardOrientationVerticalDescription": "Show departures in a scrollable list",
+      "cardOrientationHorizontalDescription": "Show departures in a table view (legacy  behavior)",
+      "theme": "Card Theme",
       "showListHeader": "Show list header",
       "showScrollButtons": "Show scroll buttons",
-      "theme": "Card Theme",
-      "departuresToShow": "Departures to show per page",
-      "scrollBackTimeout": "Scrollback time (seconds)",
-      "layout": "Departure row layout",
+      "departuresToShow": "Number of departures to show",
+      "scrollBackTimeout": "Scroll-back time (seconds)",
+      "sortDepartures": "Sort entities by planned departure time",
+
+      "layout-expandable": "Departure layout",
+      "layout": "Add cell",
+      "layout-cells": {
+        "icon": "Transport icon",
+        "line": "Line",
+        "destination": "Destination",
+        "time-diff": "Departure in",
+        "planned-time": "Planned time",
+        "estimated-time": "Estimated time",
+        "delay": "Delay"
+      },
+      "layoutWarning": "The following cells will be ignored when using the horizontal orientation",
+
+      "animation-expandable": "Departure icon & animation",
+      "departureIcon": "Custom departure icon",
+      "animateLine": "Animate departure line",
+      "arrivalTimeOffset": "Arrival time offset",
+      "departureAnimation": "Departure animation",
+      "noAnimation": "None",
+
+      "interactions-expandable": "Interactions",
+
+      "entities-expandable": "Entities (required)",
       "addEntity": "Add entity",
+
       "entity": {
         "entity": "Entity",
         "destinationName": "Destination name",
         "lineName": "Line name",
         "lineColor": "Line color",
-        "icon": "Icon",
-        "remove": "Delete"
+        "icon": "Custom transport icon",
+        "remove": "Remove"
+      },
+      "help": {
+        "showListHeader": "Show the header row for the departure list",
+        "showScrollButtons": "Show buttons to scroll through the departure list",
+        "sortDepartures": "Sort departures by their planned time",
+        "scrollBackTimeout": "Time in seconds before the list automatically scrolls back to the top",
+        "layout": "Configure which cells are shown and their order in a departure row",
+        "departureIcon": "If no custom icon is defined, the entity's transport icon will be used for the animation",
+        "animateLine": "If disabled, only the departure time cell will be animated",
+        "arrivalTimeOffset": "Time in minutes before departure when the animation starts"
       }
     },
     "list-header": {
@@ -25,12 +65,9 @@
       "line": "Line",
       "destination": "Destination",
       "time-diff": "Departure in",
-      "planned-time": "Planned departure",
-      "estimated-time": "Estimated departure",
+      "planned-time": "Planned",
+      "estimated-time": "Estimated",
       "delay": "Delay"
-    },
-    "departures": "Departures",
-    "line": "Line",
-    "destination": "Destination"
+    }
   }
 }
