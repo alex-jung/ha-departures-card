@@ -86,29 +86,21 @@ export const animatePresets: Record<string, AnimatePreset> = {
   flipOutX: {
     keyframes: [
       {
-        transform: "perspective(400px) rotateX(0deg)",
+        transform: "perspective(2000px) rotateX(0deg)",
         opacity: 1,
       },
       {
-        transform: "perspective(400px) rotateX(-20deg)",
+        transform: "perspective(2000px) rotateX(90deg)",
         opacity: 1,
       },
       {
-        transform: "perspective(400px) rotateX(90deg)",
-        opacity: 0,
-      },
-      {
-        transform: "perspective(400px) rotateX(-20deg)",
-        opacity: 1,
-      },
-      {
-        transform: "perspective(400px) rotateX(0deg)",
+        transform: "perspective(2000px) rotateX(0deg)",
         opacity: 1,
       },
     ],
     options: {
       duration: 1500,
-      easing: "ease-in",
+      easing: "ease-in-out",
       iterations: Infinity,
     },
   },
