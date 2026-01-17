@@ -72,6 +72,9 @@ export abstract class Content extends LitElement {
     }
 
     const preset = animatePresets[animation];
+    const customDuration = this.cardConfig?.departureAnimationDuration ?? 0;
+    const duration = customDuration != 0 ? customDuration : preset.options?.duration;
+    const options = { ...preset.options, duration: duration };
 
     let elements;
 
@@ -84,7 +87,7 @@ export abstract class Content extends LitElement {
     elements?.forEach((element) => {
       if (element.classList.contains("arriving")) {
         if (element.getAnimations().length == 0) {
-          element.animate(preset.keyframes, preset.options);
+          element.animate(preset.keyframes, options);
         }
       } else {
         element.getAnimations().forEach((animation) => {
@@ -154,7 +157,7 @@ export abstract class Content extends LitElement {
 
     return html`<div class="list-header">
       <div class="list-header-content" theme=${this.theme} style="${styleMap(styles)}">${content}</div>
-      <hr />
+      <hr width="98%" />
     </div>`;
   }
 

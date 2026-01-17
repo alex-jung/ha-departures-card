@@ -16,10 +16,6 @@ export default (CLIArgs) => {
 
   let inputMap = { "ha-departures-card": "./src/components/ha-departures-card.ts" };
 
-  if (!prod) {
-    inputMap["dev"] = "./src/dev/debug-form.ts";
-  }
-
   return {
     input: inputMap,
 

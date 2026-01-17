@@ -30,25 +30,26 @@ A card to display departure times provided by [Departures](https://github.com/al
 
 ## Card Properties
 
-| yaml attribute                            | Type         | Required | Default value                                         |
-| ----------------------------------------- | ------------ | -------- | ----------------------------------------------------- |
-| type                                      | string       | yes      | `custom:departures-card`                              |
-| [animateLine](#animateLine)               | boolean      | no       | false                                                 |
-| [arrivalTimeOffset](#arrivalTimeOffset)   | number       | no       | 0                                                     |
-| [cardOrientation](#cardOrientation)       | string       | yes      | "vertical"                                            |
-| [departureAnimation](#departureAnimation) | string       | no       | "none"                                                |
-| [departureIcon](#departureIcon)           | string       | no       | -                                                     |
-| [departuresToShow](#departuresToShow)     | number       | no       | 5                                                     |
-| entities                                  | entity[]     | yes      | -                                                     |
-| [icon](#icon)                             | string       | no       | "mdi:bus-multiple"                                    |
-| [layout](#layout)                         | list[string] | yes      | ["icon", "line", "destination", "time-diff", "delay"] |
-| [scrollBackTimeout](#scrollBackTimeout)   | number       | no       | 5                                                     |
-| [showCardHeader](#showCardHeader)         | boolean      | no       | true                                                  |
-| [showListHeader](#showListHeader)         | boolean      | no       | true                                                  |
-| [showScrollButtons](#showScrollButtons)   | boolean      | no       | true                                                  |
-| [sortDepartures](#sortDepartures)         | boolean      | no       | true                                                  |
-| [theme](#theme)                           | string       | no       | "Basic"                                               |
-| [title](#title)                           | string       | no       | "Departures"                                          |
+| yaml attribute                                            | Type         | Required | Default value                                         |
+| --------------------------------------------------------- | ------------ | -------- | ----------------------------------------------------- |
+| type                                                      | string       | yes      | `custom:departures-card`                              |
+| [animateLine](#animateLine)                               | boolean      | no       | false                                                 |
+| [arrivalTimeOffset](#arrivalTimeOffset)                   | number       | no       | 0                                                     |
+| [cardOrientation](#cardOrientation)                       | string       | yes      | "vertical"                                            |
+| [departureAnimation](#departureAnimation)                 | string       | no       | "none"                                                |
+| [departureAnimationDuration](#departureAnimationDuration) | number       | no       | default value                                         |
+| [departureIcon](#departureIcon)                           | string       | no       | -                                                     |
+| [departuresToShow](#departuresToShow)                     | number       | no       | 5                                                     |
+| entities                                                  | entity[]     | yes      | -                                                     |
+| [icon](#icon)                                             | string       | no       | "mdi:bus-multiple"                                    |
+| [layout](#layout)                                         | list[string] | yes      | ["icon", "line", "destination", "time-diff", "delay"] |
+| [scrollBackTimeout](#scrollBackTimeout)                   | number       | no       | 5                                                     |
+| [showCardHeader](#showCardHeader)                         | boolean      | no       | true                                                  |
+| [showListHeader](#showListHeader)                         | boolean      | no       | true                                                  |
+| [showScrollButtons](#showScrollButtons)                   | boolean      | no       | true                                                  |
+| [sortDepartures](#sortDepartures)                         | boolean      | no       | true                                                  |
+| [theme](#theme)                                           | string       | no       | "Basic"                                               |
+| [title](#title)                                           | string       | no       | "Departures"                                          |
 
 ### "animateLine"
 
@@ -132,9 +133,22 @@ departureAnimation: "vertical"
 | ------------------------------------------- | -------------------------------------------- |
 | ![card](assets/departureAnimation_none.png) | ![card](assets/departureAnimation_flash.gif) |
 
+### "departureAnimationDuration"
+
+**Type:** `number`
+**Default:** `0`
+
+Defines the duration (in ms) of arrival animation.
+
+If no value provided (=0) by the user, the default internal value is used.
+
+````yaml
+type: custom:departures-card
+departureAnimationDuration: 2000
+
 ### "departureIcon"
 
-**Type:** `string`  
+**Type:** `string`
 **Default:** `null`
 
 Defines which icon is displayed for a transport arrival.
@@ -146,7 +160,7 @@ This option allows you to customize the visual representation of the arriving tr
 ```yaml
 type: custom:departures-card
 departureIcon: "vertical"
-```
+````
 
 | departureIcon:                         | departureIcon: "mdi:bus-double-decker" |
 | -------------------------------------- | -------------------------------------- |

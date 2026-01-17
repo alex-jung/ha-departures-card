@@ -1,7 +1,7 @@
 import { css } from "lit";
 
 export const cardStyles = css`
-  .content {
+  :host {
     --departures-bg: #363636;
     --departures-delay-ok: #23a043;
     --departures-delay-bad: #f44336;
@@ -22,9 +22,6 @@ export const cardStyles = css`
     font-size: 2em;
     padding-bottom: 8px;
   }
-  .content {
-    padding: 0px 0px;
-  }
 `;
 export const contentCore = css`
   .list-header-content,
@@ -33,6 +30,8 @@ export const contentCore = css`
     column-gap: 5px;
     padding: 5px 5px;
     align-items: end;
+    margin: 0px 10px;
+    justify-content: space-between;
   }
   .list-header-content {
     font-size: 0.8em;
@@ -69,6 +68,7 @@ export const contentCore = css`
   .cell-estimated-time {
     text-align: center;
   }
+  .list-header-delay,
   .cell-delay {
     width: 100%;
     text-align: center;
@@ -96,7 +96,6 @@ export const contentCore = css`
 
   #content-background {
     border-radius: 5px;
-    background: var(--departures-bg);
   }
   .splide__slide {
     align-items: center;
@@ -118,7 +117,6 @@ export const contentCore = css`
 
   /* Black-White theme */
   #content-background[theme="black-white"] {
-    padding: 8px;
     border-radius: 6px;
     background-color: #000000;
     color: white;
@@ -138,7 +136,6 @@ export const contentCore = css`
 
   /* Cappucino theme */
   #content-background[theme="cappucino"] {
-    padding: 10px;
     color: white;
   }
   .list-header-content[theme="cappucino"] {
@@ -160,7 +157,6 @@ export const contentCore = css`
 
   /* Blue Ocean theme */
   #content-background[theme="blue-ocean"] {
-    padding: 10px;
     background-color: #0d2f55;
     color: white;
   }

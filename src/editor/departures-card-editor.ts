@@ -275,6 +275,18 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
         },
       },
     },
+    {
+      name: "departureAnimationDuration",
+      selector: {
+        number: {
+          min: 0,
+          max: 5000,
+          step: 100,
+          default: 100,
+          mode: "slider",
+        },
+      },
+    },
   ];
 
   protected render() {
@@ -506,13 +518,17 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     }
 
     if (preset) {
+      const customDuration = this._config?.departureAnimationDuration ?? 0;
+      const duration = customDuration != 0 ? customDuration : preset.options?.duration;
+      const options = { ...preset.options, duration: duration };
+
       if (animateLine) {
-        elLine?.animate(preset.keyframes, preset.options);
+        elLine?.animate(preset.keyframes, options);
         elTime?.getAnimations().forEach((animation) => {
           animation.cancel();
         });
       } else {
-        elTime?.animate(preset.keyframes, preset.options);
+        elTime?.animate(preset.keyframes, options);
         elLine?.getAnimations().forEach((animation) => {
           animation.cancel();
         });

@@ -15,6 +15,9 @@ export class ContentTable extends Content {
   static styles = [
     Content.styles,
     css`
+      .list-header-content {
+        margin: 0px;
+      }
       .table-content {
         display: flex;
         flex-direction: column;

@@ -18,6 +18,7 @@ import {
   DEFAULT_CARD_THEME,
   DEFAULT_CARD_TITLE,
   DEFAULT_DEPARTURE_ANIMATION,
+  DEFAULT_DEPARTURE_ANIMATION_DURATION,
   DEFAULT_DEPARTURE_ICON,
   DEFAULT_DEPARTURES_TO_SHOW,
   DEFAULT_LAYOUT,
@@ -37,7 +38,7 @@ import { localize } from "../locales/localize";
   description: "Display departure times for different public transports",
 });
 
-const version = "3.2.0";
+const version = "3.3.0";
 const repoUrl = "https://github.com/alex-jung/ha-departures-card";
 
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;");
@@ -78,6 +79,7 @@ export class DeparturesCard extends LitElement {
       departureIcon: DEFAULT_DEPARTURE_ICON,
       animateLine: DEFAULT_ANIMATE_LINE,
       departureAnimation: DEFAULT_DEPARTURE_ANIMATION,
+      departureAnimationDuration: DEFAULT_DEPARTURE_ANIMATION_DURATION,
       arrivalTimeOffset: DEFAULT_ARRIVAL_OFFSET,
       layout: DEFAULT_LAYOUT,
       entities: [],
@@ -139,7 +141,7 @@ export class DeparturesCard extends LitElement {
                 </div>
               `
             : ""}
-          <div class="content" data-theme=${darkTheme ? "dark" : "light"}>${content}</div>
+          ${content}
         </div>
       </ha-card>
     `;
