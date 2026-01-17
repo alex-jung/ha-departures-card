@@ -139,7 +139,7 @@ export class DeparturesCard extends LitElement {
                 </div>
               `
             : ""}
-          <div class="content" data-theme=${darkTheme ? "dark" : "light"}>${content}</div>
+          ${content}
         </div>
       </ha-card>
     `;
