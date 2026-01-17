@@ -37,7 +37,7 @@ import { localize } from "../locales/localize";
   description: "Display departure times for different public transports",
 });
 
-const version = "3.2.0";
+const version = "3.3.0";
 const repoUrl = "https://github.com/alex-jung/ha-departures-card";
 
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;");

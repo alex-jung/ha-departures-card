@@ -34,7 +34,7 @@
       "animateLine": "Ankunftszeile animieren",
       "arrivalTimeOffset": "Ankunftszeit-Versatz",
       "departureAnimation": "Ankunftsanimation",
-
+      "departureAnimationDuration": "Animationsdauer (ms)",
       "noAnimation": "Keine",
 
       "interactions-expandable": "Interaktionen",
@@ -58,7 +58,8 @@
         "layout": "Konfiguration der angezeigten Zellen und ihrer Reihenfolge in einer Ankunftszeile",
         "departureIcon": "Wenn kein benutzerdefiniertes Symbol festgelegt ist, wird das transport icon der Entität für die Animation verwendet",
         "animateLine": "Wenn deaktiviert, wird nur die Zelle 'Ankunft in' animiert",
-        "arrivalTimeOffset": "Zeit in Minuten vor der geplanten Ankunft, ab der die Animation startet"
+        "arrivalTimeOffset": "Zeit in Minuten vor der geplanten Ankunft, ab der die Animation startet",
+        "departureAnimationDuration": "Bei Wert 0 wird interner default Wert benutzt"
       }
     },
     "list-header": {

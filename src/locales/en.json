@@ -34,6 +34,7 @@
       "animateLine": "Animate departure line",
       "arrivalTimeOffset": "Arrival time offset",
       "departureAnimation": "Departure animation",
+      "departureAnimationDuration": "Animation duration (ms)",
       "noAnimation": "None",
 
       "interactions-expandable": "Interactions",
@@ -57,7 +58,8 @@
         "layout": "Configure which cells are shown and their order in a departure row",
         "departureIcon": "If no custom icon is defined, the entity's transport icon will be used for the animation",
         "animateLine": "If disabled, only the departure time cell will be animated",
-        "arrivalTimeOffset": "Time in minutes before departure when the animation starts"
+        "arrivalTimeOffset": "Time in minutes before departure when the animation starts",
+        "departureAnimationDuration": "Value 0 means the default value will be used"
       }
     },
     "list-header": {

@@ -7,6 +7,7 @@ export interface Config extends LovelaceCardConfig {
   arrivalTimeOffset: number;
   cardOrientation: CardOrientation;
   departureAnimation: string;
+  departureAnimationDuration: number;
   departureIcon: string;
   departuresToShow: number;
   entities?: EntityConfig[];
