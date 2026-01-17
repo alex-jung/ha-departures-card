@@ -24,7 +24,7 @@ export const LAYOUT_VERTICAL = new Map<string, string>([
   [LayoutCell.TIME_DIFF, "70px"],
   [LayoutCell.PLANNED_TIME, "55px"],
   [LayoutCell.ESTIMATED_TIME, "55px"],
-  [LayoutCell.DELAY, "30px"],
+  [LayoutCell.DELAY, "40px"],
 ]);
 export const LAYOUT_HORIZONTAL = new Map<string, string>([
   [LayoutCell.ICON, "30px"],
