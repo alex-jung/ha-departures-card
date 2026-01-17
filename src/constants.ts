@@ -11,6 +11,7 @@ export const DEFAULT_SORT_DEPARTURES = false;
 export const DEFAULT_DEPARTURE_ICON = "";
 export const DEFAULT_ANIMATE_LINE = false;
 export const DEFAULT_DEPARTURE_ANIMATION = "none";
+export const DEFAULT_DEPARTURE_ANIMATION_DURATION = 0;
 export const DEFAULT_ARRIVAL_OFFSET = 0;
 export const DEFAULT_LAYOUT = [LayoutCell.ICON, LayoutCell.LINE, LayoutCell.DESTINATION, LayoutCell.TIME_DIFF, LayoutCell.DELAY];
 export const DEFAULT_DEPARTURES_TO_SHOW = 5;
