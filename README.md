@@ -142,9 +142,10 @@ Defines the duration (in ms) of arrival animation.
 
 If no value provided (=0) by the user, the default internal value is used.
 
-````yaml
+```yaml
 type: custom:departures-card
 departureAnimationDuration: 2000
+```
 
 ### "departureIcon"
 
@@ -160,7 +161,7 @@ This option allows you to customize the visual representation of the arriving tr
 ```yaml
 type: custom:departures-card
 departureIcon: "vertical"
-````
+```
 
 | departureIcon:                         | departureIcon: "mdi:bus-double-decker" |
 | -------------------------------------- | -------------------------------------- |
