@@ -70,6 +70,8 @@ function t(t,e,n,r){var i,o=arguments.length,a=o<3?e:null===r?r=Object.getOwnPro
     width: 100%;
     text-align: center;
     border-radius: 1000px;
+  }
+  .cell-delay {
     color: white;
   }
   .cell-delay.delayed {
