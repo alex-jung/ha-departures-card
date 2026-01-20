@@ -120,6 +120,10 @@ export class ContentTable extends Content {
       });
     }
 
+    if (this.cardConfig.entitiesToShow != undefined && this.cardConfig.entitiesToShow < contentRows.length) {
+      contentRows = contentRows.slice(0, this.cardConfig.entitiesToShow);
+    }
+
     return html`<div class="table-content" id="content-background" theme="${this.theme}">${this.renderListHeader()}${contentRows}</div>`;
   }
 

@@ -119,7 +119,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
       : []),
   ];
 
-  private _schemaDesign = (localize: Function, orientation: CardOrientation) => [
+  private _schemaDesign = (localize: Function, orientation: CardOrientation, limitEntities: boolean, countEntities: number) => [
     {
       name: "cardOrientation",
       required: true,
@@ -196,6 +196,25 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
             name: "sortDepartures",
             selector: { boolean: {} },
           },
+          {
+            name: "limitEntities",
+            selector: { boolean: {} },
+          },
+          ...(limitEntities
+            ? [
+                {
+                  name: "entitiesToShow",
+                  selector: {
+                    number: {
+                      min: 1,
+                      max: countEntities,
+                      step: 1,
+                      mode: "slider",
+                    },
+                  },
+                },
+              ]
+            : []),
         ]),
     {
       name: "departuresToShow",
@@ -280,7 +299,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
       selector: {
         number: {
           min: 0,
-          max: 5000,
+          max: 10000,
           step: 100,
           default: 100,
           mode: "slider",
@@ -301,7 +320,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     const lang = this.hass.locale?.language;
 
     const schemaGeneral = this._schemaGeneral(this._config!.showCardHeader);
-    const schemaDesign = this._schemaDesign(this.computeLabelCallback, this._config.cardOrientation);
+    const schemaDesign = this._schemaDesign(this.computeLabelCallback, this._config.cardOrientation, this._config.limitEntities, this._config.entities?.length ?? 1);
     const schemaLayout = this._schemaLayout(this.computeLabelCallback);
     const schemaAnimation = this._schemaAnimation(this.computeLabelCallback);
 
@@ -489,6 +508,11 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     if (this._config?.departureAnimation != newConfig.departureAnimation) {
       this._cancelPreviewAnimations();
     }
+    if (newConfig.limitEntities == false) {
+      if (newConfig.entitiesToShow) {
+        newConfig.entitiesToShow = newConfig.entities?.length;
+      }
+    }
 
     console.log("configChanged", newConfig);
 
@@ -508,13 +532,6 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
 
     if (animation != "none" && animation in animatePresets) {
       preset = animatePresets[animation];
-    } else {
-      elTime?.getAnimations().forEach((animation) => {
-        animation.cancel();
-      });
-      elLine?.getAnimations().forEach((animation) => {
-        animation.cancel();
-      });
     }
 
     if (preset) {

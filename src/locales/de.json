@@ -12,7 +12,9 @@
       "theme": "Card Theme",
       "showListHeader": "Listenüberschrift anzeigen",
       "showScrollButtons": "Scroll-Schaltflächen anzeigen",
-      "departuresToShow": "Anzahl der Ankünfte zu anzeigen",
+      "departuresToShow": "Anzahl der Ankünfte anzuzeigen",
+      "limitEntities": "Anzahl der Entitäten begrenzen",
+      "entitiesToShow": "Anzahl der Entitäten anzuzeigen",
       "scrollBackTimeout": "Zurückscroll-Zeit (Sekunden)",
       "sortDepartures": "Entitäten nach geplanter Ankunft sortieren",
 

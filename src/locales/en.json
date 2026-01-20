@@ -13,6 +13,8 @@
       "showListHeader": "Show list header",
       "showScrollButtons": "Show scroll buttons",
       "departuresToShow": "Number of departures to show",
+      "limitEntities": "Limit number of entities to show",
+      "entitiesToShow": "Number of entities to show",
       "scrollBackTimeout": "Scroll-back time (seconds)",
       "sortDepartures": "Sort entities by planned departure time",
 

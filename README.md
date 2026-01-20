@@ -41,8 +41,10 @@ A card to display departure times provided by [Departures](https://github.com/al
 | [departureIcon](#departureIcon)                           | string       | no       | -                                                     |
 | [departuresToShow](#departuresToShow)                     | number       | no       | 5                                                     |
 | entities                                                  | entity[]     | yes      | -                                                     |
+| [entitiesToShow](#entitiesToShow)                         | number       | no       | -                                                     |
 | [icon](#icon)                                             | string       | no       | "mdi:bus-multiple"                                    |
 | [layout](#layout)                                         | list[string] | yes      | ["icon", "line", "destination", "time-diff", "delay"] |
+| [limitEntities](#limitEntities)                           | boolean      | no       | false                                                 |
 | [scrollBackTimeout](#scrollBackTimeout)                   | number       | no       | 5                                                     |
 | [showCardHeader](#showCardHeader)                         | boolean      | no       | true                                                  |
 | [showListHeader](#showListHeader)                         | boolean      | no       | true                                                  |
@@ -185,6 +187,18 @@ departuresToShow: 5
 | ---------------------------------------------- | ----------------------------------------------- |
 | ![card](assets/image_departures_to_show_3.png) | ![card](assets/image_departures_to_show_10.png) |
 
+### "entitiesToShow"
+
+**Type:** `number`
+**Default**: `-`
+
+Specifies how many entities are displayed. This option is valid only if [limitEntities](#limitentities) is set to `true`.
+
+```yaml
+type: custom:departures-card
+entitiesToShow: 5
+```
+
 ### "icon"
 
 **Type:** `string`
@@ -234,6 +248,23 @@ layout: ["icon", "line", "destination", "time-diff", "delay"]
 | layout: ["icon", "line", "destination", "time-diff", "delay"] | layout: "line", "destination", "planned-time", "estimated-time"] |
 | ------------------------------------------------------------- | ---------------------------------------------------------------- |
 | ![card](assets/image_layout_0.png)                            | ![card](assets/image_layout_1.png)                               |
+
+### "limitEntities"
+
+**Type:** `boolean`
+**Default**: `false`
+
+> [!NOTE]
+>
+> This options is not available for `vertical` card orientation.
+
+Defines whether the count of entities to show should be limited or not.
+If `true`, the option [entitiesToShow](#entitiestoshow) will be taken into account.
+
+```yaml
+type: custom:departures-card
+limitEntities: false
+```
 
 ### "scrollBackTimeout"
 
