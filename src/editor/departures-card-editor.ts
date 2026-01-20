@@ -555,7 +555,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
       }
     }
 
-    console.log("configChanged", newConfig);
+    console.debug("configChanged", newConfig);
 
     fireEvent(this, "config-changed", { config: newConfig });
   }

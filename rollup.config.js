@@ -14,6 +14,8 @@ export default (CLIArgs) => {
   const prod = !!CLIArgs.prod;
   const mini = !!CLIArgs.mini;
 
+  console.log("Building for", prod ? "production" : "development", mini ? "with minification" : "");
+
   let inputMap = { "ha-departures-card": "./src/components/ha-departures-card.ts" };
 
   return {

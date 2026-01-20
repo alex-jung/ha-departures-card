@@ -79,7 +79,7 @@ export class ContentList extends Content {
 
   private _restartscrollBackTimer() {
     if (this.scrollBackTimer == null) {
-      console.log("Scrollback timer is null, create a new instance");
+      console.debug("Scrollback timer is null, create a new instance");
       this._initializeScrollbackTimer();
     }
 
