@@ -62,18 +62,18 @@ export const animatePresets: Record<string, AnimatePreset> = {
   flipInX: {
     keyframes: [
       {
-        transform: "perspective(400px) rotateX(90deg)",
+        transform: "perspective(2000px) rotateX(90deg)",
         opacity: 0,
       },
       {
-        transform: "perspective(400px) rotateX(-20deg)",
+        transform: "perspective(2000px) rotateX(-20deg)",
       },
       {
-        transform: "perspective(400px) rotateX(10deg)",
+        transform: "perspective(2000px) rotateX(10deg)",
         opacity: 1,
       },
       {
-        transform: "perspective(400px) rotateX(0deg)",
+        transform: "perspective(2000px) rotateX(0deg)",
       },
     ],
     options: {

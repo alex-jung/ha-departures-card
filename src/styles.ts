@@ -30,7 +30,7 @@ export const contentCore = css`
     column-gap: 5px;
     padding: 5px 5px;
     align-items: end;
-    margin: 0px 10px;
+    margin: 0px 2px;
     justify-content: space-between;
   }
   .list-header-content {
