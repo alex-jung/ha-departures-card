@@ -44,6 +44,11 @@
       "entities-expandable": "Entitäten (erforderlich)",
       "addEntity": "Entität hinzufügen",
 
+      "card.editor.interactions-expandable": "Interaktionen",
+      "tap_action": "Verhalten bei Antippen",
+      "hold_action": "Verhalten bei Festhalten",
+      "double_tap_action": "Verhalten bei Doppeltipp",
+
       "entity": {
         "entity": "Entität",
         "destinationName": "Zielname",

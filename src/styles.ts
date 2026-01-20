@@ -73,6 +73,8 @@ export const contentCore = css`
     width: 100%;
     text-align: center;
     border-radius: 1000px;
+  }
+  .cell-delay {
     color: white;
   }
   .cell-delay.delayed {
