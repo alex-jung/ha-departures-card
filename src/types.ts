@@ -1,4 +1,4 @@
-import { LovelaceCardConfig } from "custom-card-helpers";
+import { ActionConfig, LovelaceCardConfig } from "custom-card-helpers";
 import { DepartureTime } from "./data/departure-time";
 
 // ha-departures-card specific configuration types
@@ -21,6 +21,11 @@ export interface Config extends LovelaceCardConfig {
   showScrollButtons: boolean;
   sortDepartures: boolean;
   theme: CardTheme;
+
+  // tap actions
+  hold_action?: ActionConfig;
+  tap_action?: ActionConfig;
+  double_tap_action?: ActionConfig;
   title: string;
 }
 

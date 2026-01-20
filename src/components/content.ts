@@ -11,12 +11,17 @@ import { Layout } from "../data/layout";
 import { localize } from "../locales/localize";
 import { getContrastTextColor } from "../helpers";
 import { animatePresets } from "../animate-presets";
+import { handleAction, hasAction, HomeAssistant } from "custom-card-helpers";
+import { actionHandler } from "../action-handler";
 
 export abstract class Content extends LitElement {
   static styles = [contentCore as CSSResultGroup];
 
   @property({ attribute: false })
   departures!: Array<DeparturesDataRow>;
+
+  @property({ attribute: false })
+  public hass!: HomeAssistant;
 
   @property({ attribute: false })
   language!: string;
@@ -214,7 +219,33 @@ export abstract class Content extends LitElement {
       }
     });
 
-    return html` <div class="departure-line  ${classMap(classes)}" theme=${this.theme} style="${styleMap(styles)}">${content}</div> `;
+    return html`
+      <div
+        class="departure-line  ${classMap(classes)}"
+        entity-id="${departure.entity}"
+        @action=${this._handleAction}
+        .actionHandler=${actionHandler({
+          hasHold: hasAction(this.cardConfig.hold_action),
+          hasDoubleClick: hasAction(this.cardConfig.double_tap_action),
+        })}
+        theme=${this.theme}
+        style="${styleMap(styles)}">
+        ${content}
+      </div>
+    `;
+  }
+
+  protected _handleAction(ev: CustomEvent) {
+    let target = ev.composedPath().find((el) => (el as HTMLElement).hasAttribute?.("entity-id")) as HTMLElement;
+
+    if (!target) {
+      console.error("Could not find target element for action handling");
+      return;
+    }
+
+    const entityId = target.attributes.getNamedItem("entity-id")?.value;
+
+    handleAction(this, this.hass, { ...this.cardConfig, entity: entityId }, ev.detail.action);
   }
 
   /**

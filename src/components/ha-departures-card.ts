@@ -108,7 +108,6 @@ export class DeparturesCard extends LitElement {
 
   public render() {
     const cardConfig = this.config || DeparturesCard.getStubConfig(this.hass);
-    const darkTheme = Object(this.hass?.selectedTheme)["dark"] ?? false;
     const cardTitle = cardConfig.title ?? DEFAULT_CARD_TITLE;
     const cardIcon = cardConfig.icon ?? DEFAULT_CARD_ICON;
 
@@ -158,6 +157,7 @@ export class DeparturesCard extends LitElement {
           .language=${language}
           .theme=${cardTheme}
           .departures=${departures}
+          .hass=${this.hass}
           .cardConfig=${cardConfig}
           .errors=${this.dataPool.errors}></card-content-list>`;
       case CardOrientation.HORIZONTAL:
@@ -165,6 +165,7 @@ export class DeparturesCard extends LitElement {
           .language=${language}
           .theme=${cardTheme}
           .departures=${departures}
+          .hass=${this.hass}
           .cardConfig=${cardConfig}
           .errors=${this.dataPool.errors}></card-content-table>`;
       default:

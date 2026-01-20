@@ -5,7 +5,7 @@ import { HomeAssistant, fireEvent, LovelaceCardEditor } from "custom-card-helper
 import "./departures-entity-editor";
 import { localize } from "../locales/localize";
 
-import { mdiPlus } from "@mdi/js";
+import { mdiGestureTap, mdiPlus } from "@mdi/js";
 import { cardStyles, contentCore } from "../styles";
 import { EntityTab } from "./entity-tab";
 import { mdiTableRow, mdiPalette, mdiFormatListBulleted, mdiAnimation } from "@mdi/js";
@@ -308,6 +308,32 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     },
   ];
 
+  private _schemaInteractions = () => [
+    {
+      name: "tap_action",
+      selector: {
+        ui_action: {
+          actions: ["perform-action", "assist", "url", "navigate", "none"],
+          default_action: "more-info" as const,
+        },
+      },
+    },
+    {
+      name: "",
+      type: "optional_actions",
+      flatten: true,
+      schema: (["hold_action", "double_tap_action"] as const).map((action) => ({
+        name: action,
+        selector: {
+          ui_action: {
+            actions: ["more-info", "perform-action", "assist", "navigate", "url", "none"],
+            default_action: "none" as const,
+          },
+        },
+      })),
+    },
+  ];
+
   protected render() {
     if (!this.hass || !this._config) {
       return nothing;
@@ -323,6 +349,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     const schemaDesign = this._schemaDesign(this.computeLabelCallback, this._config.cardOrientation, this._config.limitEntities, this._config.entities?.length ?? 1);
     const schemaLayout = this._schemaLayout(this.computeLabelCallback);
     const schemaAnimation = this._schemaAnimation(this.computeLabelCallback);
+    const schemaInteractions = this._schemaInteractions();
 
     return html`
       <ha-form
@@ -390,6 +417,20 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
             <h4>Animation Preview</h4>
             ${this._renderAnimatePreview()}
           </div>
+        </div>
+      </ha-expansion-panel>
+
+      <ha-expansion-panel outlined>
+        <ha-svg-icon slot="leading-icon" .path=${mdiGestureTap}></ha-svg-icon>
+        <span slot="header">${localize("card.editor.interactions-expandable", lang)}</span>
+        <div style="padding: 16px 0px;">
+          <ha-form
+            .schema="${schemaInteractions}"
+            .data="${this._config}"
+            .hass="${this.hass}"
+            .computeLabel=${this.computeLabelCallback}
+            .computeHelper=${this.computeHelperCallback}
+            @value-changed=${this.configChanged}></ha-form>
         </div>
       </ha-expansion-panel>
 

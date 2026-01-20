@@ -9,6 +9,8 @@ import { classMap } from "lit/directives/class-map.js";
 import { DEFAULT_ENTITY_ICON } from "../constants";
 import { Layout } from "../data/layout";
 import { styleMap } from "lit/directives/style-map.js";
+import { actionHandler } from "../action-handler";
+import { hasAction } from "custom-card-helpers";
 
 @customElement("card-content-table")
 export class ContentTable extends Content {
@@ -184,7 +186,20 @@ export class ContentTable extends Content {
         styles = { ...styles, borderLeft: `8px solid ${departure.lineColor ?? ""}` };
     }
 
-    return html` <div class="table-row ${classMap(classes)}" theme=${this.cardConfig.theme} style=${styleMap(styles)}>${content}</div> `;
+    return html`
+      <div
+        class="table-row ${classMap(classes)}"
+        entity-id="${departure.entity}"
+        @action=${this._handleAction}
+        .actionHandler=${actionHandler({
+          hasHold: hasAction(this.cardConfig.hold_action),
+          hasDoubleClick: hasAction(this.cardConfig.double_tap_action),
+        })}
+        theme=${this.cardConfig.theme}
+        style=${styleMap(styles)}>
+        ${content}
+      </div>
+    `;
   }
 
   private _renderTimes(times: Array<DepartureTime>, icon: string | null): TemplateResult {
