@@ -10,6 +10,8 @@ export interface Config extends LovelaceCardConfig {
   departureAnimationDuration: number;
   departureIcon: string;
   departuresToShow: number;
+  entitiesToShow: number | undefined;
+  limitEntities: boolean;
   entities?: EntityConfig[];
   icon: string;
   layout: Array<LayoutCell | string>;
