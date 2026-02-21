@@ -33,9 +33,6 @@ export class ContentList extends Content {
       console.debug("Card config has been changed, reinitialze splide.");
       this._initializeScrollbackTimer();
       this._initializeSplide();
-    } else if (_changedProperties.get("departures")) {
-      console.debug("Departures have been changed, refresh splide.");
-      this.splide?.refresh();
     }
   }
 
@@ -44,6 +41,8 @@ export class ContentList extends Content {
   }
 
   public disconnectedCallback(): void {
+    console.debug("ContentList disconnected from DOM -> stop scrollback timer.");
+
     super.disconnectedCallback();
 
     this.scrollBackTimer?.stop();
