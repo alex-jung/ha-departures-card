@@ -1,0 +1,20 @@
+services:
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: ha-dev
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8123:8123"
+    volumes:
+      - ./dev/ha-config:/config
+      - ./dist:/config/www/ha-departures-card
+
+  cors-proxy:
+    image: nginx:alpine
+    container_name: ha-dev-proxy
+    restart: unless-stopped
+    ports:
+      - "8888:80"
+    volumes:
+      - ./dev/nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro

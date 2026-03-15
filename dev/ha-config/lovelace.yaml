@@ -1,0 +1,22 @@
+title: Departures Dev
+views:
+  - title: Vertikal
+    path: vertical
+    cards:
+      - type: custom:departures-card
+        title: "Abfahrten"
+        entities:
+          - entity: sensor.bus_100_marienplatz
+          - entity: sensor.tram_18_ostbahnhof
+          - entity: sensor.u_bahn_u6_garching
+
+  - title: Horizontal
+    path: horizontal
+    cards:
+      - type: custom:departures-card
+        title: "Abfahrten"
+        cardOrientation: horizontal
+        entities:
+          - entity: sensor.bus_100_marienplatz
+          - entity: sensor.tram_18_ostbahnhof
+          - entity: sensor.u_bahn_u6_garching

@@ -1,0 +1,68 @@
+homeassistant:
+  name: "Dev"
+  unit_system: metric
+  time_zone: Europe/Berlin
+
+# Lovelace im YAML-Modus — kein UI-Editor nötig
+lovelace:
+  mode: yaml
+  resources:
+    - url: /local/ha-departures-card/ha-departures-card.js
+      type: module
+
+# Mock-Sensoren mit ha-departures-kompatiblen Attributen
+template:
+  - sensor:
+      - name: "Nürnberg Hügelstr.-67-Fürth Hauptbahnhof"
+        unique_id: dev_bus_100_marienplatz
+        state: "departures"
+        attributes:
+          line_name: "67"
+          line_id: de:vgn:700_67:0_3
+          transport: BUS
+          direction: Fürth Hauptbahnhof
+          data_provider: https://transitous.org/
+          latitude: 49.424408
+          longitude: 11.009563
+          icon: mdi:bus
+          times: >
+            {{ [
+              {"planned": "2026-03-15T21:52:00+01:00", "estimated": "2026-03-15T21:52:00+01:00", "trip_id": "20260315_21:22_de-DELFI_3118788553",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-15T22:32:00+01:00", "estimated": "2026-03-15T22:32:00+01:00", "trip_id": "20260315_22:02_de-DELFI_3118788630",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-15T23:12:00+01:00", "estimated": "2026-03-15T23:12:00+01:00", "trip_id": "20260315_22:42_de-DELFI_3118788629",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-15T23:52:00+01:00", "estimated": "2026-03-15T23:52:00+01:00", "trip_id": "20260315_23:22_de-DELFI_3118788603",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-16T00:32:00+01:00", "estimated": "2026-03-16T00:32:00+01:00", "trip_id": "20260315_24:02_de-DELFI_3105071767",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-16T05:00:00+01:00", "estimated": "2026-03-16T05:00:00+01:00", "trip_id": "20260316_04:55_de-DELFI_3118788326",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-16T05:20:00+01:00", "estimated": "2026-03-16T05:20:00+01:00", "trip_id": "20260316_05:15_de-DELFI_3105071509",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-16T05:51:00+01:00", "estimated": "2026-03-16T05:51:00+01:00", "trip_id": "20260316_05:18_de-DELFI_3118788410",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-16T06:01:00+01:00", "estimated": "2026-03-16T06:01:00+01:00", "trip_id": "20260316_05:28_de-DELFI_3118788371",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-16T06:11:00+01:00", "estimated": "2026-03-16T06:11:00+01:00", "trip_id": "20260316_05:38_de-DELFI_3118788370",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []}
+            ] }}
+      - name: "Tram 18 Ostbahnhof"
+        unique_id: dev_tram_18_ostbahnhof
+        state: "departures"
+        attributes:
+          line_name: "18"
+          direction: "Ostbahnhof"
+          transport: "tram"
+          times: >
+            {{ [
+              {"planned": (now() + timedelta(minutes=1)).isoformat(),  "estimated": (now() + timedelta(minutes=1)).isoformat(),  "cancelled": false, "trip_id": "TRAM-18-001"},
+              {"planned": (now() + timedelta(minutes=10)).isoformat(), "estimated": (now() + timedelta(minutes=12)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-002"},
+              {"planned": (now() + timedelta(minutes=20)).isoformat(), "estimated": (now() + timedelta(minutes=20)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-003"},
+              {"planned": (now() + timedelta(minutes=30)).isoformat(), "estimated": (now() + timedelta(minutes=31)).isoformat(), "cancelled": true,  "trip_id": "TRAM-18-004"}
+            ] }}
+
+      - name: "U-Bahn U6 Garching"
+        unique_id: dev_ubahn_u6_garching
+        state: "departures"
+        attributes:
+          line_name: "U6"
+          direction: "Garching Forschungszentrum"
+          transport: "subway"
+          times: >
+            {{ [
+              {"planned": (now() + timedelta(minutes=5)).isoformat(),  "estimated": (now() + timedelta(minutes=5)).isoformat(),  "cancelled": false, "trip_id": "U6-001"},
+              {"planned": (now() + timedelta(minutes=12)).isoformat(), "estimated": (now() + timedelta(minutes=14)).isoformat(), "cancelled": false, "trip_id": "U6-002"},
+              {"planned": (now() + timedelta(minutes=22)).isoformat(), "estimated": (now() + timedelta(minutes=22)).isoformat(), "cancelled": true,  "trip_id": "U6-003"}
+            ] }}
