@@ -5,8 +5,12 @@ export class DepartureTime {
   private _planned: Date;
   private _estimated: Date | undefined;
   private _delay: number | undefined;
+  private _tripId: string | undefined;
+  private _headSign: string | undefined;
+  private _cancelled: boolean;
+  private _alerts: Array<string>;
 
-  constructor(planned: Date, estimated: Date | null | undefined) {
+  constructor(planned: Date, estimated: Date | null | undefined, tripId?: string, headSign?: string, cancelled: boolean = false, alerts: Array<string> = []) {
     try {
       this._planned = prepareDate(planned);
     } catch (error) {
@@ -25,6 +29,11 @@ export class DepartureTime {
     } else {
       this._delay = differenceInMinutes(this._estimated, this._planned);
     }
+
+    this._tripId = tripId;
+    this._headSign = headSign;
+    this._cancelled = cancelled;
+    this._alerts = alerts;
   }
 
   public get planned(): Date {
@@ -33,6 +42,22 @@ export class DepartureTime {
 
   public get estimated(): Date | undefined {
     return this._estimated;
+  }
+
+  public get tripId(): string | undefined {
+    return this._tripId;
+  }
+
+  public get headSign(): string | undefined {
+    return this._headSign;
+  }
+
+  public get cancelled(): boolean {
+    return this._cancelled;
+  }
+
+  public get alerts(): Array<string> {
+    return this._alerts;
   }
 
   /**

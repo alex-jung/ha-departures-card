@@ -46,7 +46,14 @@ class ParserHaDepartures extends Parser {
 
     if (this._entity.attributes[HaDeparturesEntityAttributes.TIMES]) {
       this._entity.attributes[HaDeparturesEntityAttributes.TIMES].forEach((timeEntry: any) => {
-        times.push(new DepartureTime(timeEntry.planned, timeEntry.estimated));
+        const timePlanned = timeEntry.planned;
+        const timeEstimated = timeEntry.estimated;
+        const tripId = timeEntry.trip_id ?? undefined;
+        const headSign = timeEntry.head_sign ?? undefined;
+        const cancelled = timeEntry.cancelled ?? false;
+        const alerts = timeEntry.alerts ?? [];
+
+        times.push(new DepartureTime(timePlanned, timeEstimated, tripId, headSign, cancelled, alerts));
       });
     } else if (this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME]) {
       const planTime1 = this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME];

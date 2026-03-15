@@ -294,7 +294,13 @@ export abstract class Content extends LitElement {
    * @returns A template result containing the rendered destination cell HTML
    */
   protected renderCellDestination(departure: DeparturesDataRow): TemplateResult {
-    return html`<div class="cell-destination" theme=${this.theme}>${departure.destinationName}</div>`;
+    let styles = {};
+
+    if (departure.time.cancelled) {
+      styles = { textDecoration: "line-through" };
+    }
+
+    return html`<div class="cell-destination" theme=${this.theme} style=${styleMap(styles)}>${departure.destinationName}</div>`;
   }
 
   /**
