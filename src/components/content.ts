@@ -219,6 +219,7 @@ export abstract class Content extends LitElement {
       }
     });
 
+    const alerts = departure.time.alerts;
     return html`
       <div
         class="departure-line  ${classMap(classes)}"
@@ -232,6 +233,12 @@ export abstract class Content extends LitElement {
         style="${styleMap(styles)}">
         ${content}
       </div>
+      ${alerts.length > 0 ? html`
+        <div class="departure-alerts">
+          <ha-icon icon="mdi:alert-circle-outline" class="departure-alert-icon"></ha-icon>
+          <span>${alerts[0].headerText}</span>${alerts.length > 1 ? html`<span class="departure-alert-more">+${alerts.length - 1}</span>` : nothing}
+        </div>
+      ` : nothing}
     `;
   }
 

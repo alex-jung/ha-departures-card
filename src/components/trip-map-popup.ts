@@ -1,11 +1,13 @@
 import { LitElement, css, html, nothing, unsafeCSS, PropertyValues, CSSResultGroup } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { Alert } from "../types";
 import { ref, createRef } from "lit/directives/ref.js";
 import L from "leaflet";
 
 import leafletCssText from "leaflet/dist/leaflet.css";
 
 const TRIP_API_BASE = "http://localhost:8888/api/v5/trip?tripId=";
+const STOPTIMES_API_BASE = "https://api.transitous.org/api/v5/stoptimes";
 const POSITION_UPDATE_INTERVAL_MS = 5000;
 
 // ---------------------------------------------------------------------------
@@ -49,8 +51,20 @@ interface StopTimepoint {
 
 interface StopInfo {
   name: string;
-  time: Date;
+  plannedTime: Date;
+  estimatedTime?: Date;
+  platform?: string;
   polylineIdx: number;
+}
+
+interface StopTimeEntry {
+  tripId: string;
+  headsign: string;
+  routeShortName: string;
+  plannedDeparture: Date;
+  estimatedDeparture?: Date;
+  track?: string;
+  alerts: Alert[];
 }
 
 function euclidean(a: [number, number], b: [number, number]): number {
@@ -78,20 +92,28 @@ function buildTripStops(leg: any, polyline: [number, number][]): StopInfo[] {
   const stops: StopInfo[] = [];
   let searchFrom = 0;
 
-  const addStop = (stop: any, timeStr: string) => {
+  const addStop = (stop: any, planned: string, estimated?: string) => {
     const idx = findClosestIdx([stop.lat, stop.lon], polyline, searchFrom);
     searchFrom = idx;
-    stops.push({ name: stop.name ?? "", time: new Date(timeStr), polylineIdx: idx });
+    stops.push({
+      name: stop.name ?? "",
+      plannedTime: new Date(planned),
+      estimatedTime: estimated ? new Date(estimated) : undefined,
+      platform: stop.track ?? stop.scheduledTrack ?? stop.platformCode ?? stop.stopCode ?? undefined,
+      polylineIdx: idx,
+    });
   };
 
   for (const s of is) {
     if (!s?.lat) continue;
-    const t = s.arrival ?? s.departure;
-    if (t) addStop(s, t);
+    const planned = s.arrival ?? s.departure;
+    const estimated = s.estimatedArrival ?? s.realtimeArrival ?? undefined;
+    if (planned) addStop(s, planned, estimated);
   }
   if (leg.to?.lat) {
-    const t = leg.to.arrival;
-    if (t) addStop(leg.to, t);
+    const planned = leg.to.arrival;
+    const estimated = leg.to.estimatedArrival ?? leg.to.realtimeArrival ?? undefined;
+    if (planned) addStop(leg.to, planned, estimated);
   }
   return stops;
 }
@@ -119,15 +141,32 @@ function buildTimeline(leg: any, polyline: [number, number][]): StopTimepoint[] 
   return timeline;
 }
 
-function interpolatePosition(timeline: StopTimepoint[], polyline: [number, number][], now: Date): [number, number] | null {
-  if (timeline.length < 2) return null;
+function headingAtIdx(polyline: [number, number][], idx: number): number {
+  const i = Math.min(idx, polyline.length - 2);
+  const [lat1, lon1] = polyline[i];
+  const [lat2, lon2] = polyline[i + 1];
+  // CSS rotation: 0 = north (up), clockwise positive
+  return 90 - Math.atan2(lat2 - lat1, lon2 - lon1) * (180 / Math.PI);
+}
+
+function interpolatePosition(
+  timeline: StopTimepoint[],
+  polyline: [number, number][],
+  now: Date,
+): { pos: [number, number] | null; heading: number } {
+  if (timeline.length < 2) return { pos: null, heading: 0 };
 
   const nowMs = now.getTime();
-  if (nowMs <= timeline[0].time.getTime()) return polyline[timeline[0].polylineIdx];
-  if (nowMs >= timeline[timeline.length - 1].time.getTime()) return polyline[timeline[timeline.length - 1].polylineIdx];
+  if (nowMs <= timeline[0].time.getTime()) {
+    const idx = timeline[0].polylineIdx;
+    return { pos: polyline[idx], heading: headingAtIdx(polyline, idx) };
+  }
+  if (nowMs >= timeline[timeline.length - 1].time.getTime()) {
+    const idx = timeline[timeline.length - 1].polylineIdx;
+    return { pos: polyline[idx], heading: headingAtIdx(polyline, idx) };
+  }
 
-  let segStart = timeline[0],
-    segEnd = timeline[1];
+  let segStart = timeline[0], segEnd = timeline[1];
   for (let i = 0; i < timeline.length - 1; i++) {
     if (nowMs >= timeline[i].time.getTime() && nowMs <= timeline[i + 1].time.getTime()) {
       segStart = timeline[i];
@@ -136,10 +175,8 @@ function interpolatePosition(timeline: StopTimepoint[], polyline: [number, numbe
     }
   }
 
-  // idxA === idxB means bus is dwelling at a stop → return fixed position
-  const idxA = segStart.polylineIdx,
-    idxB = segEnd.polylineIdx;
-  if (idxA === idxB) return polyline[idxA];
+  const idxA = segStart.polylineIdx, idxB = segEnd.polylineIdx;
+  if (idxA === idxB) return { pos: polyline[idxA], heading: headingAtIdx(polyline, idxA) };
 
   const progress = (nowMs - segStart.time.getTime()) / (segEnd.time.getTime() - segStart.time.getTime());
   let totalLen = 0;
@@ -151,11 +188,24 @@ function interpolatePosition(timeline: StopTimepoint[], polyline: [number, numbe
     const segLen = euclidean(polyline[i], polyline[i + 1]);
     if (accumulated + segLen >= target) {
       const t = segLen > 0 ? (target - accumulated) / segLen : 0;
-      return [polyline[i][0] + t * (polyline[i + 1][0] - polyline[i][0]), polyline[i][1] + t * (polyline[i + 1][1] - polyline[i][1])];
+      const pos: [number, number] = [
+        polyline[i][0] + t * (polyline[i + 1][0] - polyline[i][0]),
+        polyline[i][1] + t * (polyline[i + 1][1] - polyline[i][1]),
+      ];
+      return { pos, heading: headingAtIdx(polyline, i) };
     }
     accumulated += segLen;
   }
-  return polyline[idxB];
+  return { pos: polyline[idxB], heading: headingAtIdx(polyline, idxB) };
+}
+
+function createVehicleIcon(color: string, heading: number): L.DivIcon {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="-14 -14 28 28"
+    style="transform:rotate(${heading}deg);display:block;">
+    <polygon points="0,-11 8,7 0,3 -8,7"
+      fill="${color}" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+  </svg>`;
+  return L.divIcon({ html: svg, className: "", iconSize: [56, 56], iconAnchor: [28, 28] });
 }
 
 function formatTime(d: Date): string {
@@ -208,71 +258,171 @@ export class TripMapPopup extends LitElement {
         font-size: 1em;
         flex-shrink: 0;
       }
-      .close-btn {
-        cursor: pointer;
-        background: none;
-        border: none;
-        font-size: 1.2em;
-        color: var(--primary-text-color);
-        padding: 4px 8px;
-      }
-      .body {
-        flex: 1;
-        position: relative;
-        min-height: 0;
-      }
-      .map {
-        width: 100%;
-        height: 100%;
-      }
-      .loading {
+      .header-actions {
         display: flex;
         align-items: center;
-        justify-content: center;
-        height: 100%;
-        color: var(--secondary-text-color);
+        gap: 4px;
+      }
+      .close-btn,
+      .refresh-btn {
+        cursor: pointer;
+        background: none;
+        border: 1px solid var(--divider-color, #e0e0e0);
+        border-radius: 6px;
+        font-size: 1.2em;
+        color: var(--primary-text-color);
+        padding: 4px 10px;
+        transition: background 0.15s, border-color 0.15s;
+      }
+      .close-btn:hover,
+      .refresh-btn:hover:not(:disabled) {
+        background: var(--secondary-background-color, #f5f5f5);
+        border-color: var(--primary-text-color);
+      }
+      .refresh-btn:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .refresh-btn.spinning {
+        display: inline-block;
+        animation: spin 0.8s linear infinite;
+      }
+      /* ── Alert banner ───────────────────────────────────────────── */
+      .alert-banner {
+        flex-shrink: 0;
+        background: #fff3e0;
+        border-bottom: 1px solid #ffb74d;
+        padding: 6px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        max-height: 90px;
+        overflow-y: auto;
+      }
+      .alert-banner-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        font-size: 0.82em;
+        color: #e65100;
+        line-height: 1.3;
+      }
+      .alert-banner-icon {
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .alert-banner-header {
+        font-weight: bold;
+      }
+      .alert-banner-desc {
+        font-size: 0.9em;
+        opacity: 0.85;
+        margin-top: 1px;
       }
 
-      /* ── Stop strip ────────────────────────────────────────────── */
-      .stop-strip {
+      /* ── Two-column content area ───────────────────────────────── */
+      .content {
+        display: flex;
+        flex: 1;
+        min-height: 0;
+      }
+
+      /* ── Left: stop panel (banner + list) ──────────────────────── */
+      .stop-panel {
+        width: 300px;
         flex-shrink: 0;
         display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        overflow-x: auto;
-        overflow-y: hidden;
-        /* no horizontal padding here — spacer divs handle it so content
-           isn't clipped at the scroll edges */
-        padding: 12px 0 10px;
-        border-top: 1px solid var(--divider-color, #e0e0e0);
+        flex-direction: column;
+        border-right: 1px solid var(--divider-color, #e0e0e0);
+        min-height: 0;
+      }
+      .next-stop-banner {
+        flex-shrink: 0;
+        padding: 10px 14px;
+        background: var(--primary-color, #1976d2);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .next-stop-label {
+        font-size: 0.72em;
+        opacity: 0.85;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .next-stop-name {
+        font-size: 0.95em;
+        font-weight: bold;
+        line-height: 1.2;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .next-stop-time {
+        font-size: 1.3em;
+        font-weight: bold;
+        margin-top: 2px;
+      }
+      .next-stop-dest-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        padding-top: 6px;
+        border-top: 1px solid rgba(255,255,255,0.3);
+        font-size: 0.8em;
+        opacity: 0.9;
+      }
+      .next-stop-dest-label {
+        opacity: 0.85;
+      }
+      .next-stop-dest-time {
+        font-weight: bold;
+      }
+      .stop-list {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 8px 16px 0;
         cursor: grab;
       }
-      .stop-strip:active {
-        cursor: grabbing;
-      }
-      .stop-strip-spacer {
+      .stop-list-spacer {
+        height: 16px;
         flex-shrink: 0;
-        min-width: 20px;
+      }
+      .stop-list:active {
+        cursor: grabbing;
       }
       .stop-item {
         display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        min-height: 52px;
+      }
+      .stop-timeline {
+        width: 24px;
+        flex-shrink: 0;
+        display: flex;
         flex-direction: column;
         align-items: center;
-        flex-shrink: 0;
-        width: 80px;
       }
-      /* horizontal connecting line between two stop dots */
-      .stop-connector {
-        flex-shrink: 0;
-        width: 32px;
-        height: 2px;
-        margin-top: 6px; /* aligns with dot center (dot 14px → center 7px, minus 1px border) */
+      .stop-line {
+        width: 2px;
+        flex: 1;
       }
-      .stop-connector.passed {
+      .stop-line.passed {
         background: #1976d2;
       }
-      .stop-connector.upcoming {
-        background: repeating-linear-gradient(to right, #bdbdbd 0, #bdbdbd 4px, transparent 4px, transparent 8px);
+      .stop-line.upcoming {
+        background: #bdbdbd;
+      }
+      .stop-line.hidden {
+        background: transparent;
       }
       .stop-dot {
         width: 14px;
@@ -292,109 +442,122 @@ export class TripMapPopup extends LitElement {
         border-color: #f57c00;
         width: 16px;
         height: 16px;
-        margin-top: -1px;
       }
       .stop-dot.upcoming {
         background: transparent;
         border-color: #bdbdbd;
       }
+      .stop-name-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 5px 6px 5px 8px;
+        min-width: 0;
+      }
       .stop-name {
-        font-size: 0.75em;
-        text-align: center;
-        margin-top: 5px;
-        max-width: 80px;
+        font-size: 0.85em;
+        line-height: 1.3;
+        color: var(--primary-text-color);
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-        line-height: 1.3;
-        color: var(--primary-text-color);
         word-break: break-word;
       }
-      .stop-time {
-        font-size: 0.75em;
-        text-align: center;
+      .stop-platform {
+        font-size: 0.7em;
+        font-weight: bold;
+        background: var(--secondary-background-color, #e0e0e0);
         color: var(--secondary-text-color);
-        margin-top: 3px;
+        border-radius: 3px;
+        padding: 2px 6px;
         white-space: nowrap;
       }
-      .stop-item.next .stop-name,
-      .stop-item.next .stop-time {
+      .stop-time-col {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        padding: 5px 4px 5px 0;
+        min-width: 36px;
+      }
+      .stop-time-planned {
+        font-size: 0.75em;
+        color: var(--secondary-text-color);
+        white-space: nowrap;
+        margin-top: 2px;
+      }
+      .stop-time-estimated {
+        font-size: 0.75em;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .stop-time-estimated.delayed { color: #c62828; }
+      .stop-time-estimated.ontime  { color: #2e7d32; }
+      .stop-item.next .stop-name {
         color: #f57c00;
         font-weight: bold;
       }
       @keyframes stop-pulse {
-        0% {
-          box-shadow: 0 0 0 0 rgba(245, 124, 0, 0.6);
-        }
-        60% {
-          box-shadow: 0 0 0 7px rgba(245, 124, 0, 0);
-        }
-        100% {
-          box-shadow: 0 0 0 0 rgba(245, 124, 0, 0);
-        }
+        0%   { box-shadow: 0 0 0 0   rgba(245, 124, 0, 0.6); }
+        60%  { box-shadow: 0 0 0 7px rgba(245, 124, 0, 0);   }
+        100% { box-shadow: 0 0 0 0   rgba(245, 124, 0, 0);   }
       }
       .stop-dot.next {
         animation: stop-pulse 1.6s ease-out infinite;
       }
 
-      /* ── Mobile: vertical stop list, map hidden ─────────────────── */
+      /* ── Right: map ─────────────────────────────────────────────── */
+      .map-panel {
+        flex: 1;
+        position: relative;
+        min-width: 0;
+      }
+      .map {
+        width: 100%;
+        height: 100%;
+      }
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: var(--secondary-text-color);
+      }
+
+      /* ── Boarding-stop tooltip ──────────────────────────────────── */
+      .boarding-stop-label {
+        background: #7b1fa2;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.1em;
+        font-weight: bold;
+        padding: 5px 12px;
+        white-space: nowrap;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      }
+      .boarding-stop-label::before {
+        display: none;
+      }
+
+      /* ── Mobile: hide map, stop list full width ─────────────────── */
       @media (max-width: 600px) {
         .dialog {
           width: 95vw;
           height: 85vh;
         }
-        .body {
+        .map-panel {
           display: none;
         }
-        .stop-strip {
-          flex: 1;
-          flex-direction: column;
-          overflow-x: hidden;
-          overflow-y: auto;
-          padding: 8px 16px;
-          cursor: default;
-          min-height: 0;
-          touch-action: pan-y;
-          -webkit-overflow-scrolling: touch;
-        }
-        .stop-strip-spacer {
-          min-width: 0;
-          min-height: 12px;
-        }
-        /* stop row: dot on left, name + time on right */
-        .stop-item {
-          flex-direction: row;
+        .stop-panel {
           width: 100%;
-          align-items: center;
-          gap: 12px;
-          padding: 3px 0;
+          border-right: none;
         }
-        /* vertical connector line, centered under the dot (dot=14px → center=7px, line=2px → margin=6px) */
-        .stop-connector {
-          width: 2px;
-          height: 22px;
-          margin-top: 0;
-          margin-left: 6px;
-          align-self: flex-start;
-        }
-        .stop-connector.upcoming {
-          background: repeating-linear-gradient(to bottom, #bdbdbd 0, #bdbdbd 4px, transparent 4px, transparent 8px);
-        }
-        .stop-dot.next {
-          margin-top: 0; /* cancel the -1px from default rule */
-        }
-        .stop-name {
-          flex: 1;
-          text-align: left;
-          max-width: none;
-          -webkit-line-clamp: 1;
-          margin-top: 0;
-        }
-        .stop-time {
-          text-align: right;
-          flex-shrink: 0;
-          margin-top: 0;
+        .stop-list {
+          padding: 8px 16px;
         }
       }
     `,
@@ -403,16 +566,22 @@ export class TripMapPopup extends LitElement {
   @property() tripId?: string;
   @property() title = "";
   @property({ type: Boolean }) open = false;
+  @property() fromStopId?: string;
+  @property({ type: Number }) fromLat?: number;
+  @property({ type: Number }) fromLon?: number;
+  @property({ attribute: false }) alerts: Alert[] = [];
 
   @state() private _loading = false;
   @state() private _tripData: any = null;
   @state() private _stops: StopInfo[] = [];
   @state() private _currentStopIdx = -1;
+  @state() private _stopTimesData: StopTimeEntry[] = [];
+  @state() private _stopTimesLoading = false;
 
   private _map: L.Map | null = null;
   private _mapRef = createRef<HTMLDivElement>();
   private _stripRef = createRef<HTMLDivElement>();
-  private _vehicleMarker: L.CircleMarker | null = null;
+  private _vehicleMarker: L.Marker | null = null;
   private _positionInterval: ReturnType<typeof setInterval> | null = null;
 
   protected updated(changed: PropertyValues) {
@@ -444,99 +613,177 @@ export class TripMapPopup extends LitElement {
         <div class="dialog" @click=${(ev: Event) => ev.stopPropagation()}>
           <div class="header">
             <span>${this.title}</span>
-            <button class="close-btn" @click=${this._close}>✕</button>
+            <div class="header-actions">
+              <button class="refresh-btn ${this._loading ? "spinning" : ""}" ?disabled=${this._loading} @click=${this._fetchTrip}>↻</button>
+              <button class="close-btn" @click=${this._close}>✕</button>
+            </div>
           </div>
-          <div class="body">${this._loading ? html`<div class="loading">Loading…</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}</div>
-          ${this._stops.length ? this._renderStopStrip() : nothing}
+          ${this.alerts.length > 0 ? html`
+            <div class="alert-banner">
+              ${this.alerts.map(a => {
+                const color = a.severityLevel === "SEVERE" ? "#c62828" : a.severityLevel === "INFO" ? "#1565c0" : "#e65100";
+                const icon = a.severityLevel === "SEVERE" ? "mdi:alert-octagon-outline" : a.severityLevel === "INFO" ? "mdi:information-outline" : "mdi:alert-circle-outline";
+                return html`
+                  <div class="alert-banner-item" style="color:${color}">
+                    <ha-icon icon="${icon}" class="alert-banner-icon" style="--mdc-icon-size:16px"></ha-icon>
+                    <div>
+                      <div class="alert-banner-header">${a.headerText}</div>
+                      ${a.descriptionText ? html`<div class="alert-banner-desc">${a.descriptionText}</div>` : nothing}
+                    </div>
+                  </div>
+                `;
+              })}
+            </div>
+          ` : nothing}
+          <div class="content">
+            ${this._stops.length ? this._renderStopList() : nothing}
+            <div class="map-panel">
+              ${this._loading ? html`<div class="loading">Loading…</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}
+            </div>
+          </div>
         </div>
       </div>
     `;
   }
 
-  private _renderStopStrip() {
+  private _renderNextStopBanner() {
     const cur = this._currentStopIdx;
+    const next = this._stops[cur + 1];
+    if (!next) return nothing;
+
+    const now = Date.now();
+    const nextDiffMin = Math.round((next.plannedTime.getTime() - now) / 60000);
+    const nextLabel = nextDiffMin <= 0 ? "jetzt" : `in ${nextDiffMin} min`;
+
+    const dest = this._stops[this._stops.length - 1];
+    const destDiffMin = dest ? Math.max(0, Math.round((dest.plannedTime.getTime() - now) / 60000)) : null;
+
     return html`
-      <div class="stop-strip" ${ref(this._stripRef)} @wheel=${this._onStripWheel} @mousedown=${this._onStripMouseDown}>
-        <div class="stop-strip-spacer"></div>
-        ${this._stops.map((stop, i) => {
-          const isNext = cur >= 0 && i === cur + 1;
-          const dotClass = i <= cur ? "passed" : isNext ? "next" : "upcoming";
-          const itemClass = isNext ? "next" : "";
-          const connClass = i <= cur ? "passed" : "upcoming";
-          return html`
-            ${i > 0 ? html`<div class="stop-connector ${connClass}"></div>` : nothing}
-            <div class="stop-item ${itemClass}">
-              <div class="stop-dot ${dotClass}"></div>
-              <div class="stop-name">${stop.name}</div>
-              <div class="stop-time">${formatTime(stop.time)}</div>
-            </div>
-          `;
-        })}
-        <div class="stop-strip-spacer"></div>
+      <div class="next-stop-banner">
+        <div class="next-stop-label">Nächste Haltestelle</div>
+        <div class="next-stop-name">${next.name}</div>
+        <div class="next-stop-time">${nextLabel}</div>
+        ${destDiffMin !== null ? html`
+          <div class="next-stop-dest-row">
+            <span class="next-stop-dest-label">Ankunft Ziel</span>
+            <span class="next-stop-dest-time">in ${destDiffMin} min</span>
+          </div>
+        ` : nothing}
       </div>
     `;
   }
 
-  private _onStripWheel = (e: WheelEvent) => {
-    if (window.matchMedia("(max-width: 600px)").matches) return; // vertical — let browser scroll natively
-    const strip = this._stripRef.value;
-    if (!strip) return;
-    e.preventDefault();
-    strip.scrollLeft += e.deltaY !== 0 ? e.deltaY : e.deltaX;
-  };
+  private _renderStopList() {
+    const cur = this._currentStopIdx;
+    return html`
+      <div class="stop-panel">
+        ${this._renderNextStopBanner()}
+        <div class="stop-list" ${ref(this._stripRef)} @mousedown=${this._onListMouseDown}>
+        ${this._stops.map((stop, i) => {
+          const isNext = cur >= 0 && i === cur + 1;
+          const dotClass = i <= cur ? "passed" : isNext ? "next" : "upcoming";
+          const itemClass = isNext ? "next" : "";
+          const lineClass = i <= cur ? "passed" : "upcoming";
+          const isFirst = i === 0;
+          const isLast = i === this._stops.length - 1;
+          const delayed = stop.estimatedTime && stop.estimatedTime.getTime() > stop.plannedTime.getTime();
+          const estClass = delayed ? "delayed" : "ontime";
+          return html`
+            <div class="stop-item ${itemClass}">
+              <div class="stop-timeline">
+                <div class="stop-line ${isFirst ? "hidden" : lineClass}"></div>
+                <div class="stop-dot ${dotClass}"></div>
+                <div class="stop-line ${isLast ? "hidden" : lineClass}"></div>
+              </div>
+              <div class="stop-name-section">
+                <div class="stop-name">${stop.name}</div>
+                <span class="stop-time-planned">${formatTime(stop.plannedTime)}</span>
+                ${stop.estimatedTime ? html`<span class="stop-time-estimated ${estClass}">${formatTime(stop.estimatedTime)}</span>` : nothing}
+              </div>
+              <div class="stop-time-col">
+                ${stop.platform ? html`<div class="stop-platform">${stop.platform}</div>` : nothing}
+              </div>
+            </div>
+          `;
+        })}
+        <div class="stop-list-spacer"></div>
+        </div>
+      </div>
+    `;
+  }
 
-  // Click-and-drag horizontal scrolling
   private _stripDragStart = 0;
   private _stripScrollStart = 0;
 
-  private _onStripMouseDown = (e: MouseEvent) => {
-    const strip = this._stripRef.value;
-    if (!strip) return;
-    const isMobile = window.matchMedia("(max-width: 600px)").matches;
-    if (isMobile) {
-      this._stripDragStart = e.clientY;
-      this._stripScrollStart = strip.scrollTop;
-      const onMove = (ev: MouseEvent) => {
-        strip.scrollTop = this._stripScrollStart - (ev.clientY - this._stripDragStart);
-      };
-      const onUp = () => {
-        window.removeEventListener("mousemove", onMove);
-        window.removeEventListener("mouseup", onUp);
-      };
-      window.addEventListener("mousemove", onMove);
-      window.addEventListener("mouseup", onUp);
-    } else {
-      this._stripDragStart = e.clientX;
-      this._stripScrollStart = strip.scrollLeft;
-      const onMove = (ev: MouseEvent) => {
-        strip.scrollLeft = this._stripScrollStart - (ev.clientX - this._stripDragStart);
-      };
-      const onUp = () => {
-        window.removeEventListener("mousemove", onMove);
-        window.removeEventListener("mouseup", onUp);
-      };
-      window.addEventListener("mousemove", onMove);
-      window.addEventListener("mouseup", onUp);
-    }
+  private _onListMouseDown = (e: MouseEvent) => {
+    const list = this._stripRef.value;
+    if (!list) return;
+    this._stripDragStart = e.clientY;
+    this._stripScrollStart = list.scrollTop;
+    const onMove = (ev: MouseEvent) => { list.scrollTop = this._stripScrollStart - (ev.clientY - this._stripDragStart); };
+    const onUp = () => { window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp); };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
   };
 
   private _scrollStripToNextStop() {
-    const strip = this._stripRef.value;
-    if (!strip || !this._stops.length) return;
+    const list = this._stripRef.value;
+    if (!list || !this._stops.length) return;
     const targetIdx = Math.max(0, Math.min(this._currentStopIdx + 1, this._stops.length - 1));
-    const items = strip.querySelectorAll<HTMLElement>(".stop-item");
+    const items = list.querySelectorAll<HTMLElement>(".stop-item");
     const item = items[targetIdx];
     if (!item) return;
-    const stripRect = strip.getBoundingClientRect();
+    const listRect = list.getBoundingClientRect();
     const itemRect = item.getBoundingClientRect();
-    const isMobile = window.matchMedia("(max-width: 600px)").matches;
-    if (isMobile) {
-      const itemCenterInScroll = itemRect.top - stripRect.top + strip.scrollTop + item.offsetHeight / 2;
-      strip.scrollTo({ top: itemCenterInScroll - strip.clientHeight / 2, behavior: "smooth" });
-    } else {
-      const itemCenterInScroll = itemRect.left - stripRect.left + strip.scrollLeft + item.offsetWidth / 2;
-      strip.scrollTo({ left: itemCenterInScroll - strip.clientWidth / 2, behavior: "smooth" });
+    const itemCenterInScroll = itemRect.top - listRect.top + list.scrollTop + item.offsetHeight / 2;
+    list.scrollTo({ top: itemCenterInScroll - list.clientHeight / 2, behavior: "smooth" });
+  }
+
+  private async _fetchStopTimes(stopId: string) {
+    this._stopTimesLoading = true;
+    console.info("[TripMapPopup] fetch stoptimes for stopId", stopId);
+
+    try {
+      const params = new URLSearchParams({
+        stopId,
+        time: new Date().toISOString(),
+        arriveBy: "false",
+        n: "10",
+        exactRadius: "false",
+        radius: "200",
+      });
+      const response = await fetch(`${STOPTIMES_API_BASE}?${params}`);
+      if (response.ok) {
+        const raw = await response.json();
+        const entries: any[] = Array.isArray(raw) ? raw : (raw.times ?? raw.stopTimes ?? []);
+        this._stopTimesData = entries.map((e: any): StopTimeEntry => {
+          const place = e.place ?? {};
+          const planned = new Date(place.scheduledDeparture ?? place.scheduledArrival ?? place.departure ?? place.arrival);
+          const actual = new Date(place.departure ?? place.arrival);
+          const isDelayed = e.realTime === true && Math.abs(actual.getTime() - planned.getTime()) >= 30000;
+          return {
+            tripId: e.tripId ?? "",
+            headsign: e.headsign ?? "",
+            routeShortName: e.routeShortName ?? e.displayName ?? "",
+            plannedDeparture: planned,
+            estimatedDeparture: isDelayed ? actual : undefined,
+            track: place.track ?? place.scheduledTrack ?? undefined,
+            alerts: (e.alerts ?? []).filter((a: any) => a?.headerText).map((a: any): Alert => ({
+              headerText: a.headerText,
+              descriptionText: a.descriptionText ?? "",
+              severityLevel: a.severityLevel,
+              cause: a.cause,
+              effect: a.effect,
+            })),
+          };
+        });
+      } else {
+        console.error("[TripMapPopup] stoptimes fetch failed", response.status);
+      }
+    } catch (e) {
+      console.error("[TripMapPopup] stoptimes fetch error", e);
     }
+    this._stopTimesLoading = false;
   }
 
   private async _fetchTrip() {
@@ -553,7 +800,7 @@ export class TripMapPopup extends LitElement {
 
     const url = `${TRIP_API_BASE}${encodeURIComponent(this.tripId)}`;
 
-    console.info("[TripMapPopup] fetch data");
+    console.info("[TripMapPopup] fetch trip data");
 
     try {
       const response = await fetch(url);
@@ -568,6 +815,13 @@ export class TripMapPopup extends LitElement {
 
     this._loading = false;
     await this.updateComplete;
+
+    const stopId = this._extractBoardingStopId();
+    if (stopId) {
+      this._fetchStopTimes(stopId);
+    } else {
+      console.warn("[TripMapPopup] boarding stopId not found in trip data, skipping stoptimes fetch");
+    }
     requestAnimationFrame(() => this._initMap());
   }
 
@@ -609,7 +863,13 @@ export class TripMapPopup extends LitElement {
       }
 
       (leg.intermediateStops ?? []).forEach((stop: any) => {
-        L.circleMarker([stop.lat, stop.lon], { radius: 5, color: "#fff", weight: 1.5, fillColor: "#1565c0", fillOpacity: 1 }).bindPopup(`<b>${stop.name}</b>`).addTo(this._map!);
+        const isBoardingStop = this._isBoardingStop(stop);
+        const markerOpts = isBoardingStop
+          ? { radius: 10, color: "#fff", weight: 2.5, fillColor: "#7b1fa2", fillOpacity: 1 }
+          : { radius: 5, color: "#fff", weight: 1.5, fillColor: "#1565c0", fillOpacity: 1 };
+        const marker = L.circleMarker([stop.lat, stop.lon], markerOpts).bindPopup(`<b>${stop.name}</b>`);
+        if (isBoardingStop) marker.bindTooltip(stop.name, { permanent: true, direction: "right", offset: [10, 0], className: "boarding-stop-label" });
+        marker.addTo(this._map!);
         bounds.push([stop.lat, stop.lon]);
       });
 
@@ -644,27 +904,56 @@ export class TripMapPopup extends LitElement {
       // Update stop strip current index
       let newStopIdx = -1;
       for (let i = 0; i < this._stops.length; i++) {
-        if (nowMs >= this._stops[i].time.getTime()) newStopIdx = i;
+        if (nowMs >= this._stops[i].plannedTime.getTime()) newStopIdx = i;
         else break;
       }
       if (newStopIdx !== this._currentStopIdx) this._currentStopIdx = newStopIdx;
 
       // Update vehicle marker
-      const pos = interpolatePosition(timeline, polyline, now);
+      const { pos, heading } = interpolatePosition(timeline, polyline, now);
       if (!pos || !this._map) return;
 
       const tooltip = nowMs < startMs ? "Noch nicht gestartet" : nowMs > endMs ? "Bereits angekommen" : "Aktuell";
       const color = nowMs >= startMs && nowMs <= endMs ? "#f57c00" : "#757575";
+      const icon = createVehicleIcon(color, heading);
 
       if (!this._vehicleMarker) {
-        this._vehicleMarker = L.circleMarker(pos, { radius: 9, color: "#fff", weight: 3, fillColor: color, fillOpacity: 1 }).bindTooltip(tooltip).addTo(this._map);
+        this._vehicleMarker = L.marker(pos, { icon }).bindTooltip(tooltip).addTo(this._map);
       } else {
         this._vehicleMarker.setLatLng(pos);
+        this._vehicleMarker.setIcon(icon);
       }
     };
 
     update();
     this._positionInterval = setInterval(update, POSITION_UPDATE_INTERVAL_MS);
+  }
+
+  private _extractBoardingStopId(): string | null {
+    if (!this._tripData) return null;
+    const legs: any[] = this._tripData.legs ?? [];
+    if (!legs.length) return null;
+    const leg = legs[0];
+
+    // check leg.from first
+    if (leg.from?.stopId && this._isBoardingStop(leg.from)) return leg.from.stopId;
+
+    // search intermediateStops
+    for (const stop of leg.intermediateStops ?? []) {
+      if (stop?.stopId && this._isBoardingStop(stop)) return stop.stopId;
+    }
+    return null;
+  }
+
+  private _isBoardingStop(stop: any): boolean {
+    if (this.fromStopId && stop.stopId) {
+      return stop.stopId === this.fromStopId;
+    }
+    if (this.fromLat != null && this.fromLon != null && stop.lat != null && stop.lon != null) {
+      const dist = Math.sqrt(Math.pow(stop.lat - this.fromLat, 2) + Math.pow(stop.lon - this.fromLon, 2));
+      return dist < 0.001; // ~100m
+    }
+    return false;
   }
 
   private _destroyMap() {
@@ -684,6 +973,8 @@ export class TripMapPopup extends LitElement {
     this._loading = false;
     this._stops = [];
     this._currentStopIdx = -1;
+    this._stopTimesData = [];
+    this._stopTimesLoading = false;
     this._destroyMap();
   }
 

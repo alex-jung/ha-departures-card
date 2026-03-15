@@ -27,8 +27,8 @@ template:
           icon: mdi:bus
           times: >
             {{ [
-              {"planned": "2026-03-15T21:52:00+01:00", "estimated": "2026-03-15T21:52:00+01:00", "trip_id": "20260315_21:22_de-DELFI_3118788553",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
-              {"planned": "2026-03-15T22:32:00+01:00", "estimated": "2026-03-15T22:32:00+01:00", "trip_id": "20260315_22:02_de-DELFI_3118788630",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
+              {"planned": "2026-03-15T21:52:00+01:00", "estimated": "2026-03-15T21:52:00+01:00", "trip_id": "20260315_21:22_de-DELFI_3118788553",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": [{"headerText": "Umleitung wegen Baustelle", "descriptionText": "Die Linie 67 fährt ab Hügelstraße über Ziegelstein umgeleitet. Haltestelle Thon entfällt.", "severityLevel": "WARNING", "cause": "CONSTRUCTION", "effect": "DETOUR"}]},
+              {"planned": "2026-03-15T22:32:00+01:00", "estimated": "2026-03-15T22:32:00+01:00", "trip_id": "20260315_22:02_de-DELFI_3118788630",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": [{"headerText": "Umleitung wegen Baustelle", "descriptionText": "Die Linie 67 fährt ab Hügelstraße über Ziegelstein umgeleitet. Haltestelle Thon entfällt.", "severityLevel": "WARNING", "cause": "CONSTRUCTION", "effect": "DETOUR"}, {"headerText": "Streik", "descriptionText": "Aufgrund eines ganztägigen Warnstreiks kann es zu Ausfällen kommen.", "severityLevel": "SEVERE", "cause": "STRIKE", "effect": "REDUCED_SERVICE"}]},
               {"planned": "2026-03-15T23:12:00+01:00", "estimated": "2026-03-15T23:12:00+01:00", "trip_id": "20260315_22:42_de-DELFI_3118788629",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
               {"planned": "2026-03-15T23:52:00+01:00", "estimated": "2026-03-15T23:52:00+01:00", "trip_id": "20260315_23:22_de-DELFI_3118788603",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
               {"planned": "2026-03-16T00:32:00+01:00", "estimated": "2026-03-16T00:32:00+01:00", "trip_id": "20260315_24:02_de-DELFI_3105071767",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
@@ -47,10 +47,11 @@ template:
           transport: "tram"
           times: >
             {{ [
-              {"planned": (now() + timedelta(minutes=1)).isoformat(),  "estimated": (now() + timedelta(minutes=1)).isoformat(),  "cancelled": false, "trip_id": "TRAM-18-001"},
-              {"planned": (now() + timedelta(minutes=10)).isoformat(), "estimated": (now() + timedelta(minutes=12)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-002"},
-              {"planned": (now() + timedelta(minutes=20)).isoformat(), "estimated": (now() + timedelta(minutes=20)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-003"},
-              {"planned": (now() + timedelta(minutes=30)).isoformat(), "estimated": (now() + timedelta(minutes=31)).isoformat(), "cancelled": true,  "trip_id": "TRAM-18-004"}
+              {"planned": (now() + timedelta(minutes=1)).isoformat(),  "estimated": (now() + timedelta(minutes=1)).isoformat(),  "cancelled": false, "trip_id": "TRAM-18-001", "head_sign": "Ostbahnhof"},
+              {"planned": (now() + timedelta(minutes=10)).isoformat(), "estimated": (now() + timedelta(minutes=14)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-002", "head_sign": "Ostbahnhof"},
+              {"planned": (now() + timedelta(minutes=20)).isoformat(), "estimated": (now() + timedelta(minutes=18)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-003", "head_sign": "Ostbahnhof"},
+              {"planned": (now() + timedelta(minutes=30)).isoformat(), "estimated": (now() + timedelta(minutes=35)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-004", "head_sign": "Ostbahnhof", "alerts": [{"headerText": "Verspätung wegen Stau", "descriptionText": "Die Tram 18 hat aufgrund eines Verkehrsunfalls Verspätung.", "severityLevel": "WARNING", "cause": "ACCIDENT", "effect": "SIGNIFICANT_DELAYS"}]},
+              {"planned": (now() + timedelta(minutes=40)).isoformat(), "estimated": (now() + timedelta(minutes=40)).isoformat(), "cancelled": true,  "trip_id": "TRAM-18-005", "head_sign": "Ostbahnhof"}
             ] }}
 
       - name: "U-Bahn U6 Garching"
@@ -62,7 +63,8 @@ template:
           transport: "subway"
           times: >
             {{ [
-              {"planned": (now() + timedelta(minutes=5)).isoformat(),  "estimated": (now() + timedelta(minutes=5)).isoformat(),  "cancelled": false, "trip_id": "U6-001"},
-              {"planned": (now() + timedelta(minutes=12)).isoformat(), "estimated": (now() + timedelta(minutes=14)).isoformat(), "cancelled": false, "trip_id": "U6-002"},
-              {"planned": (now() + timedelta(minutes=22)).isoformat(), "estimated": (now() + timedelta(minutes=22)).isoformat(), "cancelled": true,  "trip_id": "U6-003"}
+              {"planned": (now() + timedelta(minutes=5)).isoformat(),  "estimated": (now() + timedelta(minutes=5)).isoformat(),  "cancelled": false, "trip_id": "U6-001", "head_sign": "Garching Forschungszentrum"},
+              {"planned": (now() + timedelta(minutes=12)).isoformat(), "estimated": (now() + timedelta(minutes=17)).isoformat(), "cancelled": false, "trip_id": "U6-002", "head_sign": "Garching Forschungszentrum"},
+              {"planned": (now() + timedelta(minutes=22)).isoformat(), "estimated": (now() + timedelta(minutes=21)).isoformat(), "cancelled": false, "trip_id": "U6-003", "head_sign": "Garching Forschungszentrum"},
+              {"planned": (now() + timedelta(minutes=32)).isoformat(), "estimated": (now() + timedelta(minutes=32)).isoformat(), "cancelled": true,  "trip_id": "U6-004", "head_sign": "Garching Forschungszentrum"}
             ] }}

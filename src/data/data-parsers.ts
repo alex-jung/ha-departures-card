@@ -1,7 +1,7 @@
 import { HassEntity } from "home-assistant-js-websocket";
 import { DepartureTime } from "./departure-time";
 import { EntityNotAvailable, UnsupportedEntityError } from "../exceptions";
-import { DbInfoEntityAttributes, HaDeparturesEntityAttributes } from "../types";
+import { Alert, DbInfoEntityAttributes, HaDeparturesEntityAttributes } from "../types";
 
 export class DataParser {
   public static getParser(entity: HassEntity): Parser {
@@ -51,7 +51,16 @@ class ParserHaDepartures extends Parser {
         const tripId = timeEntry.trip_id ?? undefined;
         const headSign = timeEntry.head_sign ?? undefined;
         const cancelled = timeEntry.cancelled ?? false;
-        const alerts = timeEntry.alerts ?? [];
+        const alerts: Alert[] = (timeEntry.alerts ?? []).filter(
+          (a: any) => a?.headerText
+        ).map((a: any): Alert => ({
+          headerText: a.headerText,
+          descriptionText: a.descriptionText ?? "",
+          severityLevel: a.severityLevel,
+          cause: a.cause,
+          effect: a.effect,
+          url: a.url,
+        }));
 
         times.push(new DepartureTime(timePlanned, timeEstimated, tripId, headSign, cancelled, alerts));
       });

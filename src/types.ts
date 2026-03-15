@@ -69,6 +69,15 @@ export enum LayoutCell {
   TIME_DIFF = "time-diff",
 }
 
+export interface Alert {
+  headerText: string;
+  descriptionText: string;
+  severityLevel?: "UNKNOWN_SEVERITY" | "INFO" | "WARNING" | "SEVERE";
+  cause?: string;
+  effect?: string;
+  url?: string;
+}
+
 // ha-departures specific types
 export enum HaDeparturesEntityAttributes {
   DIRECTION = "direction",

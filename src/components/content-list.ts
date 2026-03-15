@@ -5,7 +5,7 @@ import { css, CSSResultGroup, html, PropertyValues, unsafeCSS } from "lit";
 import { DEFAULT_DEPARTURE_ROW_GAP, DEFAULT_DEPARTURE_ROW_HEIGHT, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, DEFAULT_SHOW_SCROLLBUTTONS } from "../constants";
 import { customElement, state } from "lit/decorators.js";
 import { Layout } from "../data/layout";
-import { CardOrientation, DeparturesDataRow } from "../types";
+import { Alert, CardOrientation, DeparturesDataRow } from "../types";
 import "./trip-map-popup.js";
 
 import cssText from "@splidejs/splide/dist/css/splide.min.css";
@@ -25,6 +25,10 @@ export class ContentList extends Content {
   @state() private _dialogOpen = false;
   @state() private _selectedTripId?: string;
   @state() private _dialogTitle = "";
+  @state() private _fromStopId?: string;
+  @state() private _fromLat?: number;
+  @state() private _fromLon?: number;
+  @state() private _alerts: Alert[] = [];
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
     this._initializeSplide();
@@ -78,6 +82,10 @@ export class ContentList extends Content {
       .tripId=${this._selectedTripId}
       .title=${this._dialogTitle}
       .open=${this._dialogOpen}
+      .fromStopId=${this._fromStopId}
+      .fromLat=${this._fromLat}
+      .fromLon=${this._fromLon}
+      .alerts=${this._alerts}
       @popup-closed=${() => { this._dialogOpen = false; }}
     ></trip-map-popup>
     `;
@@ -95,6 +103,14 @@ export class ContentList extends Content {
   };
 
   private _onDepartureClick(departure: DeparturesDataRow) {
+    const entityState = this.hass?.states[departure.entity];
+    const attrs = entityState?.attributes ?? {};
+    this._fromStopId = attrs.stop_id ?? undefined;
+    const lat = parseFloat(attrs.latitude);
+    const lon = parseFloat(attrs.longitude);
+    this._fromLat = isNaN(lat) ? undefined : lat;
+    this._fromLon = isNaN(lon) ? undefined : lon;
+    this._alerts = departure.time.alerts;
     this._selectedTripId = departure.time.tripId;
     this._dialogTitle = `${departure.lineName} → ${departure.destinationName}`;
     this._dialogOpen = true;
