@@ -197,6 +197,7 @@ export class TripMapPopup extends LitElement {
         overflow-x: hidden;
         padding: 8px 16px 0;
         cursor: grab;
+        touch-action: none;
       }
       .stop-list-spacer {
         height: 16px;
@@ -524,7 +525,7 @@ export class TripMapPopup extends LitElement {
     return html`
       <div class="stop-panel">
         ${this._renderNextStopBanner()}
-        <div class="stop-list" ${ref(this._stripRef)} @mousedown=${this._onListMouseDown}>
+        <div class="stop-list" ${ref(this._stripRef)} @pointerdown=${this._onListPointerDown}>
           ${this._stops.map((stop, i) => {
             const isNext = cur >= 0 && i === cur + 1;
             const dotClass = i <= cur ? "passed" : isNext ? "next" : "upcoming";
@@ -559,20 +560,21 @@ export class TripMapPopup extends LitElement {
   private _stripDragStart = 0;
   private _stripScrollStart = 0;
 
-  private _onListMouseDown = (e: MouseEvent) => {
+  private _onListPointerDown = (e: PointerEvent) => {
     const list = this._stripRef.value;
     if (!list) return;
+    list.setPointerCapture(e.pointerId);
     this._stripDragStart = e.clientY;
     this._stripScrollStart = list.scrollTop;
-    const onMove = (ev: MouseEvent) => {
+    const onMove = (ev: PointerEvent) => {
       list.scrollTop = this._stripScrollStart - (ev.clientY - this._stripDragStart);
     };
     const onUp = () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
     };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("mouseup", onUp);
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
   };
 
   private _scrollStripToNextStop() {
