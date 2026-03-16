@@ -139,6 +139,13 @@ export function buildTimeline(leg: any, polyline: [number, number][]): StopTimep
   const is: any[] = leg.intermediateStops ?? [];
   const timeline: StopTimepoint[] = [];
   let searchFrom = 0;
+
+  if (leg.from?.lat && (leg.from.departure ?? leg.from.scheduledDeparture)) {
+    const idx = findClosestIdx([leg.from.lat, leg.from.lon], polyline, searchFrom);
+    searchFrom = idx;
+    timeline.push({ time: new Date(leg.from.departure ?? leg.from.scheduledDeparture), polylineIdx: idx });
+  }
+
   for (const s of is) {
     if (!s?.lat) continue;
     const idx = findClosestIdx([s.lat, s.lon], polyline, searchFrom);
