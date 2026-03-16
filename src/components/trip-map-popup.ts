@@ -30,6 +30,7 @@ export class TripMapPopup extends LitElement {
     css`
       :host {
         display: contents;
+        font-size: 1.1em;
       }
       .overlay {
         position: fixed;

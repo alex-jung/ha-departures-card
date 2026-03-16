@@ -275,6 +275,7 @@ function t(t,e,n,i){var r,o=arguments.length,s=o<3?e:null===i?i=Object.getOwnPro
     `,a`
       :host {
         display: contents;
+        font-size: 1.1em;
       }
       .overlay {
         position: fixed;
