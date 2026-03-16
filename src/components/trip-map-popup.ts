@@ -5,6 +5,7 @@ import { ref, createRef } from "lit/directives/ref.js";
 import L from "leaflet";
 import { buildTimeline, buildTripStops, createVehicleIcon, decodePolyline, formatTime, interpolatePosition } from "../helpers";
 import { CARD_REPO_URL, CARD_VERSION } from "../constants";
+import { localize } from "../locales/localize";
 
 import leafletCssText from "leaflet/dist/leaflet.css";
 
@@ -399,6 +400,7 @@ export class TripMapPopup extends LitElement {
   @property() title = "";
   @property({ type: Boolean }) open = false;
   @property() fromStopId?: string;
+  @property() language = "en";
   @property({ attribute: false }) alerts: Alert[] = [];
 
   @state() private _loading = false;
@@ -473,12 +475,12 @@ export class TripMapPopup extends LitElement {
               ? html`
                   <div class="loading" style="flex:1;flex-direction:column;gap:8px">
                     <ha-icon icon="mdi:alert-circle-outline" style="--mdc-icon-size:36px;opacity:0.4"></ha-icon>
-                    <span>No data available</span>
+                    <span>${localize("card.popup.no-data", this.language)}</span>
                   </div>
                 `
               : html`
                   ${this._stops.length ? this._renderStopList() : nothing}
-                  <div class="map-panel">${this._loading ? html`<div class="loading">Loading…</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}</div>
+                  <div class="map-panel">${this._loading ? html`<div class="loading">${localize("card.popup.loading", this.language)}</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}</div>
                 `}
           </div>
         </div>
@@ -493,21 +495,23 @@ export class TripMapPopup extends LitElement {
 
     const now = Date.now();
     const nextDiffMin = Math.round((next.plannedTime.getTime() - now) / 60000);
-    const nextLabel = nextDiffMin <= 0 ? "jetzt" : `in ${nextDiffMin} min`;
+    const nextLabel = nextDiffMin <= 0
+      ? localize("card.popup.now", this.language)
+      : localize("card.popup.in-minutes", this.language, { min: String(nextDiffMin) });
 
     const dest = this._stops[this._stops.length - 1];
     const destDiffMin = dest ? Math.max(0, Math.round((dest.plannedTime.getTime() - now) / 60000)) : null;
 
     return html`
       <div class="next-stop-banner">
-        <div class="next-stop-label">Nächste Haltestelle</div>
+        <div class="next-stop-label">${localize("card.popup.next-stop-label", this.language)}</div>
         <div class="next-stop-name">${next.name}</div>
         <div class="next-stop-time">${nextLabel}</div>
         ${destDiffMin !== null
           ? html`
               <div class="next-stop-dest-row">
-                <span class="next-stop-dest-label">Ankunft Ziel</span>
-                <span class="next-stop-dest-time">in ${destDiffMin} min</span>
+                <span class="next-stop-dest-label">${localize("card.popup.dest-arrival-label", this.language)}</span>
+                <span class="next-stop-dest-time">${localize("card.popup.in-minutes", this.language, { min: String(destDiffMin) })}</span>
               </div>
             `
           : nothing}
@@ -772,7 +776,11 @@ export class TripMapPopup extends LitElement {
       const { pos, heading } = interpolatePosition(timeline, polyline, now);
       if (!pos || !this._map) return;
 
-      const tooltip = nowMs < startMs ? "Noch nicht gestartet" : nowMs > endMs ? "Bereits angekommen" : "Aktuell";
+      const tooltip = nowMs < startMs
+        ? localize("card.popup.vehicle-not-started", this.language)
+        : nowMs > endMs
+          ? localize("card.popup.vehicle-arrived", this.language)
+          : localize("card.popup.vehicle-current", this.language);
       const color = nowMs >= startMs && nowMs <= endMs ? "#f57c00" : "#757575";
       const icon = createVehicleIcon(color, heading);
 

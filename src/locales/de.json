@@ -80,6 +80,17 @@
     },
     "errors": {
       "no-card-orientation-set": "Bitte die Option \"Kartenausrichtung\" setzen"
+    },
+    "popup": {
+      "next-stop-label": "Nächste Haltestelle",
+      "now": "jetzt",
+      "in-minutes": "in {min} min",
+      "dest-arrival-label": "Ankunft Ziel",
+      "loading": "Laden…",
+      "no-data": "Keine Daten verfügbar",
+      "vehicle-not-started": "Noch nicht gestartet",
+      "vehicle-arrived": "Bereits angekommen",
+      "vehicle-current": "Aktuell"
     }
   }
 }
