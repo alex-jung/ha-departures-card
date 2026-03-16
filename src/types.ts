@@ -51,6 +51,11 @@ export enum CardTheme {
   BLACK_WHITE = "black-white",
   BLUE_OCEAN = "blue-ocean",
   CAPPUCINO = "cappucino",
+  DARK = "dark",
+  FOREST = "forest",
+  MINT = "mint",
+  NORD = "nord",
+  SUNSET = "sunset",
   TABLE = "table",
 }
 
