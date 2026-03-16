@@ -284,6 +284,8 @@ function t(t,e,n,i){var r,o=arguments.length,s=o<3?e:null===i?i=Object.getOwnPro
         display: flex;
         align-items: center;
         justify-content: center;
+        overscroll-behavior: none;
+        touch-action: none;
       }
       .dialog {
         background: var(--card-background-color, #fff);
@@ -443,6 +445,7 @@ function t(t,e,n,i){var r,o=arguments.length,s=o<3?e:null===i?i=Object.getOwnPro
         padding: 8px 16px 0;
         cursor: grab;
         touch-action: none;
+        overscroll-behavior: none;
       }
       .stop-list-spacer {
         height: 16px;
