@@ -117,7 +117,7 @@ export function buildTripStops(leg: any, polyline: [number, number][]): StopInfo
   }
 
   // add last stop
-  if (leg.to?.lat) {
+  if (leg.to) {
     const planned = leg.to.arrival;
     const scheduled = leg.to.scheduledArrival ?? undefined;
 
