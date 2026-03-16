@@ -583,7 +583,7 @@ export class TripMapPopup extends LitElement {
     const startY = e.clientY;
     const startScroll = list.scrollTop;
     const onMove = (ev: PointerEvent) => {
-      list.scrollTop = startScroll + (ev.clientY - startY) * 3;
+      list.scrollTop = startScroll - (ev.clientY - startY) * 3;
     };
     const onUp = () => {
       list.classList.remove("dragging");
