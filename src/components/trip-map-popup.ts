@@ -589,7 +589,6 @@ export class TripMapPopup extends LitElement {
   }
 
   private async _fetchStopTimes(stopId: string) {
-    console.info("[TripMapPopup] fetch stoptimes for stopId", stopId);
     try {
       const params = new URLSearchParams({
         stopId,
@@ -647,8 +646,6 @@ export class TripMapPopup extends LitElement {
     await this.updateComplete;
 
     const url = `${TRIP_API_BASE}${encodeURIComponent(this.tripId)}`;
-
-    console.info("[TripMapPopup] fetch trip data");
 
     try {
       const response = await fetch(url, { headers: API_HEADERS });
