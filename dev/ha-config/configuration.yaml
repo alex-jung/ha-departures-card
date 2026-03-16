@@ -22,6 +22,7 @@ template:
           transport: BUS
           direction: Fürth Hauptbahnhof
           data_provider: https://transitous.org/
+          stop_id: de-DELFI_de:09564:1976:0:2
           latitude: 49.424408
           longitude: 11.009563
           icon: mdi:bus
@@ -45,6 +46,7 @@ template:
           line_name: "5"
           line_id: de:vgn:900_5:0_0
           transport: TRAM
+          stop_id: de-DELFI_de:09564:1976:0:2
           direction: Tiergarten
           data_provider: https://transitous.org/
           latitude: 49.44078

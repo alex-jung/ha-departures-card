@@ -1,216 +1,20 @@
 import { LitElement, css, html, nothing, unsafeCSS, PropertyValues, CSSResultGroup } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { Alert } from "../types";
+import { Alert, StopInfo, StopTimeEntry, StopTimepoint } from "../types";
 import { ref, createRef } from "lit/directives/ref.js";
 import L from "leaflet";
+import { buildTimeline, buildTripStops, createVehicleIcon, decodePolyline, formatTime, interpolatePosition } from "../helpers";
+import { CARD_REPO_URL, CARD_VERSION } from "../constants";
 
 import leafletCssText from "leaflet/dist/leaflet.css";
 
-const TRIP_API_BASE = "http://localhost:8888/api/v5/trip?tripId=";
+const TRIP_API_BASE = "https://api.transitous.org/api/v5/trip?tripId=";
 const STOPTIMES_API_BASE = "https://api.transitous.org/api/v5/stoptimes";
+const API_HEADERS = {
+  "User-Agent": `ha-departures-card/${CARD_VERSION} (${CARD_REPO_URL})`,
+  "Accept": "application/json",
+};
 const POSITION_UPDATE_INTERVAL_MS = 5000;
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function decodePolyline(encoded: string, precision = 6): [number, number][] {
-  const factor = Math.pow(10, precision);
-  const coords: [number, number][] = [];
-  let index = 0,
-    lat = 0,
-    lng = 0;
-
-  while (index < encoded.length) {
-    let shift = 0,
-      result = 0,
-      b: number;
-    do {
-      b = encoded.charCodeAt(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    lat += result & 1 ? ~(result >> 1) : result >> 1;
-    shift = 0;
-    result = 0;
-    do {
-      b = encoded.charCodeAt(index++) - 63;
-      result |= (b & 0x1f) << shift;
-      shift += 5;
-    } while (b >= 0x20);
-    lng += result & 1 ? ~(result >> 1) : result >> 1;
-    coords.push([lat / factor, lng / factor]);
-  }
-  return coords;
-}
-
-interface StopTimepoint {
-  time: Date;
-  polylineIdx: number;
-}
-
-interface StopInfo {
-  name: string;
-  plannedTime: Date;
-  estimatedTime?: Date;
-  platform?: string;
-  polylineIdx: number;
-}
-
-interface StopTimeEntry {
-  tripId: string;
-  headsign: string;
-  routeShortName: string;
-  plannedDeparture: Date;
-  estimatedDeparture?: Date;
-  track?: string;
-  alerts: Alert[];
-}
-
-function euclidean(a: [number, number], b: [number, number]): number {
-  const dlat = a[0] - b[0];
-  const dlon = a[1] - b[1];
-  return Math.sqrt(dlat * dlat + dlon * dlon);
-}
-
-function findClosestIdx(point: [number, number], polyline: [number, number][], startIdx = 0): number {
-  let minDist = Infinity,
-    minIdx = startIdx;
-  for (let i = startIdx; i < polyline.length; i++) {
-    const d = euclidean(point, polyline[i]);
-    if (d < minDist) {
-      minDist = d;
-      minIdx = i;
-    }
-  }
-  return minIdx;
-}
-
-/** Builds the stop-strip list from all intermediate stops plus leg.to. */
-function buildTripStops(leg: any, polyline: [number, number][]): StopInfo[] {
-  const is: any[] = leg.intermediateStops ?? [];
-  const stops: StopInfo[] = [];
-  let searchFrom = 0;
-
-  const addStop = (stop: any, planned: string, estimated?: string) => {
-    const idx = findClosestIdx([stop.lat, stop.lon], polyline, searchFrom);
-    searchFrom = idx;
-    stops.push({
-      name: stop.name ?? "",
-      plannedTime: new Date(planned),
-      estimatedTime: estimated ? new Date(estimated) : undefined,
-      platform: stop.track ?? stop.scheduledTrack ?? stop.platformCode ?? stop.stopCode ?? undefined,
-      polylineIdx: idx,
-    });
-  };
-
-  for (const s of is) {
-    if (!s?.lat) continue;
-    const planned = s.arrival ?? s.departure;
-    const estimated = s.estimatedArrival ?? s.realtimeArrival ?? undefined;
-    if (planned) addStop(s, planned, estimated);
-  }
-  if (leg.to?.lat) {
-    const planned = leg.to.arrival;
-    const estimated = leg.to.estimatedArrival ?? leg.to.realtimeArrival ?? undefined;
-    if (planned) addStop(leg.to, planned, estimated);
-  }
-  return stops;
-}
-
-/**
- * Builds the interpolation timeline from all intermediate stops plus leg.to.
- * Each stop gets arrival + departure timepoints so the marker dwells.
- */
-function buildTimeline(leg: any, polyline: [number, number][]): StopTimepoint[] {
-  const is: any[] = leg.intermediateStops ?? [];
-  const timeline: StopTimepoint[] = [];
-  let searchFrom = 0;
-
-  for (const s of is) {
-    if (!s?.lat) continue;
-    const idx = findClosestIdx([s.lat, s.lon], polyline, searchFrom);
-    searchFrom = idx;
-    if (s.arrival) timeline.push({ time: new Date(s.arrival), polylineIdx: idx });
-    if (s.departure) timeline.push({ time: new Date(s.departure), polylineIdx: idx });
-  }
-  if (leg.to?.lat && leg.to?.arrival) {
-    const idx = findClosestIdx([leg.to.lat, leg.to.lon], polyline, searchFrom);
-    timeline.push({ time: new Date(leg.to.arrival), polylineIdx: idx });
-  }
-  return timeline;
-}
-
-function headingAtIdx(polyline: [number, number][], idx: number): number {
-  const i = Math.min(idx, polyline.length - 2);
-  const [lat1, lon1] = polyline[i];
-  const [lat2, lon2] = polyline[i + 1];
-  // CSS rotation: 0 = north (up), clockwise positive
-  return 90 - Math.atan2(lat2 - lat1, lon2 - lon1) * (180 / Math.PI);
-}
-
-function interpolatePosition(
-  timeline: StopTimepoint[],
-  polyline: [number, number][],
-  now: Date,
-): { pos: [number, number] | null; heading: number } {
-  if (timeline.length < 2) return { pos: null, heading: 0 };
-
-  const nowMs = now.getTime();
-  if (nowMs <= timeline[0].time.getTime()) {
-    const idx = timeline[0].polylineIdx;
-    return { pos: polyline[idx], heading: headingAtIdx(polyline, idx) };
-  }
-  if (nowMs >= timeline[timeline.length - 1].time.getTime()) {
-    const idx = timeline[timeline.length - 1].polylineIdx;
-    return { pos: polyline[idx], heading: headingAtIdx(polyline, idx) };
-  }
-
-  let segStart = timeline[0], segEnd = timeline[1];
-  for (let i = 0; i < timeline.length - 1; i++) {
-    if (nowMs >= timeline[i].time.getTime() && nowMs <= timeline[i + 1].time.getTime()) {
-      segStart = timeline[i];
-      segEnd = timeline[i + 1];
-      break;
-    }
-  }
-
-  const idxA = segStart.polylineIdx, idxB = segEnd.polylineIdx;
-  if (idxA === idxB) return { pos: polyline[idxA], heading: headingAtIdx(polyline, idxA) };
-
-  const progress = (nowMs - segStart.time.getTime()) / (segEnd.time.getTime() - segStart.time.getTime());
-  let totalLen = 0;
-  for (let i = idxA; i < idxB; i++) totalLen += euclidean(polyline[i], polyline[i + 1]);
-
-  const target = progress * totalLen;
-  let accumulated = 0;
-  for (let i = idxA; i < idxB; i++) {
-    const segLen = euclidean(polyline[i], polyline[i + 1]);
-    if (accumulated + segLen >= target) {
-      const t = segLen > 0 ? (target - accumulated) / segLen : 0;
-      const pos: [number, number] = [
-        polyline[i][0] + t * (polyline[i + 1][0] - polyline[i][0]),
-        polyline[i][1] + t * (polyline[i + 1][1] - polyline[i][1]),
-      ];
-      return { pos, heading: headingAtIdx(polyline, i) };
-    }
-    accumulated += segLen;
-  }
-  return { pos: polyline[idxB], heading: headingAtIdx(polyline, idxB) };
-}
-
-function createVehicleIcon(color: string, heading: number): L.DivIcon {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="-14 -14 28 28"
-    style="transform:rotate(${heading}deg);display:block;">
-    <polygon points="0,-11 8,7 0,3 -8,7"
-      fill="${color}" stroke="white" stroke-width="2" stroke-linejoin="round"/>
-  </svg>`;
-  return L.divIcon({ html: svg, className: "", iconSize: [56, 56], iconAnchor: [28, 28] });
-}
-
-function formatTime(d: Date): string {
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
 
 // ---------------------------------------------------------------------------
 // Component
@@ -284,7 +88,9 @@ export class TripMapPopup extends LitElement {
         cursor: default;
       }
       @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+          transform: rotate(360deg);
+        }
       }
       .refresh-btn.spinning {
         display: inline-block;
@@ -374,7 +180,7 @@ export class TripMapPopup extends LitElement {
         align-items: center;
         margin-top: 8px;
         padding-top: 6px;
-        border-top: 1px solid rgba(255,255,255,0.3);
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
         font-size: 0.8em;
         opacity: 0.9;
       }
@@ -494,16 +300,26 @@ export class TripMapPopup extends LitElement {
         font-weight: 600;
         white-space: nowrap;
       }
-      .stop-time-estimated.delayed { color: #c62828; }
-      .stop-time-estimated.ontime  { color: #2e7d32; }
+      .stop-time-estimated.delayed {
+        color: #c62828;
+      }
+      .stop-time-estimated.ontime {
+        color: #2e7d32;
+      }
       .stop-item.next .stop-name {
         color: #f57c00;
         font-weight: bold;
       }
       @keyframes stop-pulse {
-        0%   { box-shadow: 0 0 0 0   rgba(245, 124, 0, 0.6); }
-        60%  { box-shadow: 0 0 0 7px rgba(245, 124, 0, 0);   }
-        100% { box-shadow: 0 0 0 0   rgba(245, 124, 0, 0);   }
+        0% {
+          box-shadow: 0 0 0 0 rgba(245, 124, 0, 0.6);
+        }
+        60% {
+          box-shadow: 0 0 0 7px rgba(245, 124, 0, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(245, 124, 0, 0);
+        }
       }
       .stop-dot.next {
         animation: stop-pulse 1.6s ease-out infinite;
@@ -537,7 +353,7 @@ export class TripMapPopup extends LitElement {
         font-weight: bold;
         padding: 5px 12px;
         white-space: nowrap;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
       }
       .boarding-stop-label::before {
         display: none;
@@ -553,7 +369,7 @@ export class TripMapPopup extends LitElement {
         font-weight: bold;
         padding: 5px 12px;
         white-space: nowrap;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
       }
       .next-stop-map-label::before {
         display: none;
@@ -583,8 +399,6 @@ export class TripMapPopup extends LitElement {
   @property() title = "";
   @property({ type: Boolean }) open = false;
   @property() fromStopId?: string;
-  @property({ type: Number }) fromLat?: number;
-  @property({ type: Number }) fromLon?: number;
   @property({ attribute: false }) alerts: Alert[] = [];
 
   @state() private _loading = false;
@@ -593,14 +407,12 @@ export class TripMapPopup extends LitElement {
   @state() private _stops: StopInfo[] = [];
   @state() private _currentStopIdx = -1;
   @state() private _stopTimesData: StopTimeEntry[] = [];
-  @state() private _stopTimesLoading = false;
 
   private _map: L.Map | null = null;
   private _mapRef = createRef<HTMLDivElement>();
   private _stripRef = createRef<HTMLDivElement>();
   private _vehicleMarker: L.Marker | null = null;
   private _nextStopMarker: L.Marker | null = null;
-  private _polyline: [number, number][] = [];
   private _positionInterval: ReturnType<typeof setInterval> | null = null;
 
   protected updated(changed: PropertyValues) {
@@ -637,35 +449,37 @@ export class TripMapPopup extends LitElement {
               <button class="close-btn" @click=${this._close}>✕</button>
             </div>
           </div>
-          ${this.alerts.length > 0 ? html`
-            <div class="alert-banner">
-              ${this.alerts.map(a => {
-                const color = a.severityLevel === "SEVERE" ? "#c62828" : a.severityLevel === "INFO" ? "#1565c0" : "#e65100";
-                const icon = a.severityLevel === "SEVERE" ? "mdi:alert-octagon-outline" : a.severityLevel === "INFO" ? "mdi:information-outline" : "mdi:alert-circle-outline";
-                return html`
-                  <div class="alert-banner-item" style="color:${color}">
-                    <ha-icon icon="${icon}" class="alert-banner-icon" style="--mdc-icon-size:16px"></ha-icon>
-                    <div>
-                      <div class="alert-banner-header">${a.headerText}</div>
-                      ${a.descriptionText ? html`<div class="alert-banner-desc">${a.descriptionText}</div>` : nothing}
-                    </div>
-                  </div>
-                `;
-              })}
-            </div>
-          ` : nothing}
+          ${this.alerts.length > 0
+            ? html`
+                <div class="alert-banner">
+                  ${this.alerts.map((a) => {
+                    const color = a.severityLevel === "SEVERE" ? "#c62828" : a.severityLevel === "INFO" ? "#1565c0" : "#e65100";
+                    const icon = a.severityLevel === "SEVERE" ? "mdi:alert-octagon-outline" : a.severityLevel === "INFO" ? "mdi:information-outline" : "mdi:alert-circle-outline";
+                    return html`
+                      <div class="alert-banner-item" style="color:${color}">
+                        <ha-icon icon="${icon}" class="alert-banner-icon" style="--mdc-icon-size:16px"></ha-icon>
+                        <div>
+                          <div class="alert-banner-header">${a.headerText}</div>
+                          ${a.descriptionText ? html`<div class="alert-banner-desc">${a.descriptionText}</div>` : nothing}
+                        </div>
+                      </div>
+                    `;
+                  })}
+                </div>
+              `
+            : nothing}
           <div class="content">
-            ${this._error ? html`
-              <div class="loading" style="flex:1;flex-direction:column;gap:8px">
-                <ha-icon icon="mdi:alert-circle-outline" style="--mdc-icon-size:36px;opacity:0.4"></ha-icon>
-                <span>No data available</span>
-              </div>
-            ` : html`
-              ${this._stops.length ? this._renderStopList() : nothing}
-              <div class="map-panel">
-                ${this._loading ? html`<div class="loading">Loading…</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}
-              </div>
-            `}
+            ${this._error
+              ? html`
+                  <div class="loading" style="flex:1;flex-direction:column;gap:8px">
+                    <ha-icon icon="mdi:alert-circle-outline" style="--mdc-icon-size:36px;opacity:0.4"></ha-icon>
+                    <span>No data available</span>
+                  </div>
+                `
+              : html`
+                  ${this._stops.length ? this._renderStopList() : nothing}
+                  <div class="map-panel">${this._loading ? html`<div class="loading">Loading…</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}</div>
+                `}
           </div>
         </div>
       </div>
@@ -689,12 +503,14 @@ export class TripMapPopup extends LitElement {
         <div class="next-stop-label">Nächste Haltestelle</div>
         <div class="next-stop-name">${next.name}</div>
         <div class="next-stop-time">${nextLabel}</div>
-        ${destDiffMin !== null ? html`
-          <div class="next-stop-dest-row">
-            <span class="next-stop-dest-label">Ankunft Ziel</span>
-            <span class="next-stop-dest-time">in ${destDiffMin} min</span>
-          </div>
-        ` : nothing}
+        ${destDiffMin !== null
+          ? html`
+              <div class="next-stop-dest-row">
+                <span class="next-stop-dest-label">Ankunft Ziel</span>
+                <span class="next-stop-dest-time">in ${destDiffMin} min</span>
+              </div>
+            `
+          : nothing}
       </div>
     `;
   }
@@ -705,34 +521,32 @@ export class TripMapPopup extends LitElement {
       <div class="stop-panel">
         ${this._renderNextStopBanner()}
         <div class="stop-list" ${ref(this._stripRef)} @mousedown=${this._onListMouseDown}>
-        ${this._stops.map((stop, i) => {
-          const isNext = cur >= 0 && i === cur + 1;
-          const dotClass = i <= cur ? "passed" : isNext ? "next" : "upcoming";
-          const itemClass = isNext ? "next" : "";
-          const lineClass = i <= cur ? "passed" : "upcoming";
-          const isFirst = i === 0;
-          const isLast = i === this._stops.length - 1;
-          const delayed = stop.estimatedTime && stop.estimatedTime.getTime() > stop.plannedTime.getTime();
-          const estClass = delayed ? "delayed" : "ontime";
-          return html`
-            <div class="stop-item ${itemClass}">
-              <div class="stop-timeline">
-                <div class="stop-line ${isFirst ? "hidden" : lineClass}"></div>
-                <div class="stop-dot ${dotClass}"></div>
-                <div class="stop-line ${isLast ? "hidden" : lineClass}"></div>
+          ${this._stops.map((stop, i) => {
+            const isNext = cur >= 0 && i === cur + 1;
+            const dotClass = i <= cur ? "passed" : isNext ? "next" : "upcoming";
+            const itemClass = isNext ? "next" : "";
+            const lineClass = i <= cur ? "passed" : "upcoming";
+            const isFirst = i === 0;
+            const isLast = i === this._stops.length - 1;
+            const delayed = stop.estimatedTime && stop.estimatedTime.getTime() > stop.plannedTime.getTime();
+            const estClass = delayed ? "delayed" : "ontime";
+            return html`
+              <div class="stop-item ${itemClass}">
+                <div class="stop-timeline">
+                  <div class="stop-line ${isFirst ? "hidden" : lineClass}"></div>
+                  <div class="stop-dot ${dotClass}"></div>
+                  <div class="stop-line ${isLast ? "hidden" : lineClass}"></div>
+                </div>
+                <div class="stop-name-section">
+                  <div class="stop-name">${stop.name}</div>
+                  <span class="stop-time-planned">${formatTime(stop.plannedTime)}</span>
+                  ${stop.estimatedTime ? html`<span class="stop-time-estimated ${estClass}">${formatTime(stop.estimatedTime)}</span>` : nothing}
+                </div>
+                <div class="stop-time-col">${stop.platform ? html`<div class="stop-platform">${stop.platform}</div>` : nothing}</div>
               </div>
-              <div class="stop-name-section">
-                <div class="stop-name">${stop.name}</div>
-                <span class="stop-time-planned">${formatTime(stop.plannedTime)}</span>
-                ${stop.estimatedTime ? html`<span class="stop-time-estimated ${estClass}">${formatTime(stop.estimatedTime)}</span>` : nothing}
-              </div>
-              <div class="stop-time-col">
-                ${stop.platform ? html`<div class="stop-platform">${stop.platform}</div>` : nothing}
-              </div>
-            </div>
-          `;
-        })}
-        <div class="stop-list-spacer"></div>
+            `;
+          })}
+          <div class="stop-list-spacer"></div>
         </div>
       </div>
     `;
@@ -746,8 +560,13 @@ export class TripMapPopup extends LitElement {
     if (!list) return;
     this._stripDragStart = e.clientY;
     this._stripScrollStart = list.scrollTop;
-    const onMove = (ev: MouseEvent) => { list.scrollTop = this._stripScrollStart - (ev.clientY - this._stripDragStart); };
-    const onUp = () => { window.removeEventListener("mousemove", onMove); window.removeEventListener("mouseup", onUp); };
+    const onMove = (ev: MouseEvent) => {
+      list.scrollTop = this._stripScrollStart - (ev.clientY - this._stripDragStart);
+    };
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup", onUp);
   };
@@ -766,9 +585,7 @@ export class TripMapPopup extends LitElement {
   }
 
   private async _fetchStopTimes(stopId: string) {
-    this._stopTimesLoading = true;
     console.info("[TripMapPopup] fetch stoptimes for stopId", stopId);
-
     try {
       const params = new URLSearchParams({
         stopId,
@@ -778,10 +595,10 @@ export class TripMapPopup extends LitElement {
         exactRadius: "false",
         radius: "200",
       });
-      const response = await fetch(`${STOPTIMES_API_BASE}?${params}`);
+      const response = await fetch(`${STOPTIMES_API_BASE}?${params}`, { headers: API_HEADERS });
       if (response.ok) {
         const raw = await response.json();
-        const entries: any[] = Array.isArray(raw) ? raw : (raw.times ?? raw.stopTimes ?? []);
+        const entries: any[] = Array.isArray(raw) ? raw : raw.times ?? raw.stopTimes ?? [];
         this._stopTimesData = entries.map((e: any): StopTimeEntry => {
           const place = e.place ?? {};
           const planned = new Date(place.scheduledDeparture ?? place.scheduledArrival ?? place.departure ?? place.arrival);
@@ -794,13 +611,15 @@ export class TripMapPopup extends LitElement {
             plannedDeparture: planned,
             estimatedDeparture: isDelayed ? actual : undefined,
             track: place.track ?? place.scheduledTrack ?? undefined,
-            alerts: (e.alerts ?? []).filter((a: any) => a?.headerText).map((a: any): Alert => ({
-              headerText: a.headerText,
-              descriptionText: a.descriptionText ?? "",
-              severityLevel: a.severityLevel,
-              cause: a.cause,
-              effect: a.effect,
-            })),
+            alerts: (e.alerts ?? [])
+              .filter((a: any) => a?.headerText)
+              .map((a: any): Alert => ({
+                headerText: a.headerText,
+                descriptionText: a.descriptionText ?? "",
+                severityLevel: a.severityLevel,
+                cause: a.cause,
+                effect: a.effect,
+              })),
           };
         });
       } else {
@@ -809,7 +628,6 @@ export class TripMapPopup extends LitElement {
     } catch (e) {
       console.error("[TripMapPopup] stoptimes fetch error", e);
     }
-    this._stopTimesLoading = false;
   }
 
   private async _fetchTrip() {
@@ -829,7 +647,7 @@ export class TripMapPopup extends LitElement {
     console.info("[TripMapPopup] fetch trip data");
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { headers: API_HEADERS });
       if (response.ok) {
         this._tripData = await response.json();
         this._error = false;
@@ -845,11 +663,8 @@ export class TripMapPopup extends LitElement {
     this._loading = false;
     await this.updateComplete;
 
-    const stopId = this._extractBoardingStopId();
-    if (stopId) {
-      this._fetchStopTimes(stopId);
-    } else {
-      console.warn("[TripMapPopup] boarding stopId not found in trip data, skipping stoptimes fetch");
+    if (this.fromStopId) {
+      this._fetchStopTimes(this.fromStopId);
     }
     requestAnimationFrame(() => this._initMap());
   }
@@ -885,15 +700,13 @@ export class TripMapPopup extends LitElement {
       }
 
       if (leg.from?.lat && leg.from?.lon) {
-        const fromIsBoardingStop = this._isBoardingStop(leg.from);
-        const fromOpts = { radius: 9, color: "#fff", weight: 2, fillColor: "#2e7d32", fillOpacity: 1 };
-        const fromMarker = L.circleMarker([leg.from.lat, leg.from.lon], fromOpts).bindPopup(`<b>${leg.from.name}</b>`);
-        fromMarker.addTo(this._map!);
+        L.circleMarker([leg.from.lat, leg.from.lon], { radius: 9, color: "#fff", weight: 2, fillColor: "#2e7d32", fillOpacity: 1 })
+          .bindPopup(`<b>${leg.from.name}</b>`)
+          .addTo(this._map!);
         bounds.push([leg.from.lat, leg.from.lon]);
       }
 
       (leg.intermediateStops ?? []).forEach((stop: any) => {
-        const isBoardingStop = this._isBoardingStop(stop);
         const markerOpts = { radius: 5, color: "#fff", weight: 1.5, fillColor: "#1565c0", fillOpacity: 1 };
         const marker = L.circleMarker([stop.lat, stop.lon], markerOpts).bindPopup(`<b>${stop.name}</b>`);
         marker.addTo(this._map!);
@@ -921,8 +734,6 @@ export class TripMapPopup extends LitElement {
       return;
     }
 
-    this._polyline = polyline;
-
     const startMs = timeline[0].time.getTime();
     const endMs = timeline[timeline.length - 1].time.getTime();
     let lastNextIdx = -2;
@@ -943,7 +754,10 @@ export class TripMapPopup extends LitElement {
       const nextIdx = this._currentStopIdx + 1;
       if (nextIdx !== lastNextIdx) {
         lastNextIdx = nextIdx;
-        if (this._nextStopMarker) { this._nextStopMarker.remove(); this._nextStopMarker = null; }
+        if (this._nextStopMarker) {
+          this._nextStopMarker.remove();
+          this._nextStopMarker = null;
+        }
         const nextStop = this._stops[nextIdx];
         if (nextStop && this._map) {
           const pos = polyline[nextStop.polylineIdx];
@@ -974,33 +788,6 @@ export class TripMapPopup extends LitElement {
     this._positionInterval = setInterval(update, POSITION_UPDATE_INTERVAL_MS);
   }
 
-  private _extractBoardingStopId(): string | null {
-    if (!this._tripData) return null;
-    const legs: any[] = this._tripData.legs ?? [];
-    if (!legs.length) return null;
-    const leg = legs[0];
-
-    // check leg.from first
-    if (leg.from?.stopId && this._isBoardingStop(leg.from)) return leg.from.stopId;
-
-    // search intermediateStops
-    for (const stop of leg.intermediateStops ?? []) {
-      if (stop?.stopId && this._isBoardingStop(stop)) return stop.stopId;
-    }
-    return null;
-  }
-
-  private _isBoardingStop(stop: any): boolean {
-    if (this.fromStopId && stop.stopId) {
-      return stop.stopId === this.fromStopId;
-    }
-    if (this.fromLat != null && this.fromLon != null && stop.lat != null && stop.lon != null) {
-      const dist = Math.sqrt(Math.pow(stop.lat - this.fromLat, 2) + Math.pow(stop.lon - this.fromLon, 2));
-      return dist < 0.003; // ~300m, covers different platforms of the same station
-    }
-    return false;
-  }
-
   private _destroyMap() {
     if (this._positionInterval !== null) {
       clearInterval(this._positionInterval);
@@ -1008,7 +795,6 @@ export class TripMapPopup extends LitElement {
     }
     this._vehicleMarker = null;
     this._nextStopMarker = null;
-    this._polyline = [];
     if (this._map) {
       this._map.remove();
       this._map = null;
@@ -1022,7 +808,6 @@ export class TripMapPopup extends LitElement {
     this._stops = [];
     this._currentStopIdx = -1;
     this._stopTimesData = [];
-    this._stopTimesLoading = false;
     this._destroyMap();
   }
 

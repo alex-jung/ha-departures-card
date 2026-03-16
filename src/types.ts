@@ -78,6 +78,30 @@ export interface Alert {
   url?: string;
 }
 
+// Trip map popup types
+export interface StopTimepoint {
+  time: Date;
+  polylineIdx: number;
+}
+
+export interface StopInfo {
+  name: string;
+  plannedTime: Date;
+  estimatedTime?: Date;
+  platform?: string;
+  polylineIdx: number;
+}
+
+export interface StopTimeEntry {
+  tripId: string;
+  headsign: string;
+  routeShortName: string;
+  plannedDeparture: Date;
+  estimatedDeparture?: Date;
+  track?: string;
+  alerts: Alert[];
+}
+
 // ha-departures specific types
 export enum HaDeparturesEntityAttributes {
   DIRECTION = "direction",

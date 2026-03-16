@@ -46,8 +46,6 @@ export abstract class Content extends LitElement {
   @state() private _selectedTripId?: string;
   @state() private _dialogTitle = "";
   @state() private _fromStopId?: string;
-  @state() private _fromLat?: number;
-  @state() private _fromLon?: number;
   @state() private _popupAlerts: Alert[] = [];
 
   private _pointerDownTarget: HTMLElement | null = null;
@@ -68,7 +66,7 @@ export abstract class Content extends LitElement {
     this.renderRoot.removeEventListener("pointerdown", this._onPointerDown, { capture: true });
   }
 
-  private _onPointerDown = (ev: PointerEvent) => {
+  private _onPointerDown = (ev: Event) => {
     this._pointerDownTarget = ev.target as HTMLElement;
   };
 
@@ -88,8 +86,6 @@ export abstract class Content extends LitElement {
         .title=${this._dialogTitle}
         .open=${this._dialogOpen}
         .fromStopId=${this._fromStopId}
-        .fromLat=${this._fromLat}
-        .fromLon=${this._fromLon}
         .alerts=${this._popupAlerts}
         @popup-closed=${() => { this._dialogOpen = false; }}
       ></trip-map-popup>
@@ -306,10 +302,6 @@ export abstract class Content extends LitElement {
   private _openPopupForDeparture(departure: DeparturesDataRow) {
     const attrs = this.hass?.states[departure.entity]?.attributes ?? {};
     this._fromStopId = attrs.stop_id ?? undefined;
-    const lat = parseFloat(attrs.latitude);
-    const lon = parseFloat(attrs.longitude);
-    this._fromLat = isNaN(lat) ? undefined : lat;
-    this._fromLon = isNaN(lon) ? undefined : lon;
     this._popupAlerts = departure.time.alerts;
     this._selectedTripId = departure.time.tripId;
     this._dialogTitle = `${departure.lineName} → ${departure.destinationName}`;
