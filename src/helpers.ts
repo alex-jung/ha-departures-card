@@ -1,4 +1,3 @@
-import { HomeAssistant } from "custom-card-helpers";
 import L from "leaflet";
 import { StopInfo, StopTimepoint } from "./types";
 
@@ -116,14 +115,14 @@ export function buildTripStops(leg: any, polyline: [number, number][]): StopInfo
 
     if (planned) addStop(s, planned, scheduled);
   }
-  // if (leg.to?.lat) {
-  //   const planned = leg.to.arrival;
-  //   const estimated = leg.to.estimatedArrival ?? leg.to.realtimeArrival ?? undefined;
 
-  //   // console.log("leg to", leg.to);
+  // add last stop
+  if (leg.to?.lat) {
+    const planned = leg.to.arrival;
+    const scheduled = leg.to.scheduledArrival ?? undefined;
 
-  //   if (planned) addStop(leg.to, planned, estimated);
-  // }
+    if (planned) addStop(leg.to, planned, scheduled);
+  }
   return stops;
 }
 
