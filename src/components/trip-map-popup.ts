@@ -211,12 +211,12 @@ export class TripMapPopup extends LitElement {
         overflow-y: auto;
         overflow-x: hidden;
         padding: 24px 16px 0;
+        touch-action: pan-y;
         cursor: grab;
-        touch-action: none;
-        overscroll-behavior: none;
       }
-      .stop-list:active {
+      .stop-list.dragging {
         cursor: grabbing;
+        user-select: none;
       }
       .stop-item {
         display: grid;
@@ -573,24 +573,24 @@ export class TripMapPopup extends LitElement {
     `;
   }
 
-  private _stripDragStart = 0;
-  private _stripScrollStart = 0;
-
   private _onListPointerDown = (e: PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
     const list = this._stripRef.value;
     if (!list) return;
     list.setPointerCapture(e.pointerId);
-    this._stripDragStart = e.clientY;
-    this._stripScrollStart = list.scrollTop;
+    list.classList.add("dragging");
+    const startY = e.clientY;
+    const startScroll = list.scrollTop;
     const onMove = (ev: PointerEvent) => {
-      list.scrollTop = this._stripScrollStart - (ev.clientY - this._stripDragStart);
+      list.scrollTop = startScroll + (ev.clientY - startY) * 3;
     };
     const onUp = () => {
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
+      list.classList.remove("dragging");
+      list.removeEventListener("pointermove", onMove as EventListener);
+      list.removeEventListener("pointerup", onUp);
     };
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
+    list.addEventListener("pointermove", onMove as EventListener);
+    list.addEventListener("pointerup", onUp);
   };
 
   private _scrollStripToNextStop() {
