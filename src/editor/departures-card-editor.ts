@@ -164,6 +164,26 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
               label: "Cappucino",
               value: CardTheme.CAPPUCINO,
             },
+            {
+              label: "Dark",
+              value: CardTheme.DARK,
+            },
+            {
+              label: "Forest",
+              value: CardTheme.FOREST,
+            },
+            {
+              label: "Mint",
+              value: CardTheme.MINT,
+            },
+            {
+              label: "Nord",
+              value: CardTheme.NORD,
+            },
+            {
+              label: "Sunset",
+              value: CardTheme.SUNSET,
+            },
           ],
           mode: "dropdown",
         },

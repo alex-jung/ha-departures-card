@@ -218,6 +218,9 @@ export abstract class Content extends LitElement {
 
     switch (this.theme) {
       case CardTheme.CAPPUCINO:
+      case CardTheme.FOREST:
+      case CardTheme.MINT:
+      case CardTheme.SUNSET:
         styles = { ...styles, borderLeft: `8px solid ${departure.lineColor ?? ""}` };
     }
 
@@ -337,12 +340,15 @@ export abstract class Content extends LitElement {
     switch (this.theme) {
       case CardTheme.BLUE_OCEAN:
       case CardTheme.BASIC:
+      case CardTheme.DARK:
+      case CardTheme.NORD:
         styles = { backgroundColor: departure.lineColor, color: contrastTextColor };
         break;
       case CardTheme.BLACK_WHITE:
-        styles = {
-          color: departure.lineColor ?? "white",
-        };
+        styles = { color: departure.lineColor ?? "white" };
+        break;
+      case CardTheme.SUNSET:
+        styles = { color: departure.lineColor ?? "#ffcc80" };
         break;
     }
 

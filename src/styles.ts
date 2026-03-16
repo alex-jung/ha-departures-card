@@ -161,7 +161,7 @@ export const contentCore = css`
     color: white;
   }
   .list-header-content[theme="cappucino"] {
-    padding-left: 13px; // 5px standard + 8px left color border!
+    border-left: 8px solid transparent;
   }
   .cell-line[theme="cappucino"] {
     font-weight: bold;
@@ -172,6 +172,121 @@ export const contentCore = css`
     color: #6f4e37;
   }
   .cell-delay[theme="cappucino"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Dark theme */
+  #content-background[theme="dark"] {
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 8px;
+  }
+  .departure-line[theme="dark"] {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .cell-line[theme="dark"] {
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  .cell-time-diff[theme="dark"] {
+    font-weight: bold;
+    color: #cba6f7;
+  }
+  .cell-delay[theme="dark"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Forest theme */
+  #content-background[theme="forest"] {
+    color: #33691e;
+  }
+  .list-header-content[theme="forest"] {
+    border-left: 8px solid transparent;
+  }
+  .cell-line[theme="forest"] {
+    font-weight: bold;
+  }
+  .departure-line[theme="forest"],
+  .table-row[theme="forest"] {
+    background-color: #f1f8e9;
+    color: #33691e;
+  }
+  .cell-delay[theme="forest"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Mint theme */
+  #content-background[theme="mint"] {
+    color: #004d40;
+  }
+  .list-header-content[theme="mint"] {
+    border-left: 8px solid transparent;
+  }
+  .cell-line[theme="mint"] {
+    font-weight: bold;
+  }
+  .departure-line[theme="mint"],
+  .table-row[theme="mint"] {
+    background-color: #e0f2f1;
+    color: #00695c;
+  }
+  .cell-delay[theme="mint"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Nord theme */
+  #content-background[theme="nord"] {
+    background-color: #2e3440;
+    color: #eceff4;
+    border-radius: 8px;
+  }
+  .departure-line[theme="nord"] {
+    border-bottom: 1px solid rgba(236, 239, 244, 0.1);
+  }
+  .cell-line[theme="nord"] {
+    border-radius: 4px;
+    font-weight: bold;
+  }
+  .cell-time-diff[theme="nord"] {
+    font-weight: bold;
+    color: #88c0d0;
+  }
+  .cell-delay[theme="nord"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Sunset theme */
+  #content-background[theme="sunset"] {
+    background-color: #1c0f07;
+    color: #ffe0b2;
+    border-radius: 8px;
+  }
+  .list-header-content[theme="sunset"] {
+    border-left: 8px solid transparent;
+  }
+  .departure-line[theme="sunset"],
+  .table-row[theme="sunset"] {
+    background-color: rgba(255, 140, 0, 0.07);
+    border-bottom: 1px solid rgba(255, 140, 0, 0.18);
+  }
+  .cell-line[theme="sunset"] {
+    font-weight: bold;
+  }
+  .cell-time-diff[theme="sunset"] {
+    font-weight: bold;
+    color: #ffb300;
+  }
+  .cell-delay[theme="sunset"] {
     display: flex;
     justify-content: center;
     align-items: center;
