@@ -322,7 +322,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
       name: "",
       type: "optional_actions",
       flatten: true,
-      schema: (["hold_action", "double_tap_action"] as const).map((action) => ({
+      schema: (["double_tap_action"] as const).map((action) => ({
         name: action,
         selector: {
           ui_action: {

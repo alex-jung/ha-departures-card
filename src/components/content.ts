@@ -1,8 +1,8 @@
 import { html, LitElement, nothing, TemplateResult, CSSResultGroup, PropertyValues } from "lit-element";
-import { property } from "lit/decorators.js";
+import { property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { CardTheme, Config, DeparturesDataRow, LayoutCell } from "../types";
+import { Alert, CardTheme, Config, DeparturesDataRow, LayoutCell } from "../types";
 import { lightFormat } from "date-fns";
 import { contentCore } from "../styles";
 import { DEFAULT_ENTITY_ICON } from "../constants";
@@ -13,6 +13,7 @@ import { getContrastTextColor } from "../helpers";
 import { animatePresets } from "../animate-presets";
 import { handleAction, hasAction, HomeAssistant } from "custom-card-helpers";
 import { actionHandler } from "../action-handler";
+import "./trip-map-popup.js";
 
 export abstract class Content extends LitElement {
   static styles = [contentCore as CSSResultGroup];
@@ -41,6 +42,14 @@ export abstract class Content extends LitElement {
    */
   protected layout!: Layout;
 
+  @state() private _dialogOpen = false;
+  @state() private _selectedTripId?: string;
+  @state() private _dialogTitle = "";
+  @state() private _fromStopId?: string;
+  @state() private _popupAlerts: Alert[] = [];
+
+  private _pointerDownTarget: HTMLElement | null = null;
+
   protected updated(_changedProperties: PropertyValues): void {
     super.updated(_changedProperties);
     this._animateArriving();
@@ -49,7 +58,17 @@ export abstract class Content extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this._animateArriving();
+    this.renderRoot.addEventListener("pointerdown", this._onPointerDown, { capture: true });
   }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.renderRoot.removeEventListener("pointerdown", this._onPointerDown, { capture: true });
+  }
+
+  private _onPointerDown = (ev: Event) => {
+    this._pointerDownTarget = ev.target as HTMLElement;
+  };
 
   public render(): TemplateResult {
     if (!this.cardConfig) {
@@ -60,7 +79,18 @@ export abstract class Content extends LitElement {
       this.layout = this.createLayout();
     }
 
-    return html` <div class="content" theme=${this.theme}>${this.renderContent()} ${this.errors ? html`${this._renderErrors()}` : nothing}</div> `;
+    return html`
+      <div class="content" theme=${this.theme}>${this.renderContent()} ${this.errors ? html`${this._renderErrors()}` : nothing}</div>
+      <trip-map-popup
+        .tripId=${this._selectedTripId}
+        .title=${this._dialogTitle}
+        .open=${this._dialogOpen}
+        .fromStopId=${this._fromStopId}
+        .language=${this.language}
+        .alerts=${this._popupAlerts}
+        @popup-closed=${() => { this._dialogOpen = false; }}
+      ></trip-map-popup>
+    `;
   }
 
   private _animateArriving() {
@@ -219,33 +249,64 @@ export abstract class Content extends LitElement {
       }
     });
 
+    const alerts = departure.time.alerts;
     return html`
       <div
         class="departure-line  ${classMap(classes)}"
         entity-id="${departure.entity}"
+        data-trip-id="${departure.time.tripId}"
         @action=${this._handleAction}
         .actionHandler=${actionHandler({
-          hasHold: hasAction(this.cardConfig.hold_action),
+          hasHold: true,
           hasDoubleClick: hasAction(this.cardConfig.double_tap_action),
         })}
         theme=${this.theme}
         style="${styleMap(styles)}">
         ${content}
       </div>
+      ${alerts.length > 0 ? html`
+        <div class="departure-alerts">
+          <ha-icon icon="mdi:alert-circle-outline" class="departure-alert-icon"></ha-icon>
+          <span>${alerts[0].headerText}</span>${alerts.length > 1 ? html`<span class="departure-alert-more">+${alerts.length - 1}</span>` : nothing}
+        </div>
+      ` : nothing}
     `;
   }
 
   protected _handleAction(ev: CustomEvent) {
-    let target = ev.composedPath().find((el) => (el as HTMLElement).hasAttribute?.("entity-id")) as HTMLElement;
+    const path = ev.composedPath();
+    const target = path.find((el) => (el as HTMLElement).hasAttribute?.("entity-id")) as HTMLElement | undefined;
+    if (!target) return;
 
-    if (!target) {
-      console.error("Could not find target element for action handling");
-      return;
+    const entityId = target.getAttribute("entity-id") ?? undefined;
+
+    if (ev.detail.action === "hold") {
+      let tripId: string | undefined;
+      let el: HTMLElement | null = this._pointerDownTarget;
+      while (el) {
+        const t = el.getAttribute?.("data-trip-id");
+        if (t) { tripId = t; break; }
+        el = el.parentElement;
+      }
+      const departure = tripId
+        ? this.departures.find(d => d.entity === entityId && d.time.tripId === tripId)
+        : this.departures.find(d => d.entity === entityId);
+      if (departure) {
+        this._openPopupForDeparture(departure);
+        return;
+      }
     }
 
-    const entityId = target.attributes.getNamedItem("entity-id")?.value;
-
     handleAction(this, this.hass, { ...this.cardConfig, entity: entityId }, ev.detail.action);
+  }
+
+  private _openPopupForDeparture(departure: DeparturesDataRow) {
+    const attrs = this.hass?.states[departure.entity]?.attributes ?? {};
+    this._fromStopId = attrs.stop_id ?? undefined;
+    this._popupAlerts = departure.time.alerts;
+    this._selectedTripId = departure.time.tripId;
+    this._dialogTitle = `${departure.lineName} → ${departure.destinationName}`;
+    this._dialogOpen = true;
   }
 
   /**

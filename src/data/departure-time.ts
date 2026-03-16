@@ -1,5 +1,6 @@
 import { differenceInMinutes } from "date-fns/differenceInMinutes";
 import { prepareDate } from "../helpers";
+import { Alert } from "../types";
 
 export class DepartureTime {
   private _planned: Date;
@@ -8,9 +9,9 @@ export class DepartureTime {
   private _tripId: string | undefined;
   private _headSign: string | undefined;
   private _cancelled: boolean;
-  private _alerts: Array<string>;
+  private _alerts: Alert[];
 
-  constructor(planned: Date, estimated: Date | null | undefined, tripId?: string, headSign?: string, cancelled: boolean = false, alerts: Array<string> = []) {
+  constructor(planned: Date, estimated: Date | null | undefined, tripId?: string, headSign?: string, cancelled: boolean = false, alerts: Alert[] = []) {
     try {
       this._planned = prepareDate(planned);
     } catch (error) {
@@ -56,7 +57,7 @@ export class DepartureTime {
     return this._cancelled;
   }
 
-  public get alerts(): Array<string> {
+  public get alerts(): Alert[] {
     return this._alerts;
   }
 

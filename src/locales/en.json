@@ -80,6 +80,17 @@
     },
     "errors": {
       "no-card-orientation-set": "Please set \"Card orientation\" option"
+    },
+    "popup": {
+      "next-stop-label": "Next stop",
+      "now": "now",
+      "in-minutes": "in {min} min",
+      "dest-arrival-label": "Arrival at destination",
+      "loading": "Loading…",
+      "no-data": "No data available",
+      "vehicle-not-started": "Not started yet",
+      "vehicle-arrived": "Already arrived",
+      "vehicle-current": "In transit"
     }
   }
 }

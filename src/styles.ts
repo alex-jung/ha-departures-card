@@ -24,6 +24,26 @@ export const cardStyles = css`
   }
 `;
 export const contentCore = css`
+  .departure-alerts {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75em;
+    color: #e65100;
+    padding: 1px 7px 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .departure-alert-icon {
+    --mdc-icon-size: 14px;
+    flex-shrink: 0;
+  }
+  .departure-alert-more {
+    flex-shrink: 0;
+    font-weight: bold;
+    margin-left: 2px;
+  }
   .list-header-content,
   .departure-line {
     display: grid;

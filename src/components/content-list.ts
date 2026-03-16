@@ -3,7 +3,7 @@ import { Content } from "./content";
 import { ClassTimer } from "../helpers";
 import { css, CSSResultGroup, html, PropertyValues, unsafeCSS } from "lit";
 import { DEFAULT_DEPARTURE_ROW_GAP, DEFAULT_DEPARTURE_ROW_HEIGHT, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, DEFAULT_SHOW_SCROLLBUTTONS } from "../constants";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { Layout } from "../data/layout";
 import { CardOrientation } from "../types";
 
@@ -17,8 +17,8 @@ export class ContentList extends Content {
     ` as CSSResultGroup,
     Content.styles,
   ];
-  private splide: Splide | null = null;
 
+  private splide: Splide | null = null;
   private scrollBackTimer: ClassTimer | null = null;
 
   protected firstUpdated(_changedProperties: PropertyValues): void {
@@ -58,7 +58,9 @@ export class ContentList extends Content {
           <div class="splide__arrows"></div>
             <div class="splide__track">
               <ul class="splide__list">
-                ${this.departures.map((entry) => html`<li class="splide__slide">${this.renderDepartureLine(entry)}</li>`)}
+                ${this.departures.map(
+                  (entry, idx) => html`<li class="splide__slide" data-departure-idx=${idx}>${this.renderDepartureLine(entry)}</li>`,
+                )}
               </ul>
             </div>
           </div>

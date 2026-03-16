@@ -2,4 +2,18 @@ node_modules
 .rollup.cache
 dist/tsconfig.*
 dist/src
+dist/*.map
 coverage/
+
+# Home Assistant dev environment (runtime data)
+dev/ha-config/.storage/
+dev/ha-config/home-assistant.log*
+dev/ha-config/home-assistant_v2.db*
+dev/ha-config/.HA_VERSION
+dev/ha-config/deps/
+dev/ha-config/tts/
+dev/ha-config/.cloud/
+dev/ha-config/.ha_run.lock
+dev/ha-config/.cache/
+dev/ha-config/www/
+dev/ha-config/blueprints/
