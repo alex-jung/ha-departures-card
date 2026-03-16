@@ -414,6 +414,7 @@ export class TripMapPopup extends LitElement {
   @state() private _currentStopIdx = -1;
   @state() private _stopTimesData: StopTimeEntry[] = [];
 
+  private _savedOverscrollBehavior = "";
   private _map: L.Map | null = null;
   private _mapRef = createRef<HTMLDivElement>();
   private _stripRef = createRef<HTMLDivElement>();
@@ -426,8 +427,11 @@ export class TripMapPopup extends LitElement {
 
     if (changed.has("open")) {
       if (this.open) {
+        this._savedOverscrollBehavior = document.body.style.overscrollBehavior;
+        document.body.style.overscrollBehavior = "none";
         this._fetchTrip();
       } else {
+        document.body.style.overscrollBehavior = this._savedOverscrollBehavior;
         this._cleanup();
       }
     }
@@ -439,6 +443,7 @@ export class TripMapPopup extends LitElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    document.body.style.overscrollBehavior = this._savedOverscrollBehavior;
     this._cleanup();
   }
 
