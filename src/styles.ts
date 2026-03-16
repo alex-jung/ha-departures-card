@@ -24,25 +24,15 @@ export const cardStyles = css`
   }
 `;
 export const contentCore = css`
-  .departure-alerts {
-    display: flex;
+  .cell-alert-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.75em;
     color: #e65100;
-    padding: 1px 7px 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .departure-alert-icon {
-    --mdc-icon-size: 14px;
     flex-shrink: 0;
+    margin-left: 4px;
   }
-  .departure-alert-more {
-    flex-shrink: 0;
-    font-weight: bold;
-    margin-left: 2px;
+  .cell-alert-badge ha-icon {
+    --mdc-icon-size: 20px;
   }
   .list-header-content,
   .departure-line {
@@ -72,9 +62,16 @@ export const contentCore = css`
   .list-header-destination,
   .cell-destination {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .cell-destination-label {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    min-width: 0;
   }
   .list-header-time-diff,
   .cell-time-diff {

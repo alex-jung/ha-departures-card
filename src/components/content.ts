@@ -252,7 +252,6 @@ export abstract class Content extends LitElement {
       }
     });
 
-    const alerts = departure.time.alerts;
     return html`
       <div
         class="departure-line  ${classMap(classes)}"
@@ -267,12 +266,6 @@ export abstract class Content extends LitElement {
         style="${styleMap(styles)}">
         ${content}
       </div>
-      ${alerts.length > 0 ? html`
-        <div class="departure-alerts">
-          <ha-icon icon="mdi:alert-circle-outline" class="departure-alert-icon"></ha-icon>
-          <span>${alerts[0].headerText}</span>${alerts.length > 1 ? html`<span class="departure-alert-more">+${alerts.length - 1}</span>` : nothing}
-        </div>
-      ` : nothing}
     `;
   }
 
@@ -367,7 +360,17 @@ export abstract class Content extends LitElement {
       styles = { textDecoration: "line-through" };
     }
 
-    return html`<div class="cell-destination" theme=${this.theme} style=${styleMap(styles)}>${departure.destinationName}</div>`;
+    const hasAlerts = departure.time.alerts && departure.time.alerts.length > 0;
+
+    return html`
+      <div class="cell-destination" theme=${this.theme}>
+        <span class="cell-destination-label" style=${styleMap(styles)}>${departure.destinationName}</span>
+        ${hasAlerts ? html`
+          <span class="cell-alert-badge">
+            <ha-icon icon="mdi:alert-outline"></ha-icon>
+          </span>
+        ` : nothing}
+      </div>`;
   }
 
   /**

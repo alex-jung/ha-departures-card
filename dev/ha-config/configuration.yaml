@@ -66,6 +66,32 @@ template:
               {"planned": "2026-03-16T11:34:00+01:00", "estimated": "2026-03-16T11:34:00+01:00", "trip_id": "20260316_11:17_de-DELFI_3105078201", "cancelled": false, "head_sign": "Tiergarten", "alerts": []}
             ] }}
 
+      - name: "Nürnberg Aufseßplatz-6-Doku-Zentrum"
+        unique_id: dev_tram_6_doku_zentrum
+        state: "departures"
+        attributes:
+          line_name: "6"
+          line_id: de:vgn:900_6:0_0
+          transport: TRAM
+          direction: Doku-Zentrum
+          data_provider: https://transitous.org/
+          latitude: 49.44078
+          longitude: 11.081707
+          icon: mdi:tram
+          times: >
+            {{ [
+              {"planned": "2026-03-16T15:01:00+01:00", "estimated": "2026-03-16T15:01:00+01:00", "trip_id": "20260316_14:43_de-DELFI_3118795864", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": [{"headerText": "Construction: Track works from Aufseßplatz", "descriptionText": "Due to track construction works, delays are expected across the entire network.", "severityLevel": "WARNING", "cause": "CONSTRUCTION", "effect": "SIGNIFICANT_DELAYS"}]},
+              {"planned": "2026-03-16T15:11:00+01:00", "estimated": "2026-03-16T15:11:00+01:00", "trip_id": "20260316_14:53_de-DELFI_3118795863", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": [{"headerText": "Construction: Track works from Aufseßplatz", "descriptionText": "Due to track construction works, delays are expected across the entire network.", "severityLevel": "WARNING", "cause": "CONSTRUCTION", "effect": "SIGNIFICANT_DELAYS"}]},
+              {"planned": "2026-03-16T15:21:00+01:00", "estimated": "2026-03-16T15:21:00+01:00", "trip_id": "20260316_15:03_de-DELFI_3118795862", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
+              {"planned": "2026-03-16T15:31:00+01:00", "estimated": "2026-03-16T15:31:00+01:00", "trip_id": "20260316_15:13_de-DELFI_3118795795", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
+              {"planned": "2026-03-16T15:41:00+01:00", "estimated": "2026-03-16T15:41:00+01:00", "trip_id": "20260316_15:23_de-DELFI_3118795860", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
+              {"planned": "2026-03-16T15:51:00+01:00", "estimated": "2026-03-16T15:51:00+01:00", "trip_id": "20260316_15:33_de-DELFI_3118795859", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
+              {"planned": "2026-03-16T16:01:00+01:00", "estimated": "2026-03-16T16:01:00+01:00", "trip_id": "20260316_15:43_de-DELFI_3118796012", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
+              {"planned": "2026-03-16T16:11:00+01:00", "estimated": "2026-03-16T16:11:00+01:00", "trip_id": "20260316_15:53_de-DELFI_3118795945", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
+              {"planned": "2026-03-16T16:21:00+01:00", "estimated": "2026-03-16T16:21:00+01:00", "trip_id": "20260316_16:03_de-DELFI_3118796010", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
+              {"planned": "2026-03-16T16:31:00+01:00", "estimated": "2026-03-16T16:31:00+01:00", "trip_id": "20260316_16:13_de-DELFI_3118795789", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []}
+            ] }}
+
       - name: "U-Bahn U6 Garching"
         unique_id: dev_ubahn_u6_garching
         state: "departures"

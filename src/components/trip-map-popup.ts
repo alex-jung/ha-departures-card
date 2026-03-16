@@ -463,7 +463,7 @@ export class TripMapPopup extends LitElement {
                 <div class="alert-banner">
                   ${this.alerts.map((a) => {
                     const color = a.severityLevel === "SEVERE" ? "#c62828" : a.severityLevel === "INFO" ? "#1565c0" : "#e65100";
-                    const icon = a.severityLevel === "SEVERE" ? "mdi:alert-octagon-outline" : a.severityLevel === "INFO" ? "mdi:information-outline" : "mdi:alert-circle-outline";
+                    const icon = a.severityLevel === "SEVERE" ? "mdi:alert-octagon-outline" : a.severityLevel === "INFO" ? "mdi:information-outline" : "mdi:alert-outline";
                     return html`
                       <div class="alert-banner-item" style="color:${color}">
                         <ha-icon icon="${icon}" class="alert-banner-icon" style="--mdc-icon-size:16px"></ha-icon>

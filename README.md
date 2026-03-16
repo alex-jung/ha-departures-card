@@ -70,7 +70,7 @@ The popup shows:
 When the data source provides service alerts for a departure, a warning indicator appears inline below the departure row showing the alert header. Full alert details — including description, severity, cause, and effect — are visible in the [Trip Info Popup](#trip-info-popup).
 
 <p align="center">
-  <img width="600" src="assets/service-alerts.png"/>
+  <img width="100%" src="assets/image_tripinfo_alert.png"/>
 </p>
 
 ---

@@ -21,25 +21,15 @@ function t(t,e,n,i){var r,o=arguments.length,a=o<3?e:null===i?i=Object.getOwnPro
     padding-bottom: 8px;
   }
 `,_t=s`
-  .departure-alerts {
-    display: flex;
+  .cell-alert-badge {
+    display: inline-flex;
     align-items: center;
-    gap: 4px;
-    font-size: 0.75em;
     color: #e65100;
-    padding: 1px 7px 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .departure-alert-icon {
-    --mdc-icon-size: 14px;
     flex-shrink: 0;
+    margin-left: 4px;
   }
-  .departure-alert-more {
-    flex-shrink: 0;
-    font-weight: bold;
-    margin-left: 2px;
+  .cell-alert-badge ha-icon {
+    --mdc-icon-size: 20px;
   }
   .list-header-content,
   .departure-line {
@@ -69,9 +59,16 @@ function t(t,e,n,i){var r,o=arguments.length,a=o<3?e:null===i?i=Object.getOwnPro
   .list-header-destination,
   .cell-destination {
     flex-grow: 1;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    min-width: 0;
+  }
+  .cell-destination-label {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    min-width: 0;
   }
   .list-header-time-diff,
   .cell-time-diff {
@@ -327,7 +324,7 @@ function t(t,e,n,i){var r,o=arguments.length,a=o<3?e:null===i?i=Object.getOwnPro
           </div>
           ${this.alerts.length>0?W`
                 <div class="alert-banner">
-                  ${this.alerts.map((t=>{const e="SEVERE"===t.severityLevel?"#c62828":"INFO"===t.severityLevel?"#1565c0":"#e65100",n="SEVERE"===t.severityLevel?"mdi:alert-octagon-outline":"INFO"===t.severityLevel?"mdi:information-outline":"mdi:alert-circle-outline";return W`
+                  ${this.alerts.map((t=>{const e="SEVERE"===t.severityLevel?"#c62828":"INFO"===t.severityLevel?"#1565c0":"#e65100",n="SEVERE"===t.severityLevel?"mdi:alert-octagon-outline":"INFO"===t.severityLevel?"mdi:information-outline":"mdi:alert-outline";return W`
                       <div class="alert-banner-item" style="color:${e}">
                         <ha-icon icon="${n}" class="alert-banner-icon" style="--mdc-icon-size:16px"></ha-icon>
                         <div>
@@ -774,7 +771,7 @@ function t(t,e,n,i){var r,o=arguments.length,a=o<3?e:null===i?i=Object.getOwnPro
     `):W`Card configuration is not available!`}_animateArriving(){const t=this.cardConfig?.departureAnimation??"none",e=this.cardConfig?.animateLine??!1;if("none"===t)return;if(!(t in ve))return void console.error("Unknown animation type",t);const n=ve[t],i=this.cardConfig?.departureAnimationDuration??0,r=0!=i?i:n.options?.duration,o={...n.options,duration:r};let a;a=e?this.shadowRoot?.querySelectorAll(this.getQueryLineElements()):this.shadowRoot?.querySelectorAll(this.getQueryTimeElements()),a?.forEach((t=>{t.classList.contains("arriving")?0==t.getAnimations().length&&t.animate(n.keyframes,o):t.getAnimations().forEach((t=>{t.cancel()}))}))}renderListHeader(){if(!this.cardConfig.showListHeader)return W``;let t=this.layout?.getCells(),e={"grid-template-columns":this.layout?.getColumns()};if(!t)return W``;let n=[];return t.forEach((t=>{switch(t){case dt.ICON:n.push(W`<div class="list-header-icon">${ge("card.list-header.icon",this.language)}</div>`);break;case dt.LINE:n.push(W`<div class="list-header-line">${ge("card.list-header.line",this.language)}</div>`);break;case dt.DESTINATION:n.push(W`<div class="list-header-destination">${ge("card.list-header.destination",this.language)}</div>`);break;case dt.TIME_DIFF:n.push(W`<div class="list-header-time-diff">${ge("card.list-header.time-diff",this.language)}</div>`);break;case dt.PLANNED_TIME:n.push(W`<div class="list-header-planned-time">${ge("card.list-header.planned-time",this.language)}</div>`);break;case dt.ESTIMATED_TIME:n.push(W`<div class="list-header-estimated-time">${ge("card.list-header.estimated-time",this.language)}</div>`);break;case dt.DELAY:n.push(W`<div class="list-header-delay">${ge("card.list-header.delay",this.language)}</div>`)}})),W`<div class="list-header">
       <div class="list-header-content" theme=${this.theme} style="${ae(e)}">${n}</div>
       <hr width="98%" />
-    </div>`}renderDepartureLine(t){let e={arriving:t.time.isArriving(this.cardConfig.arrivalTimeOffset),delayed:t.time.isDelayed,earlier:t.time.isEarlier},n={};const i=this.layout?.getCells();if(!i)return W``;switch(n={...n,"grid-template-columns":this.layout?.getColumns()},this.theme){case ct.CAPPUCINO:case ct.FOREST:case ct.MINT:case ct.SUNSET:n={...n,borderLeft:`8px solid ${t.lineColor??""}`}}let r=[];i.forEach((e=>{switch(e){case dt.ICON:r.push(this.renderTransportIcon(t));break;case dt.LINE:r.push(this.renderCellLineName(t));break;case dt.DESTINATION:r.push(this.renderCellDestination(t));break;case dt.TIME_DIFF:r.push(this.renderCellTimeDiff(t));break;case dt.PLANNED_TIME:r.push(this.renderCellPlannedTime(t));break;case dt.ESTIMATED_TIME:r.push(this.renderCellEstimatedTime(t));break;case dt.DELAY:r.push(this.renderDelay(t))}}));const o=t.time.alerts;return W`
+    </div>`}renderDepartureLine(t){let e={arriving:t.time.isArriving(this.cardConfig.arrivalTimeOffset),delayed:t.time.isDelayed,earlier:t.time.isEarlier},n={};const i=this.layout?.getCells();if(!i)return W``;switch(n={...n,"grid-template-columns":this.layout?.getColumns()},this.theme){case ct.CAPPUCINO:case ct.FOREST:case ct.MINT:case ct.SUNSET:n={...n,borderLeft:`8px solid ${t.lineColor??""}`}}let r=[];return i.forEach((e=>{switch(e){case dt.ICON:r.push(this.renderTransportIcon(t));break;case dt.LINE:r.push(this.renderCellLineName(t));break;case dt.DESTINATION:r.push(this.renderCellDestination(t));break;case dt.TIME_DIFF:r.push(this.renderCellTimeDiff(t));break;case dt.PLANNED_TIME:r.push(this.renderCellPlannedTime(t));break;case dt.ESTIMATED_TIME:r.push(this.renderCellEstimatedTime(t));break;case dt.DELAY:r.push(this.renderDelay(t))}})),W`
       <div
         class="departure-line  ${ie(e)}"
         entity-id="${t.entity}"
@@ -785,13 +782,15 @@ function t(t,e,n,i){var r,o=arguments.length,a=o<3?e:null===i?i=Object.getOwnPro
         style="${ae(n)}">
         ${r}
       </div>
-      ${o.length>0?W`
-        <div class="departure-alerts">
-          <ha-icon icon="mdi:alert-circle-outline" class="departure-alert-icon"></ha-icon>
-          <span>${o[0].headerText}</span>${o.length>1?W`<span class="departure-alert-more">+${o.length-1}</span>`:V}
-        </div>
-      `:V}
-    `}_handleAction(t){const e=t.composedPath().find((t=>t.hasAttribute?.("entity-id")));if(!e)return;const n=e.getAttribute("entity-id")??void 0;if("hold"===t.detail.action){let t,e=this._pointerDownTarget;for(;e;){const n=e.getAttribute?.("data-trip-id");if(n){t=n;break}e=e.parentElement}const i=t?this.departures.find((e=>e.entity===n&&e.time.tripId===t)):this.departures.find((t=>t.entity===n));if(i)return void this._openPopupForDeparture(i)}!function(t,e,n,i){var r;"double_tap"===i&&n.double_tap_action?r=n.double_tap_action:"hold"===i&&n.hold_action?r=n.hold_action:"tap"===i&&n.tap_action&&(r=n.tap_action),Re(t,e,n,r)}(this,this.hass,{...this.cardConfig,entity:n},t.detail.action)}_openPopupForDeparture(t){const e=this.hass?.states[t.entity]?.attributes??{};this._fromStopId=e.stop_id??void 0,this._popupAlerts=t.time.alerts,this._selectedTripId=t.time.tripId,this._dialogTitle=`${t.lineName} → ${t.destinationName}`,this._dialogOpen=!0}renderTransportIcon(t){const e=t.icon??Vt;return W`<div class="cell-transport-icon" theme=${this.theme}><ha-icon icon=${e}></ha-icon></div>`}renderCellLineName(t){let e={},n="";switch(t.lineColor&&(n=function(t){const e=t.replace("#","");return e.length<6?"white":(.299*parseInt(e.substring(0,2),16)+.587*parseInt(e.substring(2,4),16)+.114*parseInt(e.substring(4,6),16))/255>.5?"black":"white"}(t.lineColor)),this.theme){case ct.BLUE_OCEAN:case ct.BASIC:case ct.DARK:case ct.NORD:e={backgroundColor:t.lineColor,color:n};break;case ct.BLACK_WHITE:e={color:t.lineColor??"white"};break;case ct.SUNSET:e={color:t.lineColor??"#ffcc80"}}return W`<div><div class="cell-line" theme=${this.theme} style=${ae(e)}>${t.lineName}</div></div>`}renderCellDestination(t){let e={};return t.time.cancelled&&(e={textDecoration:"line-through"}),W`<div class="cell-destination" theme=${this.theme} style=${ae(e)}>${t.destinationName}</div>`}renderCellPlannedTime(t){const e=t.time.planned,n=e?fe(e,"HH:mm"):"-";return W`<div class="cell-planned-time" theme=${this.theme}>${n}</div>`}renderCellEstimatedTime(t){const e=t.time.estimated,n=e?fe(e,"HH:mm"):"-";return W`<div class="cell-estimated-time" theme=${this.theme}>${n}</div>`}renderCellTimeDiff(t){let e=W``;const n=t.time,i=this.getDepartureIcon()??t.icon??Vt;let r={arriving:n.isArriving(this.cardConfig.arrivalTimeOffset)};return e=0==n.timeDiff?W`<ha-icon icon=${i}></ha-icon>`:n.timeDiff>60?W`${fe(n.time,"HH:mm")}`:W`${n.timeDiff} min`,W`<div><div class="cell-time-diff ${ie(r)}" theme=${this.theme}>${e}</div></div>`}renderDelay(t){let e="";const n=t.time;let i={arriving:t.time.isArriving(this.cardConfig.arrivalTimeOffset),delayed:n.isDelayed,earlier:n.isEarlier};return null!=n.delay&&(n.isDelayed?e=`+${n.delay}`:n.isEarlier&&(e=`${n.delay}`)),W`<div><div class="cell-delay ${ie(i)}" theme=${this.theme}>${e}</div></div>`}getDepartureIcon(){let t=this.cardConfig.departureIcon;if(t&&null!=t&&""!=t)return t}_renderErrors(){return W`
+    `}_handleAction(t){const e=t.composedPath().find((t=>t.hasAttribute?.("entity-id")));if(!e)return;const n=e.getAttribute("entity-id")??void 0;if("hold"===t.detail.action){let t,e=this._pointerDownTarget;for(;e;){const n=e.getAttribute?.("data-trip-id");if(n){t=n;break}e=e.parentElement}const i=t?this.departures.find((e=>e.entity===n&&e.time.tripId===t)):this.departures.find((t=>t.entity===n));if(i)return void this._openPopupForDeparture(i)}!function(t,e,n,i){var r;"double_tap"===i&&n.double_tap_action?r=n.double_tap_action:"hold"===i&&n.hold_action?r=n.hold_action:"tap"===i&&n.tap_action&&(r=n.tap_action),Re(t,e,n,r)}(this,this.hass,{...this.cardConfig,entity:n},t.detail.action)}_openPopupForDeparture(t){const e=this.hass?.states[t.entity]?.attributes??{};this._fromStopId=e.stop_id??void 0,this._popupAlerts=t.time.alerts,this._selectedTripId=t.time.tripId,this._dialogTitle=`${t.lineName} → ${t.destinationName}`,this._dialogOpen=!0}renderTransportIcon(t){const e=t.icon??Vt;return W`<div class="cell-transport-icon" theme=${this.theme}><ha-icon icon=${e}></ha-icon></div>`}renderCellLineName(t){let e={},n="";switch(t.lineColor&&(n=function(t){const e=t.replace("#","");return e.length<6?"white":(.299*parseInt(e.substring(0,2),16)+.587*parseInt(e.substring(2,4),16)+.114*parseInt(e.substring(4,6),16))/255>.5?"black":"white"}(t.lineColor)),this.theme){case ct.BLUE_OCEAN:case ct.BASIC:case ct.DARK:case ct.NORD:e={backgroundColor:t.lineColor,color:n};break;case ct.BLACK_WHITE:e={color:t.lineColor??"white"};break;case ct.SUNSET:e={color:t.lineColor??"#ffcc80"}}return W`<div><div class="cell-line" theme=${this.theme} style=${ae(e)}>${t.lineName}</div></div>`}renderCellDestination(t){let e={};t.time.cancelled&&(e={textDecoration:"line-through"});const n=t.time.alerts&&t.time.alerts.length>0;return W`
+      <div class="cell-destination" theme=${this.theme}>
+        <span class="cell-destination-label" style=${ae(e)}>${t.destinationName}</span>
+        ${n?W`
+          <span class="cell-alert-badge">
+            <ha-icon icon="mdi:alert-outline"></ha-icon>
+          </span>
+        `:V}
+      </div>`}renderCellPlannedTime(t){const e=t.time.planned,n=e?fe(e,"HH:mm"):"-";return W`<div class="cell-planned-time" theme=${this.theme}>${n}</div>`}renderCellEstimatedTime(t){const e=t.time.estimated,n=e?fe(e,"HH:mm"):"-";return W`<div class="cell-estimated-time" theme=${this.theme}>${n}</div>`}renderCellTimeDiff(t){let e=W``;const n=t.time,i=this.getDepartureIcon()??t.icon??Vt;let r={arriving:n.isArriving(this.cardConfig.arrivalTimeOffset)};return e=0==n.timeDiff?W`<ha-icon icon=${i}></ha-icon>`:n.timeDiff>60?W`${fe(n.time,"HH:mm")}`:W`${n.timeDiff} min`,W`<div><div class="cell-time-diff ${ie(r)}" theme=${this.theme}>${e}</div></div>`}renderDelay(t){let e="";const n=t.time;let i={arriving:t.time.isArriving(this.cardConfig.arrivalTimeOffset),delayed:n.isDelayed,earlier:n.isEarlier};return null!=n.delay&&(n.isDelayed?e=`+${n.delay}`:n.isEarlier&&(e=`${n.delay}`)),W`<div><div class="cell-delay ${ie(i)}" theme=${this.theme}>${e}</div></div>`}getDepartureIcon(){let t=this.cardConfig.departureIcon;if(t&&null!=t&&""!=t)return t}_renderErrors(){return W`
       ${this.errors.map((t=>W`<div class="error">
           <ha-icon icon="mdi:alert"></ha-icon>
           <div>'<span>${t.name}</span>': ${t.message}</div>
