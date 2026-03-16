@@ -17,13 +17,14 @@ const API_HEADERS = {
 };
 const POSITION_UPDATE_INTERVAL_MS = 5000;
 
-function formatDurationFromNow(targetMs: number): string {
+function formatDurationFromNow(targetMs: number, lang: string): string {
   const diffMs = targetMs - Date.now();
-  if (diffMs <= 0) return "";
+  if (diffMs <= 0) return localize("card.popup.now", lang);
   const dur = intervalToDuration({ start: 0, end: diffMs });
   const h = dur.hours ?? 0;
   const m = dur.minutes ?? 0;
   if (h > 0) return `${h} h ${m} min`;
+  if (m === 0) return localize("card.popup.now", lang);
   return `${m} min`;
 }
 
@@ -510,10 +511,10 @@ export class TripMapPopup extends LitElement {
     const now = Date.now();
     const nextLabel = next.plannedTime.getTime() <= now
       ? localize("card.popup.now", this.language)
-      : formatDurationFromNow(next.plannedTime.getTime());
+      : formatDurationFromNow(next.plannedTime.getTime(), this.language);
 
     const dest = this._stops[this._stops.length - 1];
-    const destLabel = dest ? formatDurationFromNow(dest.plannedTime.getTime()) : null;
+    const destLabel = dest ? formatDurationFromNow(dest.plannedTime.getTime(), this.language) : null;
 
     return html`
       <div class="next-stop-banner">
