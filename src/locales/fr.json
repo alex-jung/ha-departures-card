@@ -1,0 +1,96 @@
+{
+  "card": {
+    "editor": {
+      "title": "Titre de la carte (optionnel)",
+      "icon": "Icône de la carte (optionnel)",
+      "showCardHeader": "Afficher l'en-tête de la carte",
+
+      "design-expandable": "Design et contenu",
+      "cardOrientation": "Orientation de la carte",
+      "cardOrientationVerticalDescription": "Affiche les départs dans une liste défilante",
+      "cardOrientationHorizontalDescription": "Affiche les départs dans une vue tableau",
+      "theme": "Thème de la carte",
+      "showListHeader": "Afficher l'en-tête de liste",
+      "showScrollButtons": "Afficher les boutons de défilement",
+      "departuresToShow": "Nombre de départs à afficher",
+      "limitEntities": "Limiter le nombre d'entités à afficher",
+      "entitiesToShow": "Nombre d'entités à afficher",
+      "scrollBackTimeout": "Délai de retour (secondes)",
+      "sortDepartures": "Trier les entités par heure de départ planifiée",
+
+      "layout-expandable": "Mise en page de la ligne de départ",
+      "layout": "Ajouter une cellule",
+      "layout-cells": {
+        "icon": "Icône de transport",
+        "line": "Ligne",
+        "destination": "Destination",
+        "time-diff": "Départ dans",
+        "planned-time": "Heure planifiée",
+        "estimated-time": "Heure estimée",
+        "delay": "Retard"
+      },
+      "layoutWarning": "Les cellules suivantes seront ignorées en orientation horizontale",
+
+      "animation-expandable": "Icône et animation de départ",
+      "departureIcon": "Icône de départ personnalisée",
+      "animateLine": "Animer la ligne de départ",
+      "arrivalTimeOffset": "Décalage de l'heure d'arrivée",
+      "departureAnimation": "Animation de départ",
+      "departureAnimationDuration": "Durée de l'animation (ms)",
+      "noAnimation": "Aucune",
+
+      "interactions-expandable": "Interactions",
+
+      "entities-expandable": "Entités (requis)",
+      "addEntity": "Ajouter une entité",
+
+      "card.editor.interactions-expandable": "Interactions",
+      "tap_action": "Action au toucher",
+      "hold_action": "Action au maintien",
+      "double_tap_action": "Action au double toucher",
+
+      "entity": {
+        "entity": "Entité",
+        "destinationName": "Nom de la destination",
+        "lineName": "Nom de la ligne",
+        "lineColor": "Couleur de la ligne",
+        "icon": "Icône de transport personnalisée",
+        "remove": "Supprimer"
+      },
+      "help": {
+        "showListHeader": "Affiche les en-têtes de colonnes de la liste des départs",
+        "showScrollButtons": "Affiche des boutons pour faire défiler la liste vers le haut et le bas",
+        "sortDepartures": "Trie les départs par leur heure planifiée",
+        "scrollBackTimeout": "Temps en secondes avant que la liste revienne automatiquement au début",
+        "layout": "Configuration des cellules affichées et de leur ordre dans une ligne de départ",
+        "departureIcon": "Si aucune icône personnalisée n'est définie, l'icône de transport de l'entité sera utilisée",
+        "animateLine": "Si désactivé, seule la cellule d'heure de départ sera animée",
+        "arrivalTimeOffset": "Temps en minutes avant le départ à partir duquel l'animation démarre",
+        "departureAnimationDuration": "La valeur 0 utilise la valeur interne par défaut"
+      }
+    },
+    "list-header": {
+      "icon": "Icône",
+      "line": "Ligne",
+      "destination": "Destination",
+      "time-diff": "Départ dans",
+      "planned-time": "Planifié",
+      "estimated-time": "Estimé",
+      "delay": "Retard"
+    },
+    "errors": {
+      "no-card-orientation-set": "Veuillez définir l'option \"Orientation de la carte\""
+    },
+    "popup": {
+      "next-stop-label": "Prochain arrêt",
+      "now": "maintenant",
+      "in-minutes": "dans {min} min",
+      "dest-arrival-label": "Arrivée à destination",
+      "loading": "Chargement…",
+      "no-data": "Aucune donnée disponible",
+      "vehicle-not-started": "Pas encore parti",
+      "vehicle-arrived": "Déjà arrivé",
+      "vehicle-current": "En route"
+    }
+  }
+}

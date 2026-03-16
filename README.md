@@ -10,11 +10,23 @@ A card to display departure times provided by [Departures](https://github.com/al
   <img width="600" src="assets/image_top.png"/>
 </p>
 
+## Features
+
+- **Trip Info Popup** — long press on any departure to open an interactive map with live vehicle position, route, stop timeline, and service alerts
+- **9 built-in themes** — Basic, Black-White, Blue Ocean, Cappucino, Dark, Forest, Mint, Nord, Sunset
+- **Real-time updates** — delay, estimated times, and cancellations
+- **Service alerts** — shown inline on the departure list and in detail in the popup
+- **Departure animations** — visual highlight when a vehicle is about to depart
+- **Two layouts** — vertical scrollable list or horizontal table view
+- **Multilanguage support** — English, German, Czech, Polish, Spanish, French, Latvian
+
+---
+
 ## Installation
 
 #### Manual
 
-1. Download from last release `dist/ha-departures-car.js` file.
+1. Download from last release `dist/ha-departures-card.js` file.
 2. Activate Home Assistant `advanced mode` (Profile -> Advanced mode)
 3. Open `settings -> Dashboards` and click on tree dots in right upper corner
 4. Click on `Ressourcen` and then on `Add Ressource` button
@@ -27,6 +39,41 @@ A card to display departure times provided by [Departures](https://github.com/al
 2. Add this repository as a custom repository (HACS -> Custom repositories, type "Dashboard")
 3. Search for `Departures Card` integration and download it.
 4. Add a new card to the dashboard
+
+---
+
+## Trip Info Popup (Experemental) ![New in](https://img.shields.io/badge/new-v3.6.0-brightgreen)
+
+**Long press** (hold) on any departure row to open the trip info popup.
+Trip data is fetched from the [Transitous](https://transitous.org) open transit API (`api.transitous.org`).
+
+<p align="center">
+  <img width="600" src="assets/trip-info-popup.png"/>
+</p>
+
+The popup shows:
+
+- **Interactive map** with the full route polyline rendered on a street map
+- **Live vehicle position** with a heading arrow, updated every 5 seconds
+- **Stop timeline** — all stops with planned and estimated arrival times and platform numbers
+- **Next stop banner** — name of the next stop and time remaining until arrival
+- **Service alerts** — displayed at the top of the popup if disruptions are active for this trip
+
+### Requirements
+
+- The [ha-departures](https://github.com/alex-jung/ha-departures) integration must be installed and configured. It provides the sensor entities with departure data including trip IDs and stop information.
+
+---
+
+## Service Alerts (Experemental) ![New in](https://img.shields.io/badge/new-v3.6.0-brightgreen)
+
+When the data source provides service alerts for a departure, a warning indicator appears inline below the departure row showing the alert header. Full alert details — including description, severity, cause, and effect — are visible in the [Trip Info Popup](#trip-info-popup).
+
+<p align="center">
+  <img width="600" src="assets/service-alerts.png"/>
+</p>
+
+---
 
 ## Card Properties
 
@@ -97,8 +144,8 @@ arrivalTimeOffset: true
 
 ### "cardOrientation"
 
-**Type:** `string`  
-**Allowed values:** `"vertical"`, `"horizontal"`  
+**Type:** `string`
+**Allowed values:** `"vertical"`, `"horizontal"`
 **Default:** `"vertical"`
 
 Defines how arrivals are displayed.
@@ -376,20 +423,40 @@ sortDepartures: true
 ### "theme"
 
 **Type:** `string`
-**Default**: `"Basic"`
+**Default**: `"basic"`
 
 Selects the color theme used to display the departure board.
 
-Different themes define the color scheme for elements such as background, text, icons and delay indicators. This allows the card to be visually adapted to different dashboards or lighting conditions.
+Available themes:
+
+| Theme       | Description                                                  |
+| ----------- | ------------------------------------------------------------ |
+| `basic`     | Default light theme with bordered rows                       |
+| `black-white` | High-contrast black background with monospace font         |
+| `blue-ocean` | Dark navy background with white text                        |
+| `cappucino` | Warm beige rows with a colored left border per line          |
+| `dark`      | Dark `#1e1e2e` background with colored badges ![New](https://img.shields.io/badge/new-v3.6.0-brightgreen) |
+| `forest`    | Light green rows with a colored left border per line ![New](https://img.shields.io/badge/new-v3.6.0-brightgreen) |
+| `mint`      | Light teal rows with a colored left border per line ![New](https://img.shields.io/badge/new-v3.6.0-brightgreen) |
+| `nord`      | Dark `#2e3440` (Nord color scheme) with cyan time accent ![New](https://img.shields.io/badge/new-v3.6.0-brightgreen) |
+| `sunset`    | Dark warm background with orange accents and colored left border ![New](https://img.shields.io/badge/new-v3.6.0-brightgreen) |
 
 ```yaml
 type: custom:departures-card
-theme: basic
+theme: nord
 ```
 
 | theme: Black-White                          | theme: Cappucino                          | theme: Blue Ocean                          |
 | ------------------------------------------- | ----------------------------------------- | ------------------------------------------ |
 | ![card](assets/image_theme_black-white.png) | ![card](assets/image_theme_cappucino.png) | ![card](assets/image_theme_blue-ocean.png) |
+
+| theme: Dark                          | theme: Nord                          | theme: Sunset                          |
+| ------------------------------------ | ------------------------------------ | -------------------------------------- |
+| ![card](assets/image_theme_dark.png) | ![card](assets/image_theme_nord.png) | ![card](assets/image_theme_sunset.png) |
+
+| theme: Forest                          | theme: Mint                          |
+| -------------------------------------- | ------------------------------------ |
+| ![card](assets/image_theme_forest.png) | ![card](assets/image_theme_mint.png) |
 
 ### "title"
 
@@ -407,6 +474,8 @@ title: Frankenstr.
 | empty                                   | title: "Plärrer"                |
 | --------------------------------------- | ------------------------------- |
 | ![card](assets/image_default_title.png) | ![card](assets/image_title.png) |
+
+---
 
 ## Entity Properties
 

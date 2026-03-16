@@ -96,8 +96,10 @@ export class TripMapPopup extends LitElement {
           transform: rotate(360deg);
         }
       }
-      .refresh-btn.spinning {
+      .refresh-btn .spin-icon {
         display: inline-block;
+      }
+      .refresh-btn.spinning .spin-icon {
         animation: spin 0.8s linear infinite;
       }
       /* ── Alert banner ───────────────────────────────────────────── */
@@ -452,7 +454,7 @@ export class TripMapPopup extends LitElement {
           <div class="header">
             <span>${this.title}</span>
             <div class="header-actions">
-              <button class="refresh-btn ${this._loading ? "spinning" : ""}" ?disabled=${this._loading} @click=${this._fetchTrip}>↻</button>
+              <button class="refresh-btn ${this._loading ? "spinning" : ""}" ?disabled=${this._loading} @click=${this._fetchTrip}><span class="spin-icon">↻</span></button>
               <button class="close-btn" @click=${this._close}>✕</button>
             </div>
           </div>

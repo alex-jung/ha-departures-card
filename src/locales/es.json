@@ -1,0 +1,96 @@
+{
+  "card": {
+    "editor": {
+      "title": "Título de la tarjeta (opcional)",
+      "icon": "Icono de la tarjeta (opcional)",
+      "showCardHeader": "Mostrar encabezado de tarjeta",
+
+      "design-expandable": "Diseño y contenido",
+      "cardOrientation": "Orientación de la tarjeta",
+      "cardOrientationVerticalDescription": "Muestra las salidas en una lista desplazable",
+      "cardOrientationHorizontalDescription": "Muestra las salidas en una vista de tabla",
+      "theme": "Tema de la tarjeta",
+      "showListHeader": "Mostrar encabezado de lista",
+      "showScrollButtons": "Mostrar botones de desplazamiento",
+      "departuresToShow": "Número de salidas a mostrar",
+      "limitEntities": "Limitar número de entidades a mostrar",
+      "entitiesToShow": "Número de entidades a mostrar",
+      "scrollBackTimeout": "Tiempo de retorno (segundos)",
+      "sortDepartures": "Ordenar entidades por hora de salida planificada",
+
+      "layout-expandable": "Diseño de fila de salida",
+      "layout": "Añadir celda",
+      "layout-cells": {
+        "icon": "Icono de transporte",
+        "line": "Línea",
+        "destination": "Destino",
+        "time-diff": "Sale en",
+        "planned-time": "Hora planificada",
+        "estimated-time": "Hora estimada",
+        "delay": "Retraso"
+      },
+      "layoutWarning": "Las siguientes celdas serán ignoradas con orientación horizontal",
+
+      "animation-expandable": "Icono y animación de salida",
+      "departureIcon": "Icono de salida personalizado",
+      "animateLine": "Animar fila de salida",
+      "arrivalTimeOffset": "Desplazamiento de tiempo de llegada",
+      "departureAnimation": "Animación de salida",
+      "departureAnimationDuration": "Duración de animación (ms)",
+      "noAnimation": "Ninguna",
+
+      "interactions-expandable": "Interacciones",
+
+      "entities-expandable": "Entidades (requerido)",
+      "addEntity": "Añadir entidad",
+
+      "card.editor.interactions-expandable": "Interacciones",
+      "tap_action": "Acción al tocar",
+      "hold_action": "Acción al mantener",
+      "double_tap_action": "Acción al doble toque",
+
+      "entity": {
+        "entity": "Entidad",
+        "destinationName": "Nombre del destino",
+        "lineName": "Nombre de línea",
+        "lineColor": "Color de línea",
+        "icon": "Icono de transporte personalizado",
+        "remove": "Eliminar"
+      },
+      "help": {
+        "showListHeader": "Muestra los encabezados de columna de la lista de salidas",
+        "showScrollButtons": "Muestra botones para desplazar la lista hacia arriba y abajo",
+        "sortDepartures": "Ordena las salidas por su hora planificada",
+        "scrollBackTimeout": "Tiempo en segundos antes de que la lista vuelva automáticamente al inicio",
+        "layout": "Configuración de las celdas mostradas y su orden en una fila de salida",
+        "departureIcon": "Si no se define icono personalizado, se usará el icono de transporte de la entidad",
+        "animateLine": "Si está desactivado, solo se animará la celda de tiempo de salida",
+        "arrivalTimeOffset": "Tiempo en minutos antes de la salida cuando comienza la animación",
+        "departureAnimationDuration": "El valor 0 usa el valor predeterminado interno"
+      }
+    },
+    "list-header": {
+      "icon": "Icono",
+      "line": "Línea",
+      "destination": "Destino",
+      "time-diff": "Sale en",
+      "planned-time": "Planificado",
+      "estimated-time": "Estimado",
+      "delay": "Retraso"
+    },
+    "errors": {
+      "no-card-orientation-set": "Por favor, establezca la opción \"Orientación de tarjeta\""
+    },
+    "popup": {
+      "next-stop-label": "Próxima parada",
+      "now": "ahora",
+      "in-minutes": "en {min} min",
+      "dest-arrival-label": "Llegada al destino",
+      "loading": "Cargando…",
+      "no-data": "No hay datos disponibles",
+      "vehicle-not-started": "Aún no ha salido",
+      "vehicle-arrived": "Ya ha llegado",
+      "vehicle-current": "En tránsito"
+    }
+  }
+}

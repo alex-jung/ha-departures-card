@@ -1,0 +1,96 @@
+{
+  "card": {
+    "editor": {
+      "title": "Nagłówek karty (opcjonalne)",
+      "icon": "Ikona karty (opcjonalne)",
+      "showCardHeader": "Pokaż nagłówek karty",
+
+      "design-expandable": "Wygląd i zawartość",
+      "cardOrientation": "Orientacja karty",
+      "cardOrientationVerticalDescription": "Wyświetla odjazdy na przewijalnej liście",
+      "cardOrientationHorizontalDescription": "Wyświetla odjazdy w widoku tabeli",
+      "theme": "Motyw karty",
+      "showListHeader": "Pokaż nagłówek listy",
+      "showScrollButtons": "Pokaż przyciski przewijania",
+      "departuresToShow": "Liczba wyświetlanych odjazdów",
+      "limitEntities": "Ogranicz liczbę wyświetlanych encji",
+      "entitiesToShow": "Liczba wyświetlanych encji",
+      "scrollBackTimeout": "Czas powrotu (sekundy)",
+      "sortDepartures": "Sortuj encje według planowanego odjazdu",
+
+      "layout-expandable": "Układ wiersza odjazdu",
+      "layout": "Dodaj komórkę",
+      "layout-cells": {
+        "icon": "Ikona transportu",
+        "line": "Linia",
+        "destination": "Cel",
+        "time-diff": "Odjazd za",
+        "planned-time": "Planowy czas",
+        "estimated-time": "Szacowany czas",
+        "delay": "Opóźnienie"
+      },
+      "layoutWarning": "Następujące komórki będą ignorowane przy poziomej orientacji karty",
+
+      "animation-expandable": "Ikona i animacja odjazdu",
+      "departureIcon": "Własna ikona odjazdu",
+      "animateLine": "Animuj wiersz odjazdu",
+      "arrivalTimeOffset": "Przesunięcie czasu przyjazdu",
+      "departureAnimation": "Animacja odjazdu",
+      "departureAnimationDuration": "Czas trwania animacji (ms)",
+      "noAnimation": "Brak",
+
+      "interactions-expandable": "Interakcje",
+
+      "entities-expandable": "Encje (wymagane)",
+      "addEntity": "Dodaj encję",
+
+      "card.editor.interactions-expandable": "Interakcje",
+      "tap_action": "Akcja przy dotknięciu",
+      "hold_action": "Akcja przy przytrzymaniu",
+      "double_tap_action": "Akcja przy podwójnym dotknięciu",
+
+      "entity": {
+        "entity": "Encja",
+        "destinationName": "Nazwa celu",
+        "lineName": "Nazwa linii",
+        "lineColor": "Kolor linii",
+        "icon": "Własna ikona transportu",
+        "remove": "Usuń"
+      },
+      "help": {
+        "showListHeader": "Wyświetla nagłówki kolumn listy odjazdów",
+        "showScrollButtons": "Wyświetla przyciski do przewijania listy w górę i w dół",
+        "sortDepartures": "Sortuje odjazdy według planowanego czasu",
+        "scrollBackTimeout": "Czas w sekundach, po którym lista automatycznie wraca na początek",
+        "layout": "Konfiguracja wyświetlanych komórek i ich kolejności w wierszu odjazdu",
+        "departureIcon": "Jeśli nie podano własnej ikony, używana jest ikona transportu encji",
+        "animateLine": "Gdy wyłączone, animowana jest tylko komórka z czasem odjazdu",
+        "arrivalTimeOffset": "Czas w minutach przed odjazdem, od którego startuje animacja",
+        "departureAnimationDuration": "Wartość 0 używa domyślnej wartości wewnętrznej"
+      }
+    },
+    "list-header": {
+      "icon": "Ikona",
+      "line": "Linia",
+      "destination": "Cel",
+      "time-diff": "Odjazd za",
+      "planned-time": "Planowo",
+      "estimated-time": "Szacunkowo",
+      "delay": "Opóźn."
+    },
+    "errors": {
+      "no-card-orientation-set": "Ustaw opcję \"Orientacja karty\""
+    },
+    "popup": {
+      "next-stop-label": "Następny przystanek",
+      "now": "teraz",
+      "in-minutes": "za {min} min",
+      "dest-arrival-label": "Przyjazd do celu",
+      "loading": "Ładowanie…",
+      "no-data": "Brak dostępnych danych",
+      "vehicle-not-started": "Jeszcze nie wyruszył",
+      "vehicle-arrived": "Już dotarł",
+      "vehicle-current": "W trasie"
+    }
+  }
+}

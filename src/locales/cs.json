@@ -1,0 +1,96 @@
+{
+  "card": {
+    "editor": {
+      "title": "Nadpis karty (volitelné)",
+      "icon": "Ikona karty (volitelné)",
+      "showCardHeader": "Zobrazit záhlaví karty",
+
+      "design-expandable": "Design a obsah",
+      "cardOrientation": "Orientace karty",
+      "cardOrientationVerticalDescription": "Zobrazí odjezdy v rolovatelném seznamu",
+      "cardOrientationHorizontalDescription": "Zobrazí odjezdy v tabulkovém zobrazení",
+      "theme": "Motiv karty",
+      "showListHeader": "Zobrazit záhlaví seznamu",
+      "showScrollButtons": "Zobrazit tlačítka pro posouvání",
+      "departuresToShow": "Počet zobrazených odjezdů",
+      "limitEntities": "Omezit počet zobrazených entit",
+      "entitiesToShow": "Počet zobrazených entit",
+      "scrollBackTimeout": "Čas návratu (sekundy)",
+      "sortDepartures": "Seřadit entity podle plánovaného odjezdu",
+
+      "layout-expandable": "Rozvržení řádku odjezdu",
+      "layout": "Přidat buňku",
+      "layout-cells": {
+        "icon": "Ikona dopravy",
+        "line": "Linka",
+        "destination": "Cíl",
+        "time-diff": "Odjezd za",
+        "planned-time": "Plánovaný čas",
+        "estimated-time": "Odhadovaný čas",
+        "delay": "Zpoždění"
+      },
+      "layoutWarning": "Následující buňky budou ignorovány při horizontální orientaci karty",
+
+      "animation-expandable": "Ikona a animace odjezdu",
+      "departureIcon": "Vlastní ikona odjezdu",
+      "animateLine": "Animovat řádek odjezdu",
+      "arrivalTimeOffset": "Časový posun příjezdu",
+      "departureAnimation": "Animace odjezdu",
+      "departureAnimationDuration": "Doba animace (ms)",
+      "noAnimation": "Žádná",
+
+      "interactions-expandable": "Interakce",
+
+      "entities-expandable": "Entity (povinné)",
+      "addEntity": "Přidat entitu",
+
+      "card.editor.interactions-expandable": "Interakce",
+      "tap_action": "Akce při klepnutí",
+      "hold_action": "Akce při podržení",
+      "double_tap_action": "Akce při dvojitém klepnutí",
+
+      "entity": {
+        "entity": "Entita",
+        "destinationName": "Název cíle",
+        "lineName": "Název linky",
+        "lineColor": "Barva linky",
+        "icon": "Vlastní ikona dopravy",
+        "remove": "Odstranit"
+      },
+      "help": {
+        "showListHeader": "Zobrazí záhlaví sloupců seznamu odjezdů",
+        "showScrollButtons": "Zobrazí tlačítka pro posouvání seznamu nahoru a dolů",
+        "sortDepartures": "Seřadí odjezdy podle plánovaného času",
+        "scrollBackTimeout": "Čas v sekundách, po kterém se seznam automaticky vrátí na začátek",
+        "layout": "Konfigurace zobrazených buněk a jejich pořadí v řádku odjezdu",
+        "departureIcon": "Pokud není zadána vlastní ikona, použije se ikona dopravy z entity",
+        "animateLine": "Je-li vypnuto, animuje se pouze buňka s časem odjezdu",
+        "arrivalTimeOffset": "Čas v minutách před odjezdem, kdy se spustí animace",
+        "departureAnimationDuration": "Hodnota 0 použije výchozí interní hodnotu"
+      }
+    },
+    "list-header": {
+      "icon": "Ikona",
+      "line": "Linka",
+      "destination": "Cíl",
+      "time-diff": "Odjezd za",
+      "planned-time": "Plánováno",
+      "estimated-time": "Odhadováno",
+      "delay": "Zpoždění"
+    },
+    "errors": {
+      "no-card-orientation-set": "Nastavte prosím možnost \"Orientace karty\""
+    },
+    "popup": {
+      "next-stop-label": "Příští zastávka",
+      "now": "nyní",
+      "in-minutes": "za {min} min",
+      "dest-arrival-label": "Příjezd do cíle",
+      "loading": "Načítání…",
+      "no-data": "Žádná data k dispozici",
+      "vehicle-not-started": "Ještě nezahájeno",
+      "vehicle-arrived": "Již dorazilo",
+      "vehicle-current": "V provozu"
+    }
+  }
+}
