@@ -48,7 +48,7 @@ A card to display departure times provided by [Departures](https://github.com/al
 Trip data is fetched from the [Transitous](https://transitous.org) open transit API (`api.transitous.org`).
 
 <p align="center">
-  <img width="600" src="assets/image_tripinfo.png"/>
+  <img width="100%" src="assets/image_tripinfo.png"/>
 </p>
 
 The popup shows:
