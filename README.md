@@ -12,13 +12,13 @@ A card to display departure times provided by [Departures](https://github.com/al
 
 ## Features
 
-- **Trip Info Popup** — long press on any departure to open an interactive map with live vehicle position, route, stop timeline, and service alerts
-- **9 built-in themes** — Basic, Black-White, Blue Ocean, Cappucino, Dark, Forest, Mint, Nord, Sunset
-- **Real-time updates** — delay, estimated times, and cancellations
-- **Service alerts** — shown inline on the departure list and in detail in the popup
-- **Departure animations** — visual highlight when a vehicle is about to depart
-- **Two layouts** — vertical scrollable list or horizontal table view
-- **Multilanguage support** — English, German, Czech, Polish, Spanish, French, Latvian
+- **Trip Info Popup** - long press on any departure to open an interactive map with live vehicle position, route, stop timeline, and service alerts
+- **9 built-in themes** - Basic, Black-White, Blue Ocean, Cappucino, Dark, Forest, Mint, Nord, Sunset
+- **Real-time updates** - delay, estimated times, and cancellations
+- **Service alerts** - shown inline on the departure list and in detail in the popup
+- **Departure animations** - visual highlight when a vehicle is about to depart
+- **Two layouts** - vertical scrollable list or horizontal table view
+- **Multilanguage support** - English, German, Czech, Polish, Spanish, French, Latvian
 
 ---
 
@@ -42,7 +42,10 @@ A card to display departure times provided by [Departures](https://github.com/al
 
 ---
 
-## Trip Info Popup (Experemental) ![New in](https://img.shields.io/badge/new-v3.6.0-brightgreen)
+## Trip Info Popup ![New in](https://img.shields.io/badge/new-v3.6.0-brightgreen)
+
+> [!WARNING]
+> This feature is experimental and may contain bugs. If you run into any issues or unexpected behaviour, please [open an issue](https://github.com/alex-jung/ha-departures-card/issues) - your feedback is very welcome and helps improve the feature!
 
 **Long press** (hold) on any departure row to open the trip info popup.
 Trip data is fetched from the [Transitous](https://transitous.org) open transit API (`api.transitous.org`).
@@ -55,24 +58,27 @@ The popup shows:
 
 - **Interactive map** with the full route polyline rendered on a street map
 - **Live vehicle position** with a heading arrow, updated every 5 seconds
-- **Stop timeline** — all stops with planned and estimated arrival times and platform numbers
-- **Next stop banner** — name of the next stop and time remaining until arrival
-- **Service alerts** — displayed at the top of the popup if disruptions are active for this trip
+- **Stop timeline** - all stops with planned and estimated arrival times and platform numbers
+- **Next stop banner** - name of the next stop and time remaining until arrival
+- **Service alerts** - displayed at the top of the popup if disruptions are active for this trip
 
 ### Requirements
 
-- The [ha-departures](https://github.com/alex-jung/ha-departures) integration must be installed and configured. It provides the sensor entities with departure data including trip IDs and stop information.
+- The [ha-departures](https://github.com/alex-jung/ha-departures) integration (>= 3.1.0) must be installed and configured. It provides the sensor entities with departure data including trip IDs and stop information.
 
 ---
 
-## Service Alerts (Experemental) ![New in](https://img.shields.io/badge/new-v3.6.0-brightgreen)
+## Service Alerts ![New in](https://img.shields.io/badge/new-v3.6.0-brightgreen)
 
-When the data source provides service alerts for a departure, a warning indicator appears inline below the departure row showing the alert header. Full alert details — including description, severity, cause, and effect — are visible in the [Trip Info Popup](#trip-info-popup).
+> [!WARNING]
+> This feature is experimental and may contain bugs. 
+> If you run into any issues or unexpected behaviour, please [open an issue](https://github.com/alex-jung/ha-departures-card/issues) - your feedback is very welcome and helps improve the feature!
+
+When the data source provides service alerts for a departure, a warning indicator appears inline in the departure row showing the alert header. Full alert details - including description, severity, cause, and effect - are visible in the [Trip Info Popup](#trip-info-popup).
 
 <p align="center">
   <img width="100%" src="assets/image_tripinfo_alert.png"/>
 </p>
-
 ---
 
 ## Card Properties
