@@ -90,7 +90,8 @@
       "no-data": "Nav pieejamu datu",
       "vehicle-not-started": "Vēl nav izbraucis",
       "vehicle-arrived": "Jau ieradies",
-      "vehicle-current": "Ceļā"
+      "vehicle-current": "Ceļā",
+      "platform-text": "Pl."
     }
   }
 }

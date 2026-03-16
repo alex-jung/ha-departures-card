@@ -1,7 +1,7 @@
 import { HassEntity } from "home-assistant-js-websocket";
 import { DepartureTime } from "./departure-time";
 import { EntityNotAvailable, UnsupportedEntityError } from "../exceptions";
-import { Alert, DbInfoEntityAttributes, HaDeparturesEntityAttributes } from "../types";
+import { DbInfoEntityAttributes, HaDeparturesEntityAttributes } from "../types";
 
 export class DataParser {
   public static getParser(entity: HassEntity): Parser {
@@ -51,18 +51,9 @@ class ParserHaDepartures extends Parser {
         const tripId = timeEntry.trip_id ?? undefined;
         const headSign = timeEntry.head_sign ?? undefined;
         const cancelled = timeEntry.cancelled ?? false;
-        const alerts: Alert[] = (timeEntry.alerts ?? []).filter(
-          (a: any) => a?.headerText
-        ).map((a: any): Alert => ({
-          headerText: a.headerText,
-          descriptionText: a.descriptionText ?? "",
-          severityLevel: a.severityLevel,
-          cause: a.cause,
-          effect: a.effect,
-          url: a.url,
-        }));
+        const hasAlerts: boolean = timeEntry.alerts === true;
 
-        times.push(new DepartureTime(timePlanned, timeEstimated, tripId, headSign, cancelled, alerts));
+        times.push(new DepartureTime(timePlanned, timeEstimated, tripId, headSign, cancelled, hasAlerts));
       });
     } else if (this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME]) {
       const planTime1 = this._entity.attributes[HaDeparturesEntityAttributes.PLANNED_DEPARTURE_TIME];

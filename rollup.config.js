@@ -48,6 +48,9 @@ export default (CLIArgs) => {
       replace({
         preventAssignment: true,
         "process.env.NODE_ENV": JSON.stringify(prod ? "production" : "development"),
+        __TRANSITOUS_API_BASE__: JSON.stringify(
+          prod ? "https://api.transitous.org" : "http://localhost:8765"
+        ),
       }),
 
       babel({

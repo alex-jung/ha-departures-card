@@ -90,7 +90,8 @@
       "no-data": "Žádná data k dispozici",
       "vehicle-not-started": "Ještě nezahájeno",
       "vehicle-arrived": "Již dorazilo",
-      "vehicle-current": "V provozu"
+      "vehicle-current": "V provozu",
+      "platform-text": "Pl."
     }
   }
 }

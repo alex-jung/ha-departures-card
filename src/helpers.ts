@@ -45,13 +45,26 @@ export function getContrastTextColor(bgColor: string) {
 export function decodePolyline(encoded: string, precision = 6): [number, number][] {
   const factor = Math.pow(10, precision);
   const coords: [number, number][] = [];
-  let index = 0, lat = 0, lng = 0;
+  let index = 0,
+    lat = 0,
+    lng = 0;
   while (index < encoded.length) {
-    let shift = 0, result = 0, b: number;
-    do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+    let shift = 0,
+      result = 0,
+      b: number;
+    do {
+      b = encoded.charCodeAt(index++) - 63;
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
     lat += result & 1 ? ~(result >> 1) : result >> 1;
-    shift = 0; result = 0;
-    do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+    shift = 0;
+    result = 0;
+    do {
+      b = encoded.charCodeAt(index++) - 63;
+      result |= (b & 0x1f) << shift;
+      shift += 5;
+    } while (b >= 0x20);
     lng += result & 1 ? ~(result >> 1) : result >> 1;
     coords.push([lat / factor, lng / factor]);
   }
@@ -65,40 +78,52 @@ export function euclidean(a: [number, number], b: [number, number]): number {
 }
 
 export function findClosestIdx(point: [number, number], polyline: [number, number][], startIdx = 0): number {
-  let minDist = Infinity, minIdx = startIdx;
+  let minDist = Infinity,
+    minIdx = startIdx;
   for (let i = startIdx; i < polyline.length; i++) {
     const d = euclidean(point, polyline[i]);
-    if (d < minDist) { minDist = d; minIdx = i; }
+    if (d < minDist) {
+      minDist = d;
+      minIdx = i;
+    }
   }
   return minIdx;
 }
 
 export function buildTripStops(leg: any, polyline: [number, number][]): StopInfo[] {
-  const is: any[] = leg.intermediateStops ?? [];
+  const iStops: any[] = leg.intermediateStops ?? [];
   const stops: StopInfo[] = [];
   let searchFrom = 0;
-  const addStop = (stop: any, planned: string, estimated?: string) => {
+
+  const addStop = (stop: any, planned: string, scheduled?: string) => {
     const idx = findClosestIdx([stop.lat, stop.lon], polyline, searchFrom);
     searchFrom = idx;
+
+    console.debug("Add stop", stop);
+
     stops.push({
       name: stop.name ?? "",
       plannedTime: new Date(planned),
-      estimatedTime: estimated ? new Date(estimated) : undefined,
+      scheduledTime: scheduled ? new Date(scheduled) : undefined,
       platform: stop.track ?? stop.scheduledTrack ?? stop.platformCode ?? stop.stopCode ?? undefined,
       polylineIdx: idx,
     });
   };
-  for (const s of is) {
+  for (const s of iStops) {
     if (!s?.lat) continue;
     const planned = s.arrival ?? s.departure;
-    const estimated = s.estimatedArrival ?? s.realtimeArrival ?? undefined;
-    if (planned) addStop(s, planned, estimated);
+    const scheduled = s.scheduledArrival ?? s.scheduledDeparture ?? undefined;
+
+    if (planned) addStop(s, planned, scheduled);
   }
-  if (leg.to?.lat) {
-    const planned = leg.to.arrival;
-    const estimated = leg.to.estimatedArrival ?? leg.to.realtimeArrival ?? undefined;
-    if (planned) addStop(leg.to, planned, estimated);
-  }
+  // if (leg.to?.lat) {
+  //   const planned = leg.to.arrival;
+  //   const estimated = leg.to.estimatedArrival ?? leg.to.realtimeArrival ?? undefined;
+
+  //   // console.log("leg to", leg.to);
+
+  //   if (planned) addStop(leg.to, planned, estimated);
+  // }
   return stops;
 }
 
@@ -127,11 +152,7 @@ export function headingAtIdx(polyline: [number, number][], idx: number): number 
   return 90 - Math.atan2(lat2 - lat1, lon2 - lon1) * (180 / Math.PI);
 }
 
-export function interpolatePosition(
-  timeline: StopTimepoint[],
-  polyline: [number, number][],
-  now: Date,
-): { pos: [number, number] | null; heading: number } {
+export function interpolatePosition(timeline: StopTimepoint[], polyline: [number, number][], now: Date): { pos: [number, number] | null; heading: number } {
   if (timeline.length < 2) return { pos: null, heading: 0 };
   const nowMs = now.getTime();
   if (nowMs <= timeline[0].time.getTime()) {
@@ -142,13 +163,17 @@ export function interpolatePosition(
     const idx = timeline[timeline.length - 1].polylineIdx;
     return { pos: polyline[idx], heading: headingAtIdx(polyline, idx) };
   }
-  let segStart = timeline[0], segEnd = timeline[1];
+  let segStart = timeline[0],
+    segEnd = timeline[1];
   for (let i = 0; i < timeline.length - 1; i++) {
     if (nowMs >= timeline[i].time.getTime() && nowMs <= timeline[i + 1].time.getTime()) {
-      segStart = timeline[i]; segEnd = timeline[i + 1]; break;
+      segStart = timeline[i];
+      segEnd = timeline[i + 1];
+      break;
     }
   }
-  const idxA = segStart.polylineIdx, idxB = segEnd.polylineIdx;
+  const idxA = segStart.polylineIdx,
+    idxB = segEnd.polylineIdx;
   if (idxA === idxB) return { pos: polyline[idxA], heading: headingAtIdx(polyline, idxA) };
   const progress = (nowMs - segStart.time.getTime()) / (segEnd.time.getTime() - segStart.time.getTime());
   let totalLen = 0;
@@ -159,10 +184,7 @@ export function interpolatePosition(
     const segLen = euclidean(polyline[i], polyline[i + 1]);
     if (accumulated + segLen >= target) {
       const t = segLen > 0 ? (target - accumulated) / segLen : 0;
-      const pos: [number, number] = [
-        polyline[i][0] + t * (polyline[i + 1][0] - polyline[i][0]),
-        polyline[i][1] + t * (polyline[i + 1][1] - polyline[i][1]),
-      ];
+      const pos: [number, number] = [polyline[i][0] + t * (polyline[i + 1][0] - polyline[i][0]), polyline[i][1] + t * (polyline[i + 1][1] - polyline[i][1])];
       return { pos, heading: headingAtIdx(polyline, i) };
     }
     accumulated += segLen;

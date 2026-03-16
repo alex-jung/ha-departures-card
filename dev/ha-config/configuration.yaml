@@ -13,60 +13,7 @@ lovelace:
 # Mock-Sensoren mit ha-departures-kompatiblen Attributen
 template:
   - sensor:
-      - name: "Nürnberg Hügelstr.-67-Fürth Hauptbahnhof"
-        unique_id: dev_bus_100_marienplatz
-        state: "departures"
-        attributes:
-          line_name: "67"
-          line_id: de:vgn:700_67:0_3
-          transport: BUS
-          direction: Fürth Hauptbahnhof
-          data_provider: https://transitous.org/
-          stop_id: de-DELFI_de:09564:1976:0:2
-          latitude: 49.424408
-          longitude: 11.009563
-          icon: mdi:bus
-          times: >
-            {{ [
-              {"planned": "2026-03-16T09:18:00+01:00", "estimated": "2026-03-16T09:18:00+01:00", "trip_id": "20260316_08:51_de-DELFI_3118788072", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T09:38:00+01:00", "estimated": "2026-03-16T09:38:00+01:00", "trip_id": "20260316_09:11_de-DELFI_3118788070", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T09:58:00+01:00", "estimated": "2026-03-16T09:58:00+01:00", "trip_id": "20260316_09:31_de-DELFI_3118788067", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T10:18:00+01:00", "estimated": "2026-03-16T10:18:00+01:00", "trip_id": "20260316_09:51_de-DELFI_3118788115", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T10:38:00+01:00", "estimated": "2026-03-16T10:38:00+01:00", "trip_id": "20260316_10:11_de-DELFI_3118788113", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T10:58:00+01:00", "estimated": "2026-03-16T10:58:00+01:00", "trip_id": "20260316_10:31_de-DELFI_3118788126", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T11:18:00+01:00", "estimated": "2026-03-16T11:18:00+01:00", "trip_id": "20260316_10:51_de-DELFI_3118788059", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T11:38:00+01:00", "estimated": "2026-03-16T11:38:00+01:00", "trip_id": "20260316_11:11_de-DELFI_3118788124", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T11:58:00+01:00", "estimated": "2026-03-16T11:58:00+01:00", "trip_id": "20260316_11:31_de-DELFI_3118788056", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
-              {"planned": "2026-03-16T12:18:00+01:00", "estimated": "2026-03-16T12:18:00+01:00", "trip_id": "20260316_11:51_de-DELFI_3118788103", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []}
-            ] }}
-      - name: "Nürnberg Aufseßplatz-5-Tiergarten"
-        unique_id: dev_tram_5_tiergarten
-        state: "departures"
-        attributes:
-          line_name: "5"
-          line_id: de:vgn:900_5:0_0
-          transport: TRAM
-          stop_id: de-DELFI_de:09564:1976:0:2
-          direction: Tiergarten
-          data_provider: https://transitous.org/
-          latitude: 49.44078
-          longitude: 11.081707
-          icon: mdi:tram
-          times: >
-            {{ [
-              {"planned": "2026-03-16T10:04:00+01:00", "estimated": "2026-03-16T10:04:00+01:00", "trip_id": "20260316_09:47_de-DELFI_3105078210", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T10:14:00+01:00", "estimated": "2026-03-16T10:14:00+01:00", "trip_id": "20260316_09:57_de-DELFI_3105078209", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T10:24:00+01:00", "estimated": "2026-03-16T10:24:00+01:00", "trip_id": "20260316_10:07_de-DELFI_3105078134", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T10:34:00+01:00", "estimated": "2026-03-16T10:34:00+01:00", "trip_id": "20260316_10:17_de-DELFI_3105078207", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T10:44:00+01:00", "estimated": "2026-03-16T10:44:00+01:00", "trip_id": "20260316_10:27_de-DELFI_3105078295", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T10:54:00+01:00", "estimated": "2026-03-16T10:54:00+01:00", "trip_id": "20260316_10:37_de-DELFI_3105078364", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T11:04:00+01:00", "estimated": "2026-03-16T11:04:00+01:00", "trip_id": "20260316_10:47_de-DELFI_3105078204", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T11:14:00+01:00", "estimated": "2026-03-16T11:14:00+01:00", "trip_id": "20260316_10:57_de-DELFI_3105078362", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T11:24:00+01:00", "estimated": "2026-03-16T11:24:00+01:00", "trip_id": "20260316_11:07_de-DELFI_3105078291", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
-              {"planned": "2026-03-16T11:34:00+01:00", "estimated": "2026-03-16T11:34:00+01:00", "trip_id": "20260316_11:17_de-DELFI_3105078201", "cancelled": false, "head_sign": "Tiergarten", "alerts": []}
-            ] }}
-
-      - name: "Nürnberg Aufseßplatz-6-Doku-Zentrum"
+      - name: "Tram 6 Doku-Zentrum"
         unique_id: dev_tram_6_doku_zentrum
         state: "departures"
         attributes:
@@ -80,29 +27,26 @@ template:
           icon: mdi:tram
           times: >
             {{ [
-              {"planned": "2026-03-16T15:01:00+01:00", "estimated": "2026-03-16T15:01:00+01:00", "trip_id": "20260316_14:43_de-DELFI_3118795864", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": [{"headerText": "Construction: Track works from Aufseßplatz", "descriptionText": "Due to track construction works, delays are expected across the entire network.", "severityLevel": "WARNING", "cause": "CONSTRUCTION", "effect": "SIGNIFICANT_DELAYS"}]},
-              {"planned": "2026-03-16T15:11:00+01:00", "estimated": "2026-03-16T15:11:00+01:00", "trip_id": "20260316_14:53_de-DELFI_3118795863", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": [{"headerText": "Construction: Track works from Aufseßplatz", "descriptionText": "Due to track construction works, delays are expected across the entire network.", "severityLevel": "WARNING", "cause": "CONSTRUCTION", "effect": "SIGNIFICANT_DELAYS"}]},
-              {"planned": "2026-03-16T15:21:00+01:00", "estimated": "2026-03-16T15:21:00+01:00", "trip_id": "20260316_15:03_de-DELFI_3118795862", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
-              {"planned": "2026-03-16T15:31:00+01:00", "estimated": "2026-03-16T15:31:00+01:00", "trip_id": "20260316_15:13_de-DELFI_3118795795", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
-              {"planned": "2026-03-16T15:41:00+01:00", "estimated": "2026-03-16T15:41:00+01:00", "trip_id": "20260316_15:23_de-DELFI_3118795860", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
-              {"planned": "2026-03-16T15:51:00+01:00", "estimated": "2026-03-16T15:51:00+01:00", "trip_id": "20260316_15:33_de-DELFI_3118795859", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
-              {"planned": "2026-03-16T16:01:00+01:00", "estimated": "2026-03-16T16:01:00+01:00", "trip_id": "20260316_15:43_de-DELFI_3118796012", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
-              {"planned": "2026-03-16T16:11:00+01:00", "estimated": "2026-03-16T16:11:00+01:00", "trip_id": "20260316_15:53_de-DELFI_3118795945", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
-              {"planned": "2026-03-16T16:21:00+01:00", "estimated": "2026-03-16T16:21:00+01:00", "trip_id": "20260316_16:03_de-DELFI_3118796010", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []},
-              {"planned": "2026-03-16T16:31:00+01:00", "estimated": "2026-03-16T16:31:00+01:00", "trip_id": "20260316_16:13_de-DELFI_3118795789", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": []}
+              {"planned": (now() + timedelta(minutes=3)).isoformat(),  "estimated": (now() + timedelta(minutes=5)).isoformat(),  "trip_id": "20260316_14:43_de-DELFI_3118795864", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": true},
+              {"planned": (now() + timedelta(minutes=13)).isoformat(), "estimated": (now() + timedelta(minutes=13)).isoformat(), "trip_id": "20260316_14:53_de-DELFI_3118795863", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": true},
+              {"planned": (now() + timedelta(minutes=23)).isoformat(), "estimated": (now() + timedelta(minutes=23)).isoformat(), "trip_id": "20260316_15:03_de-DELFI_3118795862", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": false},
+              {"planned": (now() + timedelta(minutes=33)).isoformat(), "estimated": (now() + timedelta(minutes=33)).isoformat(), "trip_id": "20260316_15:13_de-DELFI_3118795795", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": false},
+              {"planned": (now() + timedelta(minutes=43)).isoformat(), "estimated": (now() + timedelta(minutes=43)).isoformat(), "trip_id": "20260316_15:23_de-DELFI_3118795860", "cancelled": true,  "head_sign": "Doku-Zentrum", "alerts": false}
             ] }}
 
-      - name: "U-Bahn U6 Garching"
+      - name: "U6 Garching Forschungszentrum"
         unique_id: dev_ubahn_u6_garching
         state: "departures"
         attributes:
           line_name: "U6"
           direction: "Garching Forschungszentrum"
-          transport: "subway"
+          transport: subway
+          data_provider: https://transitous.org/
+          icon: mdi:subway
           times: >
             {{ [
-              {"planned": (now() + timedelta(minutes=5)).isoformat(),  "estimated": (now() + timedelta(minutes=5)).isoformat(),  "cancelled": false, "trip_id": "U6-001", "head_sign": "Garching Forschungszentrum"},
-              {"planned": (now() + timedelta(minutes=12)).isoformat(), "estimated": (now() + timedelta(minutes=17)).isoformat(), "cancelled": false, "trip_id": "U6-002", "head_sign": "Garching Forschungszentrum"},
-              {"planned": (now() + timedelta(minutes=22)).isoformat(), "estimated": (now() + timedelta(minutes=21)).isoformat(), "cancelled": false, "trip_id": "U6-003", "head_sign": "Garching Forschungszentrum"},
-              {"planned": (now() + timedelta(minutes=32)).isoformat(), "estimated": (now() + timedelta(minutes=32)).isoformat(), "cancelled": true,  "trip_id": "U6-004", "head_sign": "Garching Forschungszentrum"}
+              {"planned": (now() + timedelta(minutes=5)).isoformat(),  "estimated": (now() + timedelta(minutes=5)).isoformat(),  "trip_id": "U6-001", "cancelled": false, "head_sign": "Garching Forschungszentrum", "alerts": false},
+              {"planned": (now() + timedelta(minutes=12)).isoformat(), "estimated": (now() + timedelta(minutes=17)).isoformat(), "trip_id": "U6-002", "cancelled": false, "head_sign": "Garching Forschungszentrum", "alerts": false},
+              {"planned": (now() + timedelta(minutes=22)).isoformat(), "estimated": (now() + timedelta(minutes=21)).isoformat(), "trip_id": "U6-003", "cancelled": false, "head_sign": "Garching Forschungszentrum", "alerts": false},
+              {"planned": (now() + timedelta(minutes=32)).isoformat(), "estimated": (now() + timedelta(minutes=32)).isoformat(), "trip_id": "U6-004", "cancelled": true,  "head_sign": "Garching Forschungszentrum", "alerts": false}
             ] }}

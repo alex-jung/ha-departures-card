@@ -90,7 +90,8 @@
       "no-data": "No hay datos disponibles",
       "vehicle-not-started": "Aún no ha salido",
       "vehicle-arrived": "Ya ha llegado",
-      "vehicle-current": "En tránsito"
+      "vehicle-current": "En tránsito",
+      "platform-text": "Pl."
     }
   }
 }
