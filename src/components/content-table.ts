@@ -192,7 +192,7 @@ export class ContentTable extends Content {
         entity-id="${departure.entity}"
         @action=${this._handleAction}
         .actionHandler=${actionHandler({
-          hasHold: hasAction(this.cardConfig.hold_action),
+          hasHold: true,
           hasDoubleClick: hasAction(this.cardConfig.double_tap_action),
         })}
         theme=${this.cardConfig.theme}
@@ -236,7 +236,7 @@ export class ContentTable extends Content {
       htmlDelay = html`${time.timeDiff} min`;
     }
 
-    return html`<div class="table-time ${classMap(classes)}">
+    return html`<div class="table-time ${classMap(classes)}" data-trip-id="${time.tripId}">
       <div class="table-time-diff">${htmlDelay}</div>
       ${arriving || !time.delay ? nothing : html`<div class="table-time-delay">${strDelay}</div>`}
     </div>`;

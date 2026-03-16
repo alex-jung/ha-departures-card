@@ -543,6 +543,22 @@ export class TripMapPopup extends LitElement {
         display: none;
       }
 
+      /* ── Next-stop map tooltip ──────────────────────────────────── */
+      .next-stop-map-label {
+        background: #f57c00;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 1.1em;
+        font-weight: bold;
+        padding: 5px 12px;
+        white-space: nowrap;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      }
+      .next-stop-map-label::before {
+        display: none;
+      }
+
       /* ── Mobile: hide map, stop list full width ─────────────────── */
       @media (max-width: 600px) {
         .dialog {
@@ -572,6 +588,7 @@ export class TripMapPopup extends LitElement {
   @property({ attribute: false }) alerts: Alert[] = [];
 
   @state() private _loading = false;
+  @state() private _error = false;
   @state() private _tripData: any = null;
   @state() private _stops: StopInfo[] = [];
   @state() private _currentStopIdx = -1;
@@ -582,6 +599,8 @@ export class TripMapPopup extends LitElement {
   private _mapRef = createRef<HTMLDivElement>();
   private _stripRef = createRef<HTMLDivElement>();
   private _vehicleMarker: L.Marker | null = null;
+  private _nextStopMarker: L.Marker | null = null;
+  private _polyline: [number, number][] = [];
   private _positionInterval: ReturnType<typeof setInterval> | null = null;
 
   protected updated(changed: PropertyValues) {
@@ -636,10 +655,17 @@ export class TripMapPopup extends LitElement {
             </div>
           ` : nothing}
           <div class="content">
-            ${this._stops.length ? this._renderStopList() : nothing}
-            <div class="map-panel">
-              ${this._loading ? html`<div class="loading">Loading…</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}
-            </div>
+            ${this._error ? html`
+              <div class="loading" style="flex:1;flex-direction:column;gap:8px">
+                <ha-icon icon="mdi:alert-circle-outline" style="--mdc-icon-size:36px;opacity:0.4"></ha-icon>
+                <span>No data available</span>
+              </div>
+            ` : html`
+              ${this._stops.length ? this._renderStopList() : nothing}
+              <div class="map-panel">
+                ${this._loading ? html`<div class="loading">Loading…</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}
+              </div>
+            `}
           </div>
         </div>
       </div>
@@ -806,11 +832,14 @@ export class TripMapPopup extends LitElement {
       const response = await fetch(url);
       if (response.ok) {
         this._tripData = await response.json();
+        this._error = false;
       } else {
         console.error("[TripMapPopup] fetch failed", response.status);
+        this._error = true;
       }
     } catch (e) {
       console.error("[TripMapPopup] fetch error", e);
+      this._error = true;
     }
 
     this._loading = false;
@@ -856,19 +885,17 @@ export class TripMapPopup extends LitElement {
       }
 
       if (leg.from?.lat && leg.from?.lon) {
-        L.circleMarker([leg.from.lat, leg.from.lon], { radius: 9, color: "#fff", weight: 2, fillColor: "#2e7d32", fillOpacity: 1 })
-          .bindPopup(`<b>${leg.from.name}</b>`)
-          .addTo(this._map!);
+        const fromIsBoardingStop = this._isBoardingStop(leg.from);
+        const fromOpts = { radius: 9, color: "#fff", weight: 2, fillColor: "#2e7d32", fillOpacity: 1 };
+        const fromMarker = L.circleMarker([leg.from.lat, leg.from.lon], fromOpts).bindPopup(`<b>${leg.from.name}</b>`);
+        fromMarker.addTo(this._map!);
         bounds.push([leg.from.lat, leg.from.lon]);
       }
 
       (leg.intermediateStops ?? []).forEach((stop: any) => {
         const isBoardingStop = this._isBoardingStop(stop);
-        const markerOpts = isBoardingStop
-          ? { radius: 10, color: "#fff", weight: 2.5, fillColor: "#7b1fa2", fillOpacity: 1 }
-          : { radius: 5, color: "#fff", weight: 1.5, fillColor: "#1565c0", fillOpacity: 1 };
+        const markerOpts = { radius: 5, color: "#fff", weight: 1.5, fillColor: "#1565c0", fillOpacity: 1 };
         const marker = L.circleMarker([stop.lat, stop.lon], markerOpts).bindPopup(`<b>${stop.name}</b>`);
-        if (isBoardingStop) marker.bindTooltip(stop.name, { permanent: true, direction: "right", offset: [10, 0], className: "boarding-stop-label" });
         marker.addTo(this._map!);
         bounds.push([stop.lat, stop.lon]);
       });
@@ -894,8 +921,11 @@ export class TripMapPopup extends LitElement {
       return;
     }
 
+    this._polyline = polyline;
+
     const startMs = timeline[0].time.getTime();
     const endMs = timeline[timeline.length - 1].time.getTime();
+    let lastNextIdx = -2;
 
     const update = () => {
       const now = new Date();
@@ -908,6 +938,21 @@ export class TripMapPopup extends LitElement {
         else break;
       }
       if (newStopIdx !== this._currentStopIdx) this._currentStopIdx = newStopIdx;
+
+      // Update next-stop map tooltip
+      const nextIdx = this._currentStopIdx + 1;
+      if (nextIdx !== lastNextIdx) {
+        lastNextIdx = nextIdx;
+        if (this._nextStopMarker) { this._nextStopMarker.remove(); this._nextStopMarker = null; }
+        const nextStop = this._stops[nextIdx];
+        if (nextStop && this._map) {
+          const pos = polyline[nextStop.polylineIdx];
+          const emptyIcon = L.divIcon({ html: "", className: "", iconSize: [0, 0] });
+          this._nextStopMarker = L.marker(pos, { icon: emptyIcon, interactive: false })
+            .bindTooltip(nextStop.name, { permanent: true, direction: "right", offset: [10, 0], className: "next-stop-map-label" })
+            .addTo(this._map);
+        }
+      }
 
       // Update vehicle marker
       const { pos, heading } = interpolatePosition(timeline, polyline, now);
@@ -951,7 +996,7 @@ export class TripMapPopup extends LitElement {
     }
     if (this.fromLat != null && this.fromLon != null && stop.lat != null && stop.lon != null) {
       const dist = Math.sqrt(Math.pow(stop.lat - this.fromLat, 2) + Math.pow(stop.lon - this.fromLon, 2));
-      return dist < 0.001; // ~100m
+      return dist < 0.003; // ~300m, covers different platforms of the same station
     }
     return false;
   }
@@ -962,6 +1007,8 @@ export class TripMapPopup extends LitElement {
       this._positionInterval = null;
     }
     this._vehicleMarker = null;
+    this._nextStopMarker = null;
+    this._polyline = [];
     if (this._map) {
       this._map.remove();
       this._map = null;
@@ -971,6 +1018,7 @@ export class TripMapPopup extends LitElement {
   private _cleanup() {
     this._tripData = null;
     this._loading = false;
+    this._error = false;
     this._stops = [];
     this._currentStopIdx = -1;
     this._stopTimesData = [];

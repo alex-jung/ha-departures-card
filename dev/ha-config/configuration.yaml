@@ -27,31 +27,41 @@ template:
           icon: mdi:bus
           times: >
             {{ [
-              {"planned": "2026-03-15T21:52:00+01:00", "estimated": "2026-03-15T21:52:00+01:00", "trip_id": "20260315_21:22_de-DELFI_3118788553",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": [{"headerText": "Umleitung wegen Baustelle", "descriptionText": "Die Linie 67 fährt ab Hügelstraße über Ziegelstein umgeleitet. Haltestelle Thon entfällt.", "severityLevel": "WARNING", "cause": "CONSTRUCTION", "effect": "DETOUR"}]},
-              {"planned": "2026-03-15T22:32:00+01:00", "estimated": "2026-03-15T22:32:00+01:00", "trip_id": "20260315_22:02_de-DELFI_3118788630",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": [{"headerText": "Umleitung wegen Baustelle", "descriptionText": "Die Linie 67 fährt ab Hügelstraße über Ziegelstein umgeleitet. Haltestelle Thon entfällt.", "severityLevel": "WARNING", "cause": "CONSTRUCTION", "effect": "DETOUR"}, {"headerText": "Streik", "descriptionText": "Aufgrund eines ganztägigen Warnstreiks kann es zu Ausfällen kommen.", "severityLevel": "SEVERE", "cause": "STRIKE", "effect": "REDUCED_SERVICE"}]},
-              {"planned": "2026-03-15T23:12:00+01:00", "estimated": "2026-03-15T23:12:00+01:00", "trip_id": "20260315_22:42_de-DELFI_3118788629",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
-              {"planned": "2026-03-15T23:52:00+01:00", "estimated": "2026-03-15T23:52:00+01:00", "trip_id": "20260315_23:22_de-DELFI_3118788603",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
-              {"planned": "2026-03-16T00:32:00+01:00", "estimated": "2026-03-16T00:32:00+01:00", "trip_id": "20260315_24:02_de-DELFI_3105071767",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
-              {"planned": "2026-03-16T05:00:00+01:00", "estimated": "2026-03-16T05:00:00+01:00", "trip_id": "20260316_04:55_de-DELFI_3118788326",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
-              {"planned": "2026-03-16T05:20:00+01:00", "estimated": "2026-03-16T05:20:00+01:00", "trip_id": "20260316_05:15_de-DELFI_3105071509",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
-              {"planned": "2026-03-16T05:51:00+01:00", "estimated": "2026-03-16T05:51:00+01:00", "trip_id": "20260316_05:18_de-DELFI_3118788410",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
-              {"planned": "2026-03-16T06:01:00+01:00", "estimated": "2026-03-16T06:01:00+01:00", "trip_id": "20260316_05:28_de-DELFI_3118788371",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []},
-              {"planned": "2026-03-16T06:11:00+01:00", "estimated": "2026-03-16T06:11:00+01:00", "trip_id": "20260316_05:38_de-DELFI_3118788370",  "cancelled": false, "head_sign": "Fürth Hauptbahnhof", "alerts": []}
+              {"planned": "2026-03-16T09:18:00+01:00", "estimated": "2026-03-16T09:18:00+01:00", "trip_id": "20260316_08:51_de-DELFI_3118788072", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T09:38:00+01:00", "estimated": "2026-03-16T09:38:00+01:00", "trip_id": "20260316_09:11_de-DELFI_3118788070", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T09:58:00+01:00", "estimated": "2026-03-16T09:58:00+01:00", "trip_id": "20260316_09:31_de-DELFI_3118788067", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T10:18:00+01:00", "estimated": "2026-03-16T10:18:00+01:00", "trip_id": "20260316_09:51_de-DELFI_3118788115", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T10:38:00+01:00", "estimated": "2026-03-16T10:38:00+01:00", "trip_id": "20260316_10:11_de-DELFI_3118788113", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T10:58:00+01:00", "estimated": "2026-03-16T10:58:00+01:00", "trip_id": "20260316_10:31_de-DELFI_3118788126", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T11:18:00+01:00", "estimated": "2026-03-16T11:18:00+01:00", "trip_id": "20260316_10:51_de-DELFI_3118788059", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T11:38:00+01:00", "estimated": "2026-03-16T11:38:00+01:00", "trip_id": "20260316_11:11_de-DELFI_3118788124", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T11:58:00+01:00", "estimated": "2026-03-16T11:58:00+01:00", "trip_id": "20260316_11:31_de-DELFI_3118788056", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []},
+              {"planned": "2026-03-16T12:18:00+01:00", "estimated": "2026-03-16T12:18:00+01:00", "trip_id": "20260316_11:51_de-DELFI_3118788103", "cancelled": false, "head_sign": "Frankenstraße ü. Röthenbach", "alerts": []}
             ] }}
-      - name: "Tram 18 Ostbahnhof"
-        unique_id: dev_tram_18_ostbahnhof
+      - name: "Nürnberg Aufseßplatz-5-Tiergarten"
+        unique_id: dev_tram_5_tiergarten
         state: "departures"
         attributes:
-          line_name: "18"
-          direction: "Ostbahnhof"
-          transport: "tram"
+          line_name: "5"
+          line_id: de:vgn:900_5:0_0
+          transport: TRAM
+          direction: Tiergarten
+          data_provider: https://transitous.org/
+          latitude: 49.44078
+          longitude: 11.081707
+          icon: mdi:tram
           times: >
             {{ [
-              {"planned": (now() + timedelta(minutes=1)).isoformat(),  "estimated": (now() + timedelta(minutes=1)).isoformat(),  "cancelled": false, "trip_id": "TRAM-18-001", "head_sign": "Ostbahnhof"},
-              {"planned": (now() + timedelta(minutes=10)).isoformat(), "estimated": (now() + timedelta(minutes=14)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-002", "head_sign": "Ostbahnhof"},
-              {"planned": (now() + timedelta(minutes=20)).isoformat(), "estimated": (now() + timedelta(minutes=18)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-003", "head_sign": "Ostbahnhof"},
-              {"planned": (now() + timedelta(minutes=30)).isoformat(), "estimated": (now() + timedelta(minutes=35)).isoformat(), "cancelled": false, "trip_id": "TRAM-18-004", "head_sign": "Ostbahnhof", "alerts": [{"headerText": "Verspätung wegen Stau", "descriptionText": "Die Tram 18 hat aufgrund eines Verkehrsunfalls Verspätung.", "severityLevel": "WARNING", "cause": "ACCIDENT", "effect": "SIGNIFICANT_DELAYS"}]},
-              {"planned": (now() + timedelta(minutes=40)).isoformat(), "estimated": (now() + timedelta(minutes=40)).isoformat(), "cancelled": true,  "trip_id": "TRAM-18-005", "head_sign": "Ostbahnhof"}
+              {"planned": "2026-03-16T10:04:00+01:00", "estimated": "2026-03-16T10:04:00+01:00", "trip_id": "20260316_09:47_de-DELFI_3105078210", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T10:14:00+01:00", "estimated": "2026-03-16T10:14:00+01:00", "trip_id": "20260316_09:57_de-DELFI_3105078209", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T10:24:00+01:00", "estimated": "2026-03-16T10:24:00+01:00", "trip_id": "20260316_10:07_de-DELFI_3105078134", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T10:34:00+01:00", "estimated": "2026-03-16T10:34:00+01:00", "trip_id": "20260316_10:17_de-DELFI_3105078207", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T10:44:00+01:00", "estimated": "2026-03-16T10:44:00+01:00", "trip_id": "20260316_10:27_de-DELFI_3105078295", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T10:54:00+01:00", "estimated": "2026-03-16T10:54:00+01:00", "trip_id": "20260316_10:37_de-DELFI_3105078364", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T11:04:00+01:00", "estimated": "2026-03-16T11:04:00+01:00", "trip_id": "20260316_10:47_de-DELFI_3105078204", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T11:14:00+01:00", "estimated": "2026-03-16T11:14:00+01:00", "trip_id": "20260316_10:57_de-DELFI_3105078362", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T11:24:00+01:00", "estimated": "2026-03-16T11:24:00+01:00", "trip_id": "20260316_11:07_de-DELFI_3105078291", "cancelled": false, "head_sign": "Tiergarten", "alerts": []},
+              {"planned": "2026-03-16T11:34:00+01:00", "estimated": "2026-03-16T11:34:00+01:00", "trip_id": "20260316_11:17_de-DELFI_3105078201", "cancelled": false, "head_sign": "Tiergarten", "alerts": []}
             ] }}
 
       - name: "U-Bahn U6 Garching"
