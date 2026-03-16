@@ -110,7 +110,7 @@ function buildTripResponse(tripId) {
     name: `Stop ${i + 1}`,
     lat: coord[0],
     lon: coord[1],
-    arrival: isoTime(addMinutes(base, i * 2 + (i > 2 ? 1 : 0))),
+    arrival: isoTime(addMinutes(base, i * 2 + (i > 2 ? 2 : 1))),
     scheduledArrival: isoTime(addMinutes(base, i * 2 + (i > 8 ? 5 : 0))), // last stop with delay!
     track: "2",
   }));

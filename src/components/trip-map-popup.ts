@@ -219,14 +219,15 @@ export class TripMapPopup extends LitElement {
         align-items: center;
       }
       .stop-line {
-        width: 2px;
+        width: 1px;
         flex: 1;
       }
       .stop-line.passed {
         background: #1976d2;
+        width: 2px;
       }
       .stop-line.upcoming {
-        background: #bdbdbd;
+        border-left: 2px dotted #bdbdbd;
       }
       .stop-line.hidden {
         background: transparent;

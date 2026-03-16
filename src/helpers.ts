@@ -108,6 +108,15 @@ export function buildTripStops(leg: any, polyline: [number, number][]): StopInfo
       polylineIdx: idx,
     });
   };
+
+  // add first stop
+  if (leg.from) {
+    const planned = leg.from.departure;
+    const scheduled = leg.from.scheduledDeparture ?? undefined;
+
+    if (planned) addStop(leg.from, planned, scheduled);
+  }
+
   for (const s of iStops) {
     if (!s?.lat) continue;
     const planned = s.arrival ?? s.departure;
