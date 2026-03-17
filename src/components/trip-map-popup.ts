@@ -3,12 +3,12 @@ import { customElement, property, state } from "lit/decorators.js";
 import { Alert, StopInfo, StopTimepoint } from "../types";
 import { ref, createRef } from "lit/directives/ref.js";
 import L from "leaflet";
-import { buildTimeline, buildTripStops, createVehicleIcon, decodePolyline, formatTime, interpolatePosition } from "../helpers";
-import { intervalToDuration } from "date-fns";
+import { buildTimeline, buildTripStops, createVehicleIcon, decodePolyline, formatTime, haLocaleToDateFns, interpolatePosition } from "../helpers";
 import { CARD_REPO_URL, CARD_VERSION } from "../constants";
 import { localize } from "../locales/localize";
 
 import leafletCssText from "leaflet/dist/leaflet.css";
+import { formatDistanceToNow } from "date-fns";
 
 const TRIP_API_BASE = __TRANSITOUS_API_BASE__ + "/api/v5/trip?tripId=";
 const API_HEADERS = {
@@ -16,17 +16,6 @@ const API_HEADERS = {
   Accept: "application/json",
 };
 const POSITION_UPDATE_INTERVAL_MS = 5000;
-
-function formatDurationFromNow(targetMs: number, lang: string): string {
-  const diffMs = targetMs - Date.now();
-  if (diffMs <= 0) return localize("card.popup.now", lang);
-  const dur = intervalToDuration({ start: 0, end: diffMs });
-  const h = dur.hours ?? 0;
-  const m = dur.minutes ?? 0;
-  if (h > 0) return `${h} h ${m} min`;
-  if (m === 0) return localize("card.popup.now", lang);
-  return `${m} min`;
-}
 
 // ---------------------------------------------------------------------------
 // Component
@@ -239,7 +228,8 @@ export class TripMapPopup extends LitElement {
         width: 2px;
       }
       .stop-line.upcoming {
-        border-left: 2px dotted #bdbdbd;
+        width: 2px;
+        background-image: repeating-linear-gradient(to bottom, #bdbdbd 0, #bdbdbd 3px, transparent 3px, transparent 7px);
       }
       .stop-line.hidden {
         background: transparent;
@@ -422,6 +412,8 @@ export class TripMapPopup extends LitElement {
   @state() private _alerts: Alert[] = [];
   @state() private _stops: StopInfo[] = [];
   @state() private _currentStopIdx = -1;
+  @state() private _nextLabel = "";
+  @state() private _destLabel = "";
 
   private _map: L.Map | null = null;
   private _mapRef = createRef<HTMLDivElement>();
@@ -508,24 +500,23 @@ export class TripMapPopup extends LitElement {
     const next = this._stops[cur + 1];
     if (!next) return nothing;
 
-    const now = Date.now();
-    const nextLabel = next.plannedTime.getTime() <= now
-      ? localize("card.popup.now", this.language)
-      : formatDurationFromNow(next.plannedTime.getTime(), this.language);
+    const nextTime = next.scheduledTime ?? next.plannedTime;
+    this._nextLabel = formatDistanceToNow(nextTime, { includeSeconds: false, addSuffix: true, locale: haLocaleToDateFns(this.language) });
 
     const dest = this._stops[this._stops.length - 1];
-    const destLabel = dest ? formatDurationFromNow(dest.plannedTime.getTime(), this.language) : null;
+    const destTime = dest ? dest.scheduledTime ?? dest.plannedTime : null;
+    this._destLabel = destTime ? formatDistanceToNow(destTime, { includeSeconds: false, addSuffix: true, locale: haLocaleToDateFns(this.language) }) : "";
 
     return html`
       <div class="next-stop-banner">
         <div class="next-stop-label">${localize("card.popup.next-stop-label", this.language)}</div>
         <div class="next-stop-name">${next.name}</div>
-        <div class="next-stop-time">${nextLabel}</div>
-        ${destLabel
+        <div class="next-stop-time">${this._nextLabel}</div>
+        ${destTime
           ? html`
               <div class="next-stop-dest-row">
                 <span class="next-stop-dest-label">${localize("card.popup.dest-arrival-label", this.language)}</span>
-                <span class="next-stop-dest-time">${destLabel}</span>
+                <span class="next-stop-dest-time">${this._destLabel}</span>
               </div>
             `
           : nothing}
@@ -733,7 +724,7 @@ export class TripMapPopup extends LitElement {
       // Update stop strip current index
       let newStopIdx = -1;
       for (let i = 0; i < this._stops.length; i++) {
-        if (nowMs >= this._stops[i].plannedTime.getTime()) newStopIdx = i;
+        if (nowMs >= (this._stops[i].scheduledTime ?? this._stops[i].plannedTime).getTime()) newStopIdx = i;
         else break;
       }
       if (newStopIdx !== this._currentStopIdx) this._currentStopIdx = newStopIdx;
@@ -759,6 +750,9 @@ export class TripMapPopup extends LitElement {
       // Update vehicle marker
       const isActive = nowMs >= startMs && nowMs <= endMs;
 
+      // update next stop banner
+      this._renderNextStopBanner();
+
       if (!isActive) {
         if (this._vehicleMarker) {
           this._vehicleMarker.remove();
@@ -773,9 +767,7 @@ export class TripMapPopup extends LitElement {
       const icon = createVehicleIcon("#f57c00", heading);
 
       if (!this._vehicleMarker) {
-        this._vehicleMarker = L.marker(pos, { icon })
-          .bindTooltip(localize("card.popup.vehicle-current", this.language))
-          .addTo(this._map);
+        this._vehicleMarker = L.marker(pos, { icon }).bindTooltip(localize("card.popup.vehicle-current", this.language)).addTo(this._map);
       } else {
         this._vehicleMarker.setLatLng(pos);
         this._vehicleMarker.setIcon(icon);

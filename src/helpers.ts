@@ -1,5 +1,18 @@
 import L from "leaflet";
 import { StopInfo, StopTimepoint } from "./types";
+import type { Locale } from "date-fns";
+import { enUS, de, fr, es, it, nl, pl, pt, ptBR, ru, zhCN, zhTW, ja, ko, sv, nb, da, fi, hu, cs, sk, ro, bg, hr, sl, tr, ar, he, uk, ca, et, lv, lt, el } from "date-fns/locale";
+
+const HA_LOCALE_MAP: Record<string, Locale> = {
+  en: enUS, de, fr, es, it, nl, pl, pt,
+  "pt-BR": ptBR, ru,
+  "zh-Hans": zhCN, "zh-Hant": zhTW,
+  ja, ko, sv, nb, da, fi, hu, cs, sk, ro, bg, hr, sl, tr, ar, he, uk, ca, et, lv, lt, el,
+};
+
+export function haLocaleToDateFns(lang: string): Locale {
+  return HA_LOCALE_MAP[lang] ?? HA_LOCALE_MAP[lang.split("-")[0]] ?? enUS;
+}
 
 /**
  * Prepares a date by normalizing it to the nearest minute (seconds and milliseconds set to zero).
@@ -111,25 +124,24 @@ export function buildTripStops(leg: any, polyline: [number, number][]): StopInfo
 
   // add first stop
   if (leg.from) {
-    const planned = leg.from.departure;
-    const scheduled = leg.from.scheduledDeparture ?? undefined;
+    console.warn("leg.from", leg.from.departure, leg.from.scheduledDeparture);
 
+    const planned = leg.from.departure ?? undefined;
+    const scheduled = leg.from.scheduledDeparture ?? leg.from.departure ?? undefined;
     if (planned) addStop(leg.from, planned, scheduled);
   }
 
   for (const s of iStops) {
     if (!s?.lat) continue;
-    const planned = s.arrival ?? s.departure;
-    const scheduled = s.scheduledArrival ?? s.scheduledDeparture ?? undefined;
-
+    const planned = s.arrival ?? s.departure ?? undefined;
+    const scheduled = s.scheduledArrival ?? s.arrival ?? s.scheduledDeparture ?? s.departure ?? undefined;
     if (planned) addStop(s, planned, scheduled);
   }
 
   // add last stop
   if (leg.to) {
-    const planned = leg.to.arrival;
-    const scheduled = leg.to.scheduledArrival ?? undefined;
-
+    const planned = leg.to.arrival ?? undefined;
+    const scheduled = leg.to.scheduledArrival ?? leg.to.arrival ?? undefined;
     if (planned) addStop(leg.to, planned, scheduled);
   }
   return stops;
@@ -140,22 +152,21 @@ export function buildTimeline(leg: any, polyline: [number, number][]): StopTimep
   const timeline: StopTimepoint[] = [];
   let searchFrom = 0;
 
-  if (leg.from?.lat && (leg.from.departure ?? leg.from.scheduledDeparture)) {
+  if (leg.from) {
     const idx = findClosestIdx([leg.from.lat, leg.from.lon], polyline, searchFrom);
     searchFrom = idx;
-    timeline.push({ time: new Date(leg.from.departure ?? leg.from.scheduledDeparture), polylineIdx: idx });
+    timeline.push({ time: new Date(leg.from.scheduledDeparture ?? leg.from.departure), polylineIdx: idx });
   }
 
   for (const s of is) {
     if (!s?.lat) continue;
     const idx = findClosestIdx([s.lat, s.lon], polyline, searchFrom);
     searchFrom = idx;
-    if (s.arrival) timeline.push({ time: new Date(s.arrival), polylineIdx: idx });
-    if (s.departure) timeline.push({ time: new Date(s.departure), polylineIdx: idx });
+    timeline.push({ time: new Date(s.scheduledArrival ?? s.scheduledDeparture ?? s.arrival ?? s.departure), polylineIdx: idx });
   }
-  if (leg.to?.lat && leg.to?.arrival) {
+  if (leg.to) {
     const idx = findClosestIdx([leg.to.lat, leg.to.lon], polyline, searchFrom);
-    timeline.push({ time: new Date(leg.to.arrival), polylineIdx: idx });
+    timeline.push({ time: new Date(leg.to.scheduledArrival ?? leg.to.arrival), polylineIdx: idx });
   }
   return timeline;
 }
