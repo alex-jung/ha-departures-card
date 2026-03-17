@@ -659,7 +659,6 @@ function t(t,e,n,i){var a,o=arguments.length,r=o<3?e:null===i?i=Object.getOwnPro
       }
       .stop-time-planned {
         font-size: 0.75em;
-        color: var(--secondary-text-color);
         white-space: nowrap;
       }
       .stop-time-scheduled {

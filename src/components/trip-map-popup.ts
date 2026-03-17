@@ -298,7 +298,6 @@ export class TripMapPopup extends LitElement {
       }
       .stop-time-planned {
         font-size: 0.75em;
-        color: var(--secondary-text-color);
         white-space: nowrap;
       }
       .stop-time-scheduled {
