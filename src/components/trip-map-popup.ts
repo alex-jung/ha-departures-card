@@ -212,7 +212,7 @@ export class TripMapPopup extends LitElement {
         display: grid;
         grid-template-columns: 48px 24px 1fr;
         align-items: stretch;
-        min-height: 52px;
+        min-height: 70px;
       }
       .stop-timeline {
         display: flex;
@@ -290,18 +290,17 @@ export class TripMapPopup extends LitElement {
         font-size: 0.7em;
         font-weight: bold;
         background: var(--secondary-background-color, #e0e0e0);
-        color: var(--secondary-text-color);
         border-radius: 3px;
         padding: 2px 6px;
         white-space: nowrap;
         flex-shrink: 0;
       }
       .stop-time-planned {
-        font-size: 0.75em;
+        font-size: 0.8em;
         white-space: nowrap;
       }
       .stop-time-scheduled {
-        font-size: 0.75em;
+        font-size: 0.8em;
         font-weight: 600;
         white-space: nowrap;
       }
@@ -309,7 +308,7 @@ export class TripMapPopup extends LitElement {
         color: #c62828;
       }
       .stop-time-scheduled.ontime {
-        color: #2e7d32;
+        color: #49974b;
       }
       .stop-item.next .stop-name {
         color: #f57c00;
