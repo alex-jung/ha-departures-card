@@ -64,7 +64,7 @@ The popup shows:
 
 ### Requirements
 
-- The [ha-departures](https://github.com/alex-jung/ha-departures) integration (>= 3.1.0) must be installed and configured. It provides the sensor entities with departure data including trip IDs and stop information.
+- The [ha-departures](https://github.com/alex-jung/ha-departures) integration (>= 3.1.1) must be installed and configured. It provides the sensor entities with departure data including trip IDs and stop information.
 
 ---
 
@@ -79,6 +79,7 @@ When the data source provides service alerts for a departure, a warning indicato
 <p align="center">
   <img width="100%" src="assets/image_tripinfo_alert.png"/>
 </p>
+
 ---
 
 ## Card Properties
