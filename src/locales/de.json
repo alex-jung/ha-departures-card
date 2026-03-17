@@ -90,7 +90,8 @@
       "no-data": "Keine Daten verfügbar",
       "vehicle-not-started": "Noch nicht gestartet",
       "vehicle-arrived": "Bereits angekommen",
-      "vehicle-current": "Aktuell"
+      "vehicle-current": "Aktuell",
+      "platform-text": "Gl."
     }
   }
 }

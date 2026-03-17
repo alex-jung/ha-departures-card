@@ -1,6 +1,5 @@
 import { differenceInMinutes } from "date-fns/differenceInMinutes";
 import { prepareDate } from "../helpers";
-import { Alert } from "../types";
 
 export class DepartureTime {
   private _planned: Date;
@@ -9,9 +8,9 @@ export class DepartureTime {
   private _tripId: string | undefined;
   private _headSign: string | undefined;
   private _cancelled: boolean;
-  private _alerts: Alert[];
+  private _hasAlerts: boolean;
 
-  constructor(planned: Date, estimated: Date | null | undefined, tripId?: string, headSign?: string, cancelled: boolean = false, alerts: Alert[] = []) {
+  constructor(planned: Date, estimated: Date | null | undefined, tripId?: string, headSign?: string, cancelled: boolean = false, hasAlerts: boolean = false) {
     try {
       this._planned = prepareDate(planned);
     } catch (error) {
@@ -34,7 +33,7 @@ export class DepartureTime {
     this._tripId = tripId;
     this._headSign = headSign;
     this._cancelled = cancelled;
-    this._alerts = alerts;
+    this._hasAlerts = hasAlerts;
   }
 
   public get planned(): Date {
@@ -57,8 +56,8 @@ export class DepartureTime {
     return this._cancelled;
   }
 
-  public get alerts(): Alert[] {
-    return this._alerts;
+  public get hasAlerts(): boolean {
+    return this._hasAlerts;
   }
 
   /**

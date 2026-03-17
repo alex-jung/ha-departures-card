@@ -2,7 +2,7 @@ import { html, LitElement, nothing, TemplateResult, CSSResultGroup, PropertyValu
 import { property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { Alert, CardTheme, Config, DeparturesDataRow, LayoutCell } from "../types";
+import { CardTheme, Config, DeparturesDataRow, LayoutCell } from "../types";
 import { lightFormat } from "date-fns";
 import { contentCore } from "../styles";
 import { DEFAULT_ENTITY_ICON } from "../constants";
@@ -45,8 +45,6 @@ export abstract class Content extends LitElement {
   @state() private _dialogOpen = false;
   @state() private _selectedTripId?: string;
   @state() private _dialogTitle = "";
-  @state() private _fromStopId?: string;
-  @state() private _popupAlerts: Alert[] = [];
 
   private _pointerDownTarget: HTMLElement | null = null;
 
@@ -85,11 +83,10 @@ export abstract class Content extends LitElement {
         .tripId=${this._selectedTripId}
         .title=${this._dialogTitle}
         .open=${this._dialogOpen}
-        .fromStopId=${this._fromStopId}
         .language=${this.language}
-        .alerts=${this._popupAlerts}
-        @popup-closed=${() => { this._dialogOpen = false; }}
-      ></trip-map-popup>
+        @popup-closed=${() => {
+          this._dialogOpen = false;
+        }}></trip-map-popup>
     `;
   }
 
@@ -252,7 +249,6 @@ export abstract class Content extends LitElement {
       }
     });
 
-    const alerts = departure.time.alerts;
     return html`
       <div
         class="departure-line  ${classMap(classes)}"
@@ -267,12 +263,6 @@ export abstract class Content extends LitElement {
         style="${styleMap(styles)}">
         ${content}
       </div>
-      ${alerts.length > 0 ? html`
-        <div class="departure-alerts">
-          <ha-icon icon="mdi:alert-circle-outline" class="departure-alert-icon"></ha-icon>
-          <span>${alerts[0].headerText}</span>${alerts.length > 1 ? html`<span class="departure-alert-more">+${alerts.length - 1}</span>` : nothing}
-        </div>
-      ` : nothing}
     `;
   }
 
@@ -288,12 +278,13 @@ export abstract class Content extends LitElement {
       let el: HTMLElement | null = this._pointerDownTarget;
       while (el) {
         const t = el.getAttribute?.("data-trip-id");
-        if (t) { tripId = t; break; }
+        if (t) {
+          tripId = t;
+          break;
+        }
         el = el.parentElement;
       }
-      const departure = tripId
-        ? this.departures.find(d => d.entity === entityId && d.time.tripId === tripId)
-        : this.departures.find(d => d.entity === entityId);
+      const departure = tripId ? this.departures.find((d) => d.entity === entityId && d.time.tripId === tripId) : this.departures.find((d) => d.entity === entityId);
       if (departure) {
         this._openPopupForDeparture(departure);
         return;
@@ -305,8 +296,6 @@ export abstract class Content extends LitElement {
 
   private _openPopupForDeparture(departure: DeparturesDataRow) {
     const attrs = this.hass?.states[departure.entity]?.attributes ?? {};
-    this._fromStopId = attrs.stop_id ?? undefined;
-    this._popupAlerts = departure.time.alerts;
     this._selectedTripId = departure.time.tripId;
     this._dialogTitle = `${departure.lineName} → ${departure.destinationName}`;
     this._dialogOpen = true;
@@ -367,7 +356,18 @@ export abstract class Content extends LitElement {
       styles = { textDecoration: "line-through" };
     }
 
-    return html`<div class="cell-destination" theme=${this.theme} style=${styleMap(styles)}>${departure.destinationName}</div>`;
+    const hasAlerts = departure.time.hasAlerts;
+
+    return html` <div class="cell-destination" theme=${this.theme}>
+      <span class="cell-destination-label" style=${styleMap(styles)}>${departure.destinationName}</span>
+      ${hasAlerts
+        ? html`
+            <span class="cell-alert-badge">
+              <ha-icon icon="mdi:alert-outline"></ha-icon>
+            </span>
+          `
+        : nothing}
+    </div>`;
   }
 
   /**

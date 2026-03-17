@@ -1,19 +1,19 @@
 import { LitElement, css, html, nothing, unsafeCSS, PropertyValues, CSSResultGroup } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { Alert, StopInfo, StopTimeEntry, StopTimepoint } from "../types";
+import { Alert, StopInfo, StopTimepoint } from "../types";
 import { ref, createRef } from "lit/directives/ref.js";
 import L from "leaflet";
-import { buildTimeline, buildTripStops, createVehicleIcon, decodePolyline, formatTime, interpolatePosition } from "../helpers";
+import { buildTimeline, buildTripStops, createVehicleIcon, decodePolyline, formatTime, haLocaleToDateFns, interpolatePosition } from "../helpers";
 import { CARD_REPO_URL, CARD_VERSION } from "../constants";
 import { localize } from "../locales/localize";
 
 import leafletCssText from "leaflet/dist/leaflet.css";
+import { formatDistanceToNow } from "date-fns";
 
-const TRIP_API_BASE = "https://api.transitous.org/api/v5/trip?tripId=";
-const STOPTIMES_API_BASE = "https://api.transitous.org/api/v5/stoptimes";
+const TRIP_API_BASE = __TRANSITOUS_API_BASE__ + "/api/v5/trip?tripId=";
 const API_HEADERS = {
   "User-Agent": `ha-departures-card/${CARD_VERSION} (${CARD_REPO_URL})`,
-  "Accept": "application/json",
+  Accept: "application/json",
 };
 const POSITION_UPDATE_INTERVAL_MS = 5000;
 
@@ -96,8 +96,10 @@ export class TripMapPopup extends LitElement {
           transform: rotate(360deg);
         }
       }
-      .refresh-btn.spinning {
+      .refresh-btn .spin-icon {
         display: inline-block;
+      }
+      .refresh-btn.spinning .spin-icon {
         animation: spin 0.8s linear infinite;
       }
       /* ── Alert banner ───────────────────────────────────────────── */
@@ -198,40 +200,36 @@ export class TripMapPopup extends LitElement {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
-        padding: 8px 16px 0;
+        padding: 24px 16px 0;
+        touch-action: pan-y;
         cursor: grab;
-        touch-action: none;
-        overscroll-behavior: none;
       }
-      .stop-list-spacer {
-        height: 16px;
-        flex-shrink: 0;
-      }
-      .stop-list:active {
+      .stop-list.dragging {
         cursor: grabbing;
+        user-select: none;
       }
       .stop-item {
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: 48px 24px 1fr;
         align-items: stretch;
-        min-height: 52px;
+        min-height: 70px;
       }
       .stop-timeline {
-        width: 24px;
-        flex-shrink: 0;
         display: flex;
         flex-direction: column;
         align-items: center;
       }
       .stop-line {
-        width: 2px;
+        width: 1px;
         flex: 1;
       }
       .stop-line.passed {
         background: #1976d2;
+        width: 2px;
       }
       .stop-line.upcoming {
-        background: #bdbdbd;
+        width: 2px;
+        background-image: repeating-linear-gradient(to bottom, #bdbdbd 0, #bdbdbd 3px, transparent 3px, transparent 7px);
       }
       .stop-line.hidden {
         background: transparent;
@@ -259,58 +257,58 @@ export class TripMapPopup extends LitElement {
         background: transparent;
         border-color: #bdbdbd;
       }
-      .stop-name-section {
-        flex: 1;
+      .stop-time-col {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        padding: 5px 6px 5px 8px;
+        align-items: flex-start;
+      }
+      .stop-time-spacer {
+        flex: 1;
+      }
+      .stop-time-content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .stop-name-section {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 6px;
+        padding: 0 0 0 10px;
         min-width: 0;
       }
       .stop-name {
         font-size: 0.85em;
+        font-weight: bold;
         line-height: 1.3;
         color: var(--primary-text-color);
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        word-break: break-word;
+        flex: 1;
+        min-width: 0;
       }
       .stop-platform {
         font-size: 0.7em;
         font-weight: bold;
         background: var(--secondary-background-color, #e0e0e0);
-        color: var(--secondary-text-color);
         border-radius: 3px;
         padding: 2px 6px;
         white-space: nowrap;
-      }
-      .stop-time-col {
         flex-shrink: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
-        padding: 5px 4px 5px 0;
-        min-width: 36px;
       }
       .stop-time-planned {
-        font-size: 0.75em;
-        color: var(--secondary-text-color);
+        font-size: 0.8em;
         white-space: nowrap;
-        margin-top: 2px;
       }
-      .stop-time-estimated {
-        font-size: 0.75em;
+      .stop-time-scheduled {
+        font-size: 0.8em;
         font-weight: 600;
         white-space: nowrap;
       }
-      .stop-time-estimated.delayed {
+      .stop-time-scheduled.delayed {
         color: #c62828;
       }
-      .stop-time-estimated.ontime {
-        color: #2e7d32;
+      .stop-time-scheduled.ontime {
+        color: #49974b;
       }
       .stop-item.next .stop-name {
         color: #f57c00;
@@ -395,7 +393,7 @@ export class TripMapPopup extends LitElement {
           border-right: none;
         }
         .stop-list {
-          padding: 8px 16px;
+          padding: 16px 16px;
         }
       }
     `,
@@ -404,16 +402,16 @@ export class TripMapPopup extends LitElement {
   @property() tripId?: string;
   @property() title = "";
   @property({ type: Boolean }) open = false;
-  @property() fromStopId?: string;
   @property() language = "en";
-  @property({ attribute: false }) alerts: Alert[] = [];
 
   @state() private _loading = false;
   @state() private _error = false;
   @state() private _tripData: any = null;
+  @state() private _alerts: Alert[] = [];
   @state() private _stops: StopInfo[] = [];
   @state() private _currentStopIdx = -1;
-  @state() private _stopTimesData: StopTimeEntry[] = [];
+  @state() private _nextLabel = "";
+  @state() private _destLabel = "";
 
   private _map: L.Map | null = null;
   private _mapRef = createRef<HTMLDivElement>();
@@ -452,16 +450,16 @@ export class TripMapPopup extends LitElement {
           <div class="header">
             <span>${this.title}</span>
             <div class="header-actions">
-              <button class="refresh-btn ${this._loading ? "spinning" : ""}" ?disabled=${this._loading} @click=${this._fetchTrip}>↻</button>
+              <button class="refresh-btn ${this._loading ? "spinning" : ""}" ?disabled=${this._loading} @click=${this._fetchTrip}><span class="spin-icon">↻</span></button>
               <button class="close-btn" @click=${this._close}>✕</button>
             </div>
           </div>
-          ${this.alerts.length > 0
+          ${this._alerts.length > 0
             ? html`
                 <div class="alert-banner">
-                  ${this.alerts.map((a) => {
+                  ${this._alerts.map((a) => {
                     const color = a.severityLevel === "SEVERE" ? "#c62828" : a.severityLevel === "INFO" ? "#1565c0" : "#e65100";
-                    const icon = a.severityLevel === "SEVERE" ? "mdi:alert-octagon-outline" : a.severityLevel === "INFO" ? "mdi:information-outline" : "mdi:alert-circle-outline";
+                    const icon = a.severityLevel === "SEVERE" ? "mdi:alert-octagon-outline" : a.severityLevel === "INFO" ? "mdi:information-outline" : "mdi:alert-outline";
                     return html`
                       <div class="alert-banner-item" style="color:${color}">
                         <ha-icon icon="${icon}" class="alert-banner-icon" style="--mdc-icon-size:16px"></ha-icon>
@@ -485,7 +483,9 @@ export class TripMapPopup extends LitElement {
                 `
               : html`
                   ${this._stops.length ? this._renderStopList() : nothing}
-                  <div class="map-panel">${this._loading ? html`<div class="loading">${localize("card.popup.loading", this.language)}</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}</div>
+                  <div class="map-panel">
+                    ${this._loading ? html`<div class="loading">${localize("card.popup.loading", this.language)}</div>` : html`<div class="map" ${ref(this._mapRef)}></div>`}
+                  </div>
                 `}
           </div>
         </div>
@@ -498,25 +498,23 @@ export class TripMapPopup extends LitElement {
     const next = this._stops[cur + 1];
     if (!next) return nothing;
 
-    const now = Date.now();
-    const nextDiffMin = Math.round((next.plannedTime.getTime() - now) / 60000);
-    const nextLabel = nextDiffMin <= 0
-      ? localize("card.popup.now", this.language)
-      : localize("card.popup.in-minutes", this.language, { min: String(nextDiffMin) });
+    const nextTime = next.scheduledTime ?? next.plannedTime;
+    this._nextLabel = formatDistanceToNow(nextTime, { includeSeconds: false, addSuffix: true, locale: haLocaleToDateFns(this.language) });
 
     const dest = this._stops[this._stops.length - 1];
-    const destDiffMin = dest ? Math.max(0, Math.round((dest.plannedTime.getTime() - now) / 60000)) : null;
+    const destTime = dest ? dest.scheduledTime ?? dest.plannedTime : null;
+    this._destLabel = destTime ? formatDistanceToNow(destTime, { includeSeconds: false, addSuffix: true, locale: haLocaleToDateFns(this.language) }) : "";
 
     return html`
       <div class="next-stop-banner">
         <div class="next-stop-label">${localize("card.popup.next-stop-label", this.language)}</div>
         <div class="next-stop-name">${next.name}</div>
-        <div class="next-stop-time">${nextLabel}</div>
-        ${destDiffMin !== null
+        <div class="next-stop-time">${this._nextLabel}</div>
+        ${destTime
           ? html`
               <div class="next-stop-dest-row">
                 <span class="next-stop-dest-label">${localize("card.popup.dest-arrival-label", this.language)}</span>
-                <span class="next-stop-dest-time">${localize("card.popup.in-minutes", this.language, { min: String(destDiffMin) })}</span>
+                <span class="next-stop-dest-time">${this._destLabel}</span>
               </div>
             `
           : nothing}
@@ -535,108 +533,72 @@ export class TripMapPopup extends LitElement {
             const dotClass = i <= cur ? "passed" : isNext ? "next" : "upcoming";
             const itemClass = isNext ? "next" : "";
             const lineClass = i <= cur ? "passed" : "upcoming";
-            const isFirst = i === 0;
             const isLast = i === this._stops.length - 1;
-            const delayed = stop.estimatedTime && stop.estimatedTime.getTime() > stop.plannedTime.getTime();
+            const delayed = stop.scheduledTime && stop.scheduledTime.getTime() > stop.plannedTime.getTime();
+
+            console.debug("Parsing stop time", stop);
+
             const estClass = delayed ? "delayed" : "ontime";
             return html`
               <div class="stop-item ${itemClass}">
+                <div class="stop-time-col">
+                  <div class="stop-time-content">
+                    <span class="stop-time-planned">${formatTime(stop.plannedTime)}</span>
+                    ${stop.scheduledTime ? html`<span class="stop-time-scheduled ${estClass}">${formatTime(stop.scheduledTime)}</span>` : nothing}
+                  </div>
+                </div>
                 <div class="stop-timeline">
-                  <div class="stop-line ${isFirst ? "hidden" : lineClass}"></div>
                   <div class="stop-dot ${dotClass}"></div>
                   <div class="stop-line ${isLast ? "hidden" : lineClass}"></div>
                 </div>
                 <div class="stop-name-section">
                   <div class="stop-name">${stop.name}</div>
-                  <span class="stop-time-planned">${formatTime(stop.plannedTime)}</span>
-                  ${stop.estimatedTime ? html`<span class="stop-time-estimated ${estClass}">${formatTime(stop.estimatedTime)}</span>` : nothing}
+                  ${stop.platform ? html`<div class="stop-platform">${localize("card.popup.platform-text", this.language)} ${stop.platform}</div>` : nothing}
                 </div>
-                <div class="stop-time-col">${stop.platform ? html`<div class="stop-platform">${stop.platform}</div>` : nothing}</div>
               </div>
             `;
           })}
-          <div class="stop-list-spacer"></div>
         </div>
       </div>
     `;
   }
 
-  private _stripDragStart = 0;
-  private _stripScrollStart = 0;
-
   private _onListPointerDown = (e: PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
     const list = this._stripRef.value;
     if (!list) return;
     list.setPointerCapture(e.pointerId);
-    this._stripDragStart = e.clientY;
-    this._stripScrollStart = list.scrollTop;
+    list.classList.add("dragging");
+    const startY = e.clientY;
+    const startScroll = list.scrollTop;
     const onMove = (ev: PointerEvent) => {
-      list.scrollTop = this._stripScrollStart - (ev.clientY - this._stripDragStart);
+      list.scrollTop = startScroll - (ev.clientY - startY) * 3;
     };
     const onUp = () => {
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
+      list.classList.remove("dragging");
+      list.removeEventListener("pointermove", onMove as EventListener);
+      list.removeEventListener("pointerup", onUp);
     };
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
+    list.addEventListener("pointermove", onMove as EventListener);
+    list.addEventListener("pointerup", onUp);
   };
 
   private _scrollStripToNextStop() {
     const list = this._stripRef.value;
+
     if (!list || !this._stops.length) return;
+
     const targetIdx = Math.max(0, Math.min(this._currentStopIdx + 1, this._stops.length - 1));
     const items = list.querySelectorAll<HTMLElement>(".stop-item");
     const item = items[targetIdx];
+
     if (!item) return;
+
     const listRect = list.getBoundingClientRect();
     const itemRect = item.getBoundingClientRect();
     const itemCenterInScroll = itemRect.top - listRect.top + list.scrollTop + item.offsetHeight / 2;
-    list.scrollTo({ top: itemCenterInScroll - list.clientHeight / 2, behavior: "smooth" });
-  }
 
-  private async _fetchStopTimes(stopId: string) {
-    try {
-      const params = new URLSearchParams({
-        stopId,
-        time: new Date().toISOString(),
-        arriveBy: "false",
-        n: "10",
-        exactRadius: "false",
-        radius: "200",
-      });
-      const response = await fetch(`${STOPTIMES_API_BASE}?${params}`, { headers: API_HEADERS });
-      if (response.ok) {
-        const raw = await response.json();
-        const entries: any[] = Array.isArray(raw) ? raw : raw.times ?? raw.stopTimes ?? [];
-        this._stopTimesData = entries.map((e: any): StopTimeEntry => {
-          const place = e.place ?? {};
-          const planned = new Date(place.scheduledDeparture ?? place.scheduledArrival ?? place.departure ?? place.arrival);
-          const actual = new Date(place.departure ?? place.arrival);
-          const isDelayed = e.realTime === true && Math.abs(actual.getTime() - planned.getTime()) >= 30000;
-          return {
-            tripId: e.tripId ?? "",
-            headsign: e.headsign ?? "",
-            routeShortName: e.routeShortName ?? e.displayName ?? "",
-            plannedDeparture: planned,
-            estimatedDeparture: isDelayed ? actual : undefined,
-            track: place.track ?? place.scheduledTrack ?? undefined,
-            alerts: (e.alerts ?? [])
-              .filter((a: any) => a?.headerText)
-              .map((a: any): Alert => ({
-                headerText: a.headerText,
-                descriptionText: a.descriptionText ?? "",
-                severityLevel: a.severityLevel,
-                cause: a.cause,
-                effect: a.effect,
-              })),
-          };
-        });
-      } else {
-        console.error("[TripMapPopup] stoptimes fetch failed", response.status);
-      }
-    } catch (e) {
-      console.error("[TripMapPopup] stoptimes fetch error", e);
-    }
+    list.scrollTo({ top: itemCenterInScroll - list.clientHeight / 2, behavior: "smooth" });
   }
 
   private async _fetchTrip() {
@@ -657,6 +619,17 @@ export class TripMapPopup extends LitElement {
       const response = await fetch(url, { headers: API_HEADERS });
       if (response.ok) {
         this._tripData = await response.json();
+        this._alerts = (this._tripData?.alerts ?? [])
+          .filter((a: any) => a?.headerText)
+          .map(
+            (a: any): Alert => ({
+              headerText: a.headerText,
+              descriptionText: a.descriptionText ?? "",
+              severityLevel: a.severityLevel,
+              cause: a.cause,
+              effect: a.effect,
+            }),
+          );
         this._error = false;
       } else {
         console.error("[TripMapPopup] fetch failed", response.status);
@@ -670,9 +643,6 @@ export class TripMapPopup extends LitElement {
     this._loading = false;
     await this.updateComplete;
 
-    if (this.fromStopId) {
-      this._fetchStopTimes(this.fromStopId);
-    }
     requestAnimationFrame(() => this._initMap());
   }
 
@@ -752,7 +722,7 @@ export class TripMapPopup extends LitElement {
       // Update stop strip current index
       let newStopIdx = -1;
       for (let i = 0; i < this._stops.length; i++) {
-        if (nowMs >= this._stops[i].plannedTime.getTime()) newStopIdx = i;
+        if (nowMs >= (this._stops[i].scheduledTime ?? this._stops[i].plannedTime).getTime()) newStopIdx = i;
         else break;
       }
       if (newStopIdx !== this._currentStopIdx) this._currentStopIdx = newStopIdx;
@@ -776,19 +746,26 @@ export class TripMapPopup extends LitElement {
       }
 
       // Update vehicle marker
+      const isActive = nowMs >= startMs && nowMs <= endMs;
+
+      // update next stop banner
+      this._renderNextStopBanner();
+
+      if (!isActive) {
+        if (this._vehicleMarker) {
+          this._vehicleMarker.remove();
+          this._vehicleMarker = null;
+        }
+        return;
+      }
+
       const { pos, heading } = interpolatePosition(timeline, polyline, now);
       if (!pos || !this._map) return;
 
-      const tooltip = nowMs < startMs
-        ? localize("card.popup.vehicle-not-started", this.language)
-        : nowMs > endMs
-          ? localize("card.popup.vehicle-arrived", this.language)
-          : localize("card.popup.vehicle-current", this.language);
-      const color = nowMs >= startMs && nowMs <= endMs ? "#f57c00" : "#757575";
-      const icon = createVehicleIcon(color, heading);
+      const icon = createVehicleIcon("#f57c00", heading);
 
       if (!this._vehicleMarker) {
-        this._vehicleMarker = L.marker(pos, { icon }).bindTooltip(tooltip).addTo(this._map);
+        this._vehicleMarker = L.marker(pos, { icon }).bindTooltip(localize("card.popup.vehicle-current", this.language)).addTo(this._map);
       } else {
         this._vehicleMarker.setLatLng(pos);
         this._vehicleMarker.setIcon(icon);
@@ -814,11 +791,11 @@ export class TripMapPopup extends LitElement {
 
   private _cleanup() {
     this._tripData = null;
+    this._alerts = [];
     this._loading = false;
     this._error = false;
     this._stops = [];
     this._currentStopIdx = -1;
-    this._stopTimesData = [];
     this._destroyMap();
   }
 

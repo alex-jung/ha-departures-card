@@ -1,0 +1,97 @@
+{
+  "card": {
+    "editor": {
+      "title": "Kartes virsraksts (neobligāts)",
+      "icon": "Kartes ikona (neobligāts)",
+      "showCardHeader": "Rādīt kartes galveni",
+
+      "design-expandable": "Dizains un saturs",
+      "cardOrientation": "Kartes orientācija",
+      "cardOrientationVerticalDescription": "Rāda atiešanas ritināmā sarakstā",
+      "cardOrientationHorizontalDescription": "Rāda atiešanas tabulas skatā",
+      "theme": "Kartes motīvs",
+      "showListHeader": "Rādīt saraksta galveni",
+      "showScrollButtons": "Rādīt ritināšanas pogas",
+      "departuresToShow": "Rādāmo atiešanu skaits",
+      "limitEntities": "Ierobežot rādāmo entītiju skaitu",
+      "entitiesToShow": "Rādāmo entītiju skaits",
+      "scrollBackTimeout": "Atgriešanās laiks (sekundes)",
+      "sortDepartures": "Kārtot entītijas pēc plānotā atiešanas laika",
+
+      "layout-expandable": "Atiešanas rindas izkārtojums",
+      "layout": "Pievienot šūnu",
+      "layout-cells": {
+        "icon": "Transporta ikona",
+        "line": "Līnija",
+        "destination": "Galamērķis",
+        "time-diff": "Atiet pēc",
+        "planned-time": "Plānotais laiks",
+        "estimated-time": "Prognozētais laiks",
+        "delay": "Kavēšanās"
+      },
+      "layoutWarning": "Šīs šūnas tiks ignorētas horizontālā kartes orientācijā",
+
+      "animation-expandable": "Atiešanas ikona un animācija",
+      "departureIcon": "Pielāgota atiešanas ikona",
+      "animateLine": "Animēt atiešanas rindu",
+      "arrivalTimeOffset": "Ierašanās laika nobīde",
+      "departureAnimation": "Atiešanas animācija",
+      "departureAnimationDuration": "Animācijas ilgums (ms)",
+      "noAnimation": "Nav",
+
+      "interactions-expandable": "Mijiedarbības",
+
+      "entities-expandable": "Entītijas (nepieciešams)",
+      "addEntity": "Pievienot entītiju",
+
+      "card.editor.interactions-expandable": "Mijiedarbības",
+      "tap_action": "Darbība pieskaroties",
+      "hold_action": "Darbība turot",
+      "double_tap_action": "Darbība divreiz pieskaroties",
+
+      "entity": {
+        "entity": "Entītija",
+        "destinationName": "Galamērķa nosaukums",
+        "lineName": "Līnijas nosaukums",
+        "lineColor": "Līnijas krāsa",
+        "icon": "Pielāgota transporta ikona",
+        "remove": "Noņemt"
+      },
+      "help": {
+        "showListHeader": "Rāda atiešanu saraksta kolonnu virsrakstus",
+        "showScrollButtons": "Rāda pogas saraksta ritināšanai uz augšu un leju",
+        "sortDepartures": "Kārto atiešanas pēc plānotā laika",
+        "scrollBackTimeout": "Laiks sekundēs, pēc kura saraksts automātiski atgriežas sākumā",
+        "layout": "Rādāmo šūnu un to secības konfigurācija atiešanas rindā",
+        "departureIcon": "Ja nav norādīta pielāgota ikona, tiks izmantota entītijas transporta ikona",
+        "animateLine": "Ja atspējots, tiks animēta tikai atiešanas laika šūna",
+        "arrivalTimeOffset": "Laiks minūtēs pirms atiešanas, kad sākas animācija",
+        "departureAnimationDuration": "Vērtība 0 izmanto noklusējuma iekšējo vērtību"
+      }
+    },
+    "list-header": {
+      "icon": "Ikona",
+      "line": "Līnija",
+      "destination": "Galamērķis",
+      "time-diff": "Atiet pēc",
+      "planned-time": "Plānots",
+      "estimated-time": "Prognozēts",
+      "delay": "Kavēj."
+    },
+    "errors": {
+      "no-card-orientation-set": "Lūdzu, iestatiet opciju \"Kartes orientācija\""
+    },
+    "popup": {
+      "next-stop-label": "Nākamā pietura",
+      "now": "tagad",
+      "in-minutes": "pēc {min} min",
+      "dest-arrival-label": "Ierašanās galamērķī",
+      "loading": "Ielādē…",
+      "no-data": "Nav pieejamu datu",
+      "vehicle-not-started": "Vēl nav izbraucis",
+      "vehicle-arrived": "Jau ieradies",
+      "vehicle-current": "Ceļā",
+      "platform-text": "Pl."
+    }
+  }
+}

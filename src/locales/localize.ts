@@ -1,12 +1,22 @@
 import en from "./en.json";
 import de from "./de.json";
+import cs from "./cs.json";
+import es from "./es.json";
+import fr from "./fr.json";
+import lv from "./lv.json";
+import pl from "./pl.json";
 
 export type Translations = typeof en;
-export type SupportedLanguages = "en" | "de";
+export type SupportedLanguages = "en" | "de" | "cs" | "es" | "fr" | "lv" | "pl";
 
 const translations: Record<SupportedLanguages, Translations> = {
   en,
   de,
+  cs,
+  es,
+  fr,
+  lv,
+  pl,
 };
 
 // Holt verschachtelten Wert (z. B. "user.greeting") aus Objekt
