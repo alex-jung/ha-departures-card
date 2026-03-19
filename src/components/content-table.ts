@@ -233,7 +233,9 @@ export class ContentTable extends Content {
     } else if (time.timeDiff > 60) {
       htmlDelay = html`${lightFormat(time.time, "HH:mm")}`;
     } else {
-      htmlDelay = html`${time.timeDiff} min`;
+      //htmlDelay = html`${time.timeDiff} min`;
+      // alway render time
+      htmlDelay = html`${lightFormat(time.time, "HH:mm")}`;
     }
 
     return html`<div class="table-time ${classMap(classes)}" data-trip-id="${time.tripId}">
