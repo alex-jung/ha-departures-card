@@ -15,6 +15,7 @@
       "departuresToShow": "Počet zobrazených odjezdů",
       "limitEntities": "Omezit počet zobrazených entit",
       "entitiesToShow": "Počet zobrazených entit",
+      "entitiesFilter": "Filtr odjezdů (minuty)",
       "scrollBackTimeout": "Čas návratu (sekundy)",
       "sortDepartures": "Seřadit entity podle plánovaného odjezdu",
 
@@ -66,7 +67,8 @@
         "departureIcon": "Pokud není zadána vlastní ikona, použije se ikona dopravy z entity",
         "animateLine": "Je-li vypnuto, animuje se pouze buňka s časem odjezdu",
         "arrivalTimeOffset": "Čas v minutách před odjezdem, kdy se spustí animace",
-        "departureAnimationDuration": "Hodnota 0 použije výchozí interní hodnotu"
+        "departureAnimationDuration": "Hodnota 0 použije výchozí interní hodnotu",
+        "entitiesFilter": "Odfiltruje odjezdy v příštích X minutách. Nastavte 0 pro vypnutí"
       }
     },
     "list-header": {

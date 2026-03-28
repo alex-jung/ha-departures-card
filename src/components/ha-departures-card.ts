@@ -38,7 +38,8 @@ import { localize } from "../locales/localize";
   description: "Display departure times for different public transports",
 });
 
-const version = "3.5.0";
+declare const __VERSION__: string;
+const version = __VERSION__;
 const repoUrl = "https://github.com/alex-jung/ha-departures-card";
 
 console.groupCollapsed(`%cDepartures-Card ${version}`, "color:black; font-weight: bold; background: tomato; padding: 2px; border-radius: 5px;");
@@ -82,6 +83,7 @@ export class DeparturesCard extends LitElement {
       departureAnimationDuration: DEFAULT_DEPARTURE_ANIMATION_DURATION,
       arrivalTimeOffset: DEFAULT_ARRIVAL_OFFSET,
       layout: DEFAULT_LAYOUT,
+      entitiesFilter: 0,
       entities: [],
     };
   }
@@ -126,7 +128,7 @@ export class DeparturesCard extends LitElement {
 
     this.dataPool.update(this.hass, this.config.entities);
 
-    const departures: Array<DeparturesDataRow> = this.dataPool.getDepartures(true);
+    const departures: Array<DeparturesDataRow> = this.dataPool.getDepartures(true, this.config.entitiesFilter);
     const content = this._getCardContent(cardConfig, departures);
 
     return html`

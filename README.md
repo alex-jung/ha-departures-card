@@ -3,6 +3,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/alex-jung/ha-departures-card)
 ![GitHub License](https://img.shields.io/github/license/alex-jung/ha-departures-card)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/alex-jung/ha-departures-card)
+[![Downloads](https://img.shields.io/github/downloads/alex-jung/ha-departures-card/total?style=flat-square)](https://github.com/alex-jung/ha-departures-card/releases)
 
 A card to display departure times provided by [Departures](https://github.com/alex-jung/ha-departures) custom integration.
 
@@ -95,6 +96,7 @@ When the data source provides service alerts for a departure, a warning indicato
 | [departureIcon](#departureIcon)                           | string       | no       | -                                                     |
 | [departuresToShow](#departuresToShow)                     | number       | no       | 5                                                     |
 | entities                                                  | entity[]     | yes      | -                                                     |
+| [entitiesFilter](#entitiesFilter)                         | number       | no       | 0                                                     |
 | [entitiesToShow](#entitiesToShow)                         | number       | no       | -                                                     |
 | [icon](#icon)                                             | string       | no       | "mdi:bus-multiple"                                    |
 | [layout](#layout)                                         | list[string] | yes      | ["icon", "line", "destination", "time-diff", "delay"] |
@@ -240,6 +242,23 @@ departuresToShow: 5
 | departuresToShow: 3                            | departuresToShow: 10                            |
 | ---------------------------------------------- | ----------------------------------------------- |
 | ![card](assets/image_departures_to_show_3.png) | ![card](assets/image_departures_to_show_10.png) |
+
+### "entitiesFilter"
+
+**Type:** `number`
+**Unit:** minutes
+**Default:** `0`
+
+Filters out departures that are scheduled within the next X minutes.
+
+For example, if `entitiesFilter` is set to `5`, any departure leaving in less than 5 minutes will not be shown. This is useful when you are too far away to catch the next one and want to avoid cluttering the list with unreachable departures.
+
+A value of `0` disables the filter and shows all upcoming departures.
+
+```yaml
+type: custom:departures-card
+entitiesFilter: 5
+```
 
 ### "entitiesToShow"
 

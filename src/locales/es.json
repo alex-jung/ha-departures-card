@@ -15,6 +15,7 @@
       "departuresToShow": "Número de salidas a mostrar",
       "limitEntities": "Limitar número de entidades a mostrar",
       "entitiesToShow": "Número de entidades a mostrar",
+      "entitiesFilter": "Filtro de salidas (minutos)",
       "scrollBackTimeout": "Tiempo de retorno (segundos)",
       "sortDepartures": "Ordenar entidades por hora de salida planificada",
 
@@ -66,7 +67,8 @@
         "departureIcon": "Si no se define icono personalizado, se usará el icono de transporte de la entidad",
         "animateLine": "Si está desactivado, solo se animará la celda de tiempo de salida",
         "arrivalTimeOffset": "Tiempo en minutos antes de la salida cuando comienza la animación",
-        "departureAnimationDuration": "El valor 0 usa el valor predeterminado interno"
+        "departureAnimationDuration": "El valor 0 usa el valor predeterminado interno",
+        "entitiesFilter": "Filtra las salidas en los próximos X minutos. Establezca 0 para desactivar"
       }
     },
     "list-header": {
