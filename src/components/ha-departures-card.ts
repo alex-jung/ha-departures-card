@@ -82,6 +82,7 @@ export class DeparturesCard extends LitElement {
       departureAnimationDuration: DEFAULT_DEPARTURE_ANIMATION_DURATION,
       arrivalTimeOffset: DEFAULT_ARRIVAL_OFFSET,
       layout: DEFAULT_LAYOUT,
+      entitiesFilter: 0,
       entities: [],
     };
   }
@@ -126,7 +127,7 @@ export class DeparturesCard extends LitElement {
 
     this.dataPool.update(this.hass, this.config.entities);
 
-    const departures: Array<DeparturesDataRow> = this.dataPool.getDepartures(true);
+    const departures: Array<DeparturesDataRow> = this.dataPool.getDepartures(true, this.config.entitiesFilter);
     const content = this._getCardContent(cardConfig, departures);
 
     return html`

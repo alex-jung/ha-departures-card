@@ -15,6 +15,7 @@
       "departuresToShow": "Nombre de départs à afficher",
       "limitEntities": "Limiter le nombre d'entités à afficher",
       "entitiesToShow": "Nombre d'entités à afficher",
+      "entitiesFilter": "Filtre de départs (minutes)",
       "scrollBackTimeout": "Délai de retour (secondes)",
       "sortDepartures": "Trier les entités par heure de départ planifiée",
 
@@ -66,7 +67,8 @@
         "departureIcon": "Si aucune icône personnalisée n'est définie, l'icône de transport de l'entité sera utilisée",
         "animateLine": "Si désactivé, seule la cellule d'heure de départ sera animée",
         "arrivalTimeOffset": "Temps en minutes avant le départ à partir duquel l'animation démarre",
-        "departureAnimationDuration": "La valeur 0 utilise la valeur interne par défaut"
+        "departureAnimationDuration": "La valeur 0 utilise la valeur interne par défaut",
+        "entitiesFilter": "Filtre les départs dans les X prochaines minutes. Mettre 0 pour désactiver"
       }
     },
     "list-header": {

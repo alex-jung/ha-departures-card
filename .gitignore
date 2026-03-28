@@ -1,8 +1,6 @@
 node_modules
 .rollup.cache
-dist/tsconfig.*
-dist/src
-dist/*.map
+dist/
 coverage/
 
 # Home Assistant dev environment (runtime data)

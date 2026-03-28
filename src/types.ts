@@ -21,6 +21,7 @@ export interface Config extends LovelaceCardConfig {
   showScrollButtons: boolean;
   sortDepartures: boolean;
   theme: CardTheme;
+  entitiesFilter?: number;
 
   // tap actions
   hold_action?: ActionConfig;

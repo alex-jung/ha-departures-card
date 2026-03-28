@@ -247,6 +247,17 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
         },
       },
     },
+    {
+      name: "entitiesFilter",
+      selector: {
+        number: {
+          min: 0,
+          max: 30,
+          step: 1,
+          mode: "slider",
+        },
+      },
+    },
   ];
 
   private _schemaLayout = (localize: Function) => [

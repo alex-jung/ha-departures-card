@@ -50,7 +50,7 @@ export class DepartureTimesPool {
    * @returns An array of DeparturesDataRow objects representing upcoming departures (where timeDiff >= 0).
    *          Each row contains departure details including entity, line name, destination, color, icon, and time information.
    */
-  public getDepartures(sortByDepartureTime: boolean = true): Array<DeparturesDataRow> {
+  public getDepartures(sortByDepartureTime: boolean = true, filter: number = 0): Array<DeparturesDataRow> {
     let departures = Array.from(this._data.values());
 
     let list: Array<DeparturesDataRow> = [];
@@ -74,6 +74,10 @@ export class DepartureTimesPool {
       list.sort((entry1, entry2) => {
         return entry1.time.time.getTime() - entry2.time.time.getTime();
       });
+    }
+
+    if (filter > 0) {
+      list = list.filter((entry) => entry.time.timeDiff > filter);
     }
 
     return list;

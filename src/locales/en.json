@@ -15,6 +15,7 @@
       "departuresToShow": "Number of departures to show",
       "limitEntities": "Limit number of entities to show",
       "entitiesToShow": "Number of entities to show",
+      "entitiesFilter": "Departure filter (minutes)",
       "scrollBackTimeout": "Scroll-back time (seconds)",
       "sortDepartures": "Sort entities by planned departure time",
 
@@ -66,7 +67,8 @@
         "departureIcon": "If no custom icon is defined, the entity's transport icon will be used for the animation",
         "animateLine": "If disabled, only the departure time cell will be animated",
         "arrivalTimeOffset": "Time in minutes before departure when the animation starts",
-        "departureAnimationDuration": "Value 0 means the default value will be used"
+        "departureAnimationDuration": "Value 0 means the default value will be used",
+        "entitiesFilter": "Filter out departures within the next X minutes. Set to 0 to disable"
       }
     },
     "list-header": {

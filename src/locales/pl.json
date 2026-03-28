@@ -15,6 +15,7 @@
       "departuresToShow": "Liczba wyświetlanych odjazdów",
       "limitEntities": "Ogranicz liczbę wyświetlanych encji",
       "entitiesToShow": "Liczba wyświetlanych encji",
+      "entitiesFilter": "Filtr odjazdów (minuty)",
       "scrollBackTimeout": "Czas powrotu (sekundy)",
       "sortDepartures": "Sortuj encje według planowanego odjazdu",
 
@@ -66,7 +67,8 @@
         "departureIcon": "Jeśli nie podano własnej ikony, używana jest ikona transportu encji",
         "animateLine": "Gdy wyłączone, animowana jest tylko komórka z czasem odjazdu",
         "arrivalTimeOffset": "Czas w minutach przed odjazdem, od którego startuje animacja",
-        "departureAnimationDuration": "Wartość 0 używa domyślnej wartości wewnętrznej"
+        "departureAnimationDuration": "Wartość 0 używa domyślnej wartości wewnętrznej",
+        "entitiesFilter": "Filtruje odjazdy w ciągu następnych X minut. Ustaw 0, aby wyłączyć"
       }
     },
     "list-header": {
