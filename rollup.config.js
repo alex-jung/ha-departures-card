@@ -7,6 +7,10 @@ import json from "@rollup/plugin-json";
 import { string } from "rollup-plugin-string";
 import clear from "rollup-plugin-clear";
 import { terser } from "rollup-plugin-terser";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const { version } = require("./package.json");
 
 const outputDir = "dist";
 
@@ -48,6 +52,7 @@ export default (CLIArgs) => {
       replace({
         preventAssignment: true,
         "process.env.NODE_ENV": JSON.stringify(prod ? "production" : "development"),
+        __VERSION__: JSON.stringify(version),
         __TRANSITOUS_API_BASE__: JSON.stringify(
           prod ? "https://api.transitous.org" : "http://localhost:8765"
         ),
