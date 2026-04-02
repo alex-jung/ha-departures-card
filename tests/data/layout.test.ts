@@ -47,6 +47,17 @@ describe("Layout", () => {
     });
   });
 
+  describe("Custom cellWidths", () => {
+    it("should use custom width for a cell", () => {
+      const l = new Layout([LayoutCell.ICON, LayoutCell.TIME_DIFF], CardOrientation.VERTICAL, { "icon": "200px" });
+      expect(l.getColumns()).toEqual(`200px ${LAYOUT_VERTICAL.get(LayoutCell.TIME_DIFF)}`);
+    });
+    it("should fall back to default width when cellWidths not set for cell", () => {
+      const l = new Layout([LayoutCell.ICON, LayoutCell.TIME_DIFF], CardOrientation.VERTICAL, { "time-diff": "100px" });
+      expect(l.getColumns()).toEqual(`${LAYOUT_VERTICAL.get(LayoutCell.ICON)} 100px`);
+    });
+  });
+
   describe("Default horizontal layout", () => {
     let layout = new Layout(undefined, CardOrientation.HORIZONTAL);
 
