@@ -30,6 +30,7 @@
         "estimated-time": "Prognozētais laiks",
         "delay": "Kavēšanās"
       },
+      "cellWidths": "Šūnu platumi (piem. 50px, 1fr, auto)",
       "layoutWarning": "Šīs šūnas tiks ignorētas horizontālā kartes orientācijā",
 
       "animation-expandable": "Atiešanas ikona un animācija",
@@ -64,6 +65,7 @@
         "sortDepartures": "Kārto atiešanas pēc plānotā laika",
         "scrollBackTimeout": "Laiks sekundēs, pēc kura saraksts automātiski atgriežas sākumā",
         "layout": "Rādāmo šūnu un to secības konfigurācija atiešanas rindā",
+        "cellWidths": "Atiešanas rinda izmanto CSS grid izkārtojumu. Šeit var precizēt katras šūnas platumu (piem. 50px, 1fr, auto). Tukša vērtība izmanto noklusējuma platumu.",
         "departureIcon": "Ja nav norādīta pielāgota ikona, tiks izmantota entītijas transporta ikona",
         "animateLine": "Ja atspējots, tiks animēta tikai atiešanas laika šūna",
         "arrivalTimeOffset": "Laiks minūtēs pirms atiešanas, kad sākas animācija",

@@ -37,7 +37,7 @@ export class ContentList extends Content {
   }
 
   protected createLayout(): Layout {
-    return new Layout(this.cardConfig.layout, CardOrientation.VERTICAL);
+    return new Layout(this.cardConfig.layout, CardOrientation.VERTICAL, this.cardConfig.cellWidths);
   }
 
   public disconnectedCallback(): void {

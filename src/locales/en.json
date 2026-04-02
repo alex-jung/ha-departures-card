@@ -30,6 +30,7 @@
         "estimated-time": "Estimated time",
         "delay": "Delay"
       },
+      "cellWidths": "Cell widths (e.g. 50px, 1fr, auto)",
       "layoutWarning": "The following cells will be ignored when using the horizontal orientation",
 
       "animation-expandable": "Departure icon & animation",
@@ -64,6 +65,7 @@
         "sortDepartures": "Sort departures by their planned time",
         "scrollBackTimeout": "Time in seconds before the list automatically scrolls back to the top",
         "layout": "Configure which cells are shown and their order in a departure row",
+        "cellWidths": "The departure row uses a CSS grid layout. Fine-tune the width of each cell here (e.g. 50px, 1fr, auto). Empty value uses the default width.",
         "departureIcon": "If no custom icon is defined, the entity's transport icon will be used for the animation",
         "animateLine": "If disabled, only the departure time cell will be animated",
         "arrivalTimeOffset": "Time in minutes before departure when the animation starts",

@@ -30,6 +30,7 @@
         "estimated-time": "Geschätzte Zeit",
         "delay": "Verspätung"
       },
+      "cellWidths": "Zellenbreiten (z.B. 50px, 1fr, auto)",
       "layoutWarning": "Die folgenden Zellen werden bei horizontaler Kartenausrichtung ignoriert",
 
       "animation-expandable": "Ankunftssymbol & Animation",
@@ -64,6 +65,7 @@
         "sortDepartures": "Sortiert die Ankünfte nach ihrer geplanten Zeit",
         "scrollBackTimeout": "Zeit in Sekunden, nach der automatisch zum Listenanfang zurückgescrollt wird",
         "layout": "Konfiguration der angezeigten Zellen und ihrer Reihenfolge in einer Ankunftszeile",
+        "cellWidths": "Die Abfahrtszeile verwendet ein CSS-Grid-Layout. Hier kann die Breite jeder Zelle angepasst werden (z.B. 50px, 1fr, auto). Leerer Wert verwendet die Standardbreite.",
         "departureIcon": "Wenn kein benutzerdefiniertes Symbol festgelegt ist, wird das transport icon der Entität für die Animation verwendet",
         "animateLine": "Wenn deaktiviert, wird nur die Zelle 'Ankunft in' animiert",
         "arrivalTimeOffset": "Zeit in Minuten vor der geplanten Ankunft, ab der die Animation startet",

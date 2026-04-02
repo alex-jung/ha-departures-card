@@ -30,6 +30,7 @@
         "estimated-time": "Odhadovaný čas",
         "delay": "Zpoždění"
       },
+      "cellWidths": "Šířky buněk (např. 50px, 1fr, auto)",
       "layoutWarning": "Následující buňky budou ignorovány při horizontální orientaci karty",
 
       "animation-expandable": "Ikona a animace odjezdu",
@@ -64,6 +65,7 @@
         "sortDepartures": "Seřadí odjezdy podle plánovaného času",
         "scrollBackTimeout": "Čas v sekundách, po kterém se seznam automaticky vrátí na začátek",
         "layout": "Konfigurace zobrazených buněk a jejich pořadí v řádku odjezdu",
+        "cellWidths": "Řádek odjezdu používá CSS grid layout. Zde lze doladit šířku každé buňky (např. 50px, 1fr, auto). Prázdná hodnota použije výchozí šířku.",
         "departureIcon": "Pokud není zadána vlastní ikona, použije se ikona dopravy z entity",
         "animateLine": "Je-li vypnuto, animuje se pouze buňka s časem odjezdu",
         "arrivalTimeOffset": "Čas v minutách před odjezdem, kdy se spustí animace",

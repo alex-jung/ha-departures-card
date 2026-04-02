@@ -30,6 +30,7 @@
         "estimated-time": "Heure estimée",
         "delay": "Retard"
       },
+      "cellWidths": "Largeurs des cellules (ex. 50px, 1fr, auto)",
       "layoutWarning": "Les cellules suivantes seront ignorées en orientation horizontale",
 
       "animation-expandable": "Icône et animation de départ",
@@ -64,6 +65,7 @@
         "sortDepartures": "Trie les départs par leur heure planifiée",
         "scrollBackTimeout": "Temps en secondes avant que la liste revienne automatiquement au début",
         "layout": "Configuration des cellules affichées et de leur ordre dans une ligne de départ",
+        "cellWidths": "La ligne de départ utilise une mise en page CSS grid. Affinez ici la largeur de chaque cellule (ex. 50px, 1fr, auto). Valeur vide utilise la largeur par défaut.",
         "departureIcon": "Si aucune icône personnalisée n'est définie, l'icône de transport de l'entité sera utilisée",
         "animateLine": "Si désactivé, seule la cellule d'heure de départ sera animée",
         "arrivalTimeOffset": "Temps en minutes avant le départ à partir duquel l'animation démarre",

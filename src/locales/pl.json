@@ -30,6 +30,7 @@
         "estimated-time": "Szacowany czas",
         "delay": "Opóźnienie"
       },
+      "cellWidths": "Szerokości komórek (np. 50px, 1fr, auto)",
       "layoutWarning": "Następujące komórki będą ignorowane przy poziomej orientacji karty",
 
       "animation-expandable": "Ikona i animacja odjazdu",
@@ -64,6 +65,7 @@
         "sortDepartures": "Sortuje odjazdy według planowanego czasu",
         "scrollBackTimeout": "Czas w sekundach, po którym lista automatycznie wraca na początek",
         "layout": "Konfiguracja wyświetlanych komórek i ich kolejności w wierszu odjazdu",
+        "cellWidths": "Wiersz odjazdu używa układu CSS grid. Tutaj można dostosować szerokość każdej komórki (np. 50px, 1fr, auto). Pusta wartość używa domyślnej szerokości.",
         "departureIcon": "Jeśli nie podano własnej ikony, używana jest ikona transportu encji",
         "animateLine": "Gdy wyłączone, animowana jest tylko komórka z czasem odjazdu",
         "arrivalTimeOffset": "Czas w minutach przed odjazdem, od którego startuje animacja",
