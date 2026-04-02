@@ -37,6 +37,7 @@ export interface EntityConfig {
   icon: string | null;
   lineColor: string | null;
   lineName: string | null;
+  stationName: string;
 }
 
 export type DeparturesData = EntityConfig & {
@@ -73,6 +74,7 @@ export enum LayoutCell {
   LINE = "line",
   PLANNED_TIME = "planned-time",
   TIME_DIFF = "time-diff",
+  STATION_NAME = "station-name",
 }
 
 export interface Alert {

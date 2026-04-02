@@ -39,6 +39,10 @@ export class DeparturesCardEntityEditor extends LitElement {
       selector: { entity: {}, domain: "ha_departures" },
     },
     {
+      name: "stationName",
+      selector: { text: {} },
+    },
+    {
       name: "destinationName",
       selector: { text: {} },
     },

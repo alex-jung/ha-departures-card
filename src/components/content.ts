@@ -163,6 +163,9 @@ export abstract class Content extends LitElement {
 
     layoutCells.forEach((cell) => {
       switch (cell) {
+        case LayoutCell.STATION_NAME:
+          content.push(html`<div class="list-header-icon">${localize("card.list-header.station-name", this.language)}</div>`);
+          break;
         case LayoutCell.ICON:
           content.push(html`<div class="list-header-icon">${localize("card.list-header.icon", this.language)}</div>`);
           break;
@@ -225,6 +228,9 @@ export abstract class Content extends LitElement {
 
     layoutCells.forEach((cell) => {
       switch (cell) {
+        case LayoutCell.STATION_NAME:
+          content.push(this.renderStationName(departure));
+          break;
         case LayoutCell.ICON:
           content.push(this.renderTransportIcon(departure));
           break;
@@ -299,6 +305,17 @@ export abstract class Content extends LitElement {
     this._selectedTripId = departure.time.tripId;
     this._dialogTitle = `${departure.lineName} → ${departure.destinationName}`;
     this._dialogOpen = true;
+  }
+
+  /**
+   * Renders a station name for this entity.
+   * @param departure - The departure data row containing icon information
+   * @returns A template result containing the station name content.
+   */
+  protected renderStationName(departure: DeparturesDataRow): TemplateResult {
+    const station = departure.stationName;
+
+    return html`<div class="cell-station-name" theme=${this.theme}>${station}</div>`;
   }
 
   /**

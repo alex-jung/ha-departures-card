@@ -268,11 +268,18 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
           reorder: true,
           multiple: true,
           custom_value: false,
-          options: [LayoutCell.ICON, LayoutCell.LINE, LayoutCell.DESTINATION, LayoutCell.PLANNED_TIME, LayoutCell.ESTIMATED_TIME, LayoutCell.TIME_DIFF, LayoutCell.DELAY].map(
-            (cellName) => {
-              return { value: cellName, label: localize({ name: `layout-cells.${cellName}` }) };
-            },
-          ),
+          options: [
+            LayoutCell.STATION_NAME,
+            LayoutCell.ICON,
+            LayoutCell.LINE,
+            LayoutCell.DESTINATION,
+            LayoutCell.PLANNED_TIME,
+            LayoutCell.ESTIMATED_TIME,
+            LayoutCell.TIME_DIFF,
+            LayoutCell.DELAY,
+          ].map((cellName) => {
+            return { value: cellName, label: localize({ name: `layout-cells.${cellName}` }) };
+          }),
           default: [LayoutCell.ICON, LayoutCell.DESTINATION],
         },
       },

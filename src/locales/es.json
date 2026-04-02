@@ -4,7 +4,6 @@
       "title": "Título de la tarjeta (opcional)",
       "icon": "Icono de la tarjeta (opcional)",
       "showCardHeader": "Mostrar encabezado de tarjeta",
-
       "design-expandable": "Diseño y contenido",
       "cardOrientation": "Orientación de la tarjeta",
       "cardOrientationVerticalDescription": "Muestra las salidas en una lista desplazable",
@@ -18,7 +17,6 @@
       "entitiesFilter": "Filtro de salidas (minutos)",
       "scrollBackTimeout": "Tiempo de retorno (segundos)",
       "sortDepartures": "Ordenar entidades por hora de salida planificada",
-
       "layout-expandable": "Diseño de fila de salida",
       "layout": "Añadir celda",
       "layout-cells": {
@@ -28,10 +26,10 @@
         "time-diff": "Sale en",
         "planned-time": "Hora planificada",
         "estimated-time": "Hora estimada",
+        "station-name": "Nombre de la estación",
         "delay": "Retraso"
       },
       "layoutWarning": "Las siguientes celdas serán ignoradas con orientación horizontal",
-
       "animation-expandable": "Icono y animación de salida",
       "departureIcon": "Icono de salida personalizado",
       "animateLine": "Animar fila de salida",
@@ -39,19 +37,16 @@
       "departureAnimation": "Animación de salida",
       "departureAnimationDuration": "Duración de animación (ms)",
       "noAnimation": "Ninguna",
-
       "interactions-expandable": "Interacciones",
-
       "entities-expandable": "Entidades (requerido)",
       "addEntity": "Añadir entidad",
-
       "card.editor.interactions-expandable": "Interacciones",
       "tap_action": "Acción al tocar",
       "hold_action": "Acción al mantener",
       "double_tap_action": "Acción al doble toque",
-
       "entity": {
         "entity": "Entidad",
+        "stationName": "Nombre de la estación",
         "destinationName": "Nombre del destino",
         "lineName": "Nombre de línea",
         "lineColor": "Color de línea",
@@ -72,6 +67,7 @@
       }
     },
     "list-header": {
+      "station-name": "Estación",
       "icon": "Icono",
       "line": "Línea",
       "destination": "Destino",

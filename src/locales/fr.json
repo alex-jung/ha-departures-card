@@ -4,7 +4,6 @@
       "title": "Titre de la carte (optionnel)",
       "icon": "Icône de la carte (optionnel)",
       "showCardHeader": "Afficher l'en-tête de la carte",
-
       "design-expandable": "Design et contenu",
       "cardOrientation": "Orientation de la carte",
       "cardOrientationVerticalDescription": "Affiche les départs dans une liste défilante",
@@ -18,7 +17,6 @@
       "entitiesFilter": "Filtre de départs (minutes)",
       "scrollBackTimeout": "Délai de retour (secondes)",
       "sortDepartures": "Trier les entités par heure de départ planifiée",
-
       "layout-expandable": "Mise en page de la ligne de départ",
       "layout": "Ajouter une cellule",
       "layout-cells": {
@@ -28,10 +26,10 @@
         "time-diff": "Départ dans",
         "planned-time": "Heure planifiée",
         "estimated-time": "Heure estimée",
+        "station-name": "Nom de la station",
         "delay": "Retard"
       },
       "layoutWarning": "Les cellules suivantes seront ignorées en orientation horizontale",
-
       "animation-expandable": "Icône et animation de départ",
       "departureIcon": "Icône de départ personnalisée",
       "animateLine": "Animer la ligne de départ",
@@ -39,19 +37,16 @@
       "departureAnimation": "Animation de départ",
       "departureAnimationDuration": "Durée de l'animation (ms)",
       "noAnimation": "Aucune",
-
       "interactions-expandable": "Interactions",
-
       "entities-expandable": "Entités (requis)",
       "addEntity": "Ajouter une entité",
-
       "card.editor.interactions-expandable": "Interactions",
       "tap_action": "Action au toucher",
       "hold_action": "Action au maintien",
       "double_tap_action": "Action au double toucher",
-
       "entity": {
         "entity": "Entité",
+        "stationName": "Nom de la station",
         "destinationName": "Nom de la destination",
         "lineName": "Nom de la ligne",
         "lineColor": "Couleur de la ligne",
@@ -72,6 +67,7 @@
       }
     },
     "list-header": {
+      "station-name": "Station",
       "icon": "Icône",
       "line": "Ligne",
       "destination": "Destination",

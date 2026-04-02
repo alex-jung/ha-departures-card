@@ -65,6 +65,7 @@ export class DepartureTimesPool {
             lineColor: dep.lineColor,
             icon: dep.icon,
             time: time,
+            stationName: dep.stationName,
           });
         }
       });
@@ -131,6 +132,7 @@ export class DepartureTimesPool {
     const lineColor = config.lineColor;
     const times = parser.getTimes();
     const icon = config.icon || parser.getTransportIcon() || DEFAULT_ENTITY_ICON;
+    const stationName = config.stationName ?? "";
 
     if (!this._data.has(config.entity)) {
       // create a new data entry
@@ -141,6 +143,7 @@ export class DepartureTimesPool {
         lineColor: lineColor,
         icon: icon,
         times: times,
+        stationName: stationName,
       });
 
       console.debug("Create new data for entity", config.entity);
@@ -154,6 +157,7 @@ export class DepartureTimesPool {
         data.lineColor = lineColor;
         data.icon = icon;
         data.times = times;
+        data.stationName = stationName;
 
         console.debug("Update data for entity", config.entity);
       }

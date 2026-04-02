@@ -91,6 +91,9 @@ export const contentCore = css`
     text-align: center;
     border-radius: 1000px;
   }
+  .cell-station-name {
+    text-align: center;
+  }
   .cell-delay {
     color: white;
   }
