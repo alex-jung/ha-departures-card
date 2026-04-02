@@ -100,6 +100,7 @@ When the data source provides service alerts for a departure, a warning indicato
 | [entitiesToShow](#entitiesToShow)                         | number       | no       | -                                                     |
 | [icon](#icon)                                             | string       | no       | "mdi:bus-multiple"                                    |
 | [layout](#layout)                                         | list[string] | yes      | ["icon", "line", "destination", "time-diff", "delay"] |
+| [cellWidths](#cellWidths)                                 | map          | no       | -                                                     |
 | [limitEntities](#limitEntities)                           | boolean      | no       | false                                                 |
 | [scrollBackTimeout](#scrollBackTimeout)                   | number       | no       | 5                                                     |
 | [showCardHeader](#showCardHeader)                         | boolean      | no       | true                                                  |
@@ -306,6 +307,7 @@ Available values:
 - `icon` – Transport icon
 - `line` – Line or route name
 - `destination` – Route destination
+- `station-name` – Station or stop name
 - `time-diff` – Time remaining until departure
 - `planned-time` – Scheduled departure time
 - `estimated-time` – Estimated (real-time) departure time (if provided by API)
@@ -321,6 +323,26 @@ layout: ["icon", "line", "destination", "time-diff", "delay"]
 | layout: ["icon", "line", "destination", "time-diff", "delay"] | layout: "line", "destination", "planned-time", "estimated-time"] |
 | ------------------------------------------------------------- | ---------------------------------------------------------------- |
 | ![card](assets/image_layout_0.png)                            | ![card](assets/image_layout_1.png)                               |
+
+### "cellWidths"
+
+**Type:** `map`
+**Default**: `-`
+
+Overrides the default CSS grid column width for individual layout cells. Each key is a cell identifier (same values as used in [`layout`](#layout)), and each value is a valid CSS grid track size (e.g. `px`, `fr`, `auto`, `minmax(...)`).
+
+If a cell is not listed, its built-in default width is used. An empty value also falls back to the default.
+
+```yaml
+type: custom:departures-card
+layout:
+  - icon
+  - destination
+  - time-diff
+cellWidths:
+  destination: 2fr
+  time-diff: 80px
+```
 
 ### "limitEntities"
 
@@ -510,6 +532,7 @@ title: Frankenstr.
 | [linecolor](#linecolor)             | string | no       | empty         |
 | [linename](#linename)               | string | no       | empty         |
 | [destinationname](#destinationname) | string | no       | empty         |
+| [stationName](#stationName)         | string | no       | empty         |
 | [icon](#icon-1)                     | string | no       | empty         |
 
 ### "lineColor"
@@ -565,6 +588,20 @@ entities:
 | empty                                         | destinationName: Hardhöhe                           |
 | --------------------------------------------- | --------------------------------------------------- |
 | ![card](assets/image_no_destination_name.png) | ![card](assets/image_destination_named_defined.png) |
+
+### "stationName"
+
+**Type:** `string`
+**Default**: `""`
+
+Overrides the station or stop name displayed when the `station-name` layout cell is used.
+
+```yaml
+type: custom:departures-card
+entities:
+  - entity: sensor.nurnberg_plarrer_tram_4_gibitzenhof
+    stationName: Plärrer
+```
 
 ### "icon"
 
