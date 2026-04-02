@@ -4,7 +4,6 @@
       "title": "Nagłówek karty (opcjonalne)",
       "icon": "Ikona karty (opcjonalne)",
       "showCardHeader": "Pokaż nagłówek karty",
-
       "design-expandable": "Wygląd i zawartość",
       "cardOrientation": "Orientacja karty",
       "cardOrientationVerticalDescription": "Wyświetla odjazdy na przewijalnej liście",
@@ -18,7 +17,6 @@
       "entitiesFilter": "Filtr odjazdów (minuty)",
       "scrollBackTimeout": "Czas powrotu (sekundy)",
       "sortDepartures": "Sortuj encje według planowanego odjazdu",
-
       "layout-expandable": "Układ wiersza odjazdu",
       "layout": "Dodaj komórkę",
       "layout-cells": {
@@ -28,11 +26,11 @@
         "time-diff": "Odjazd za",
         "planned-time": "Planowy czas",
         "estimated-time": "Szacowany czas",
+        "station-name": "Nazwa stacji",
         "delay": "Opóźnienie"
       },
       "cellWidths": "Szerokości komórek (np. 50px, 1fr, auto)",
       "layoutWarning": "Następujące komórki będą ignorowane przy poziomej orientacji karty",
-
       "animation-expandable": "Ikona i animacja odjazdu",
       "departureIcon": "Własna ikona odjazdu",
       "animateLine": "Animuj wiersz odjazdu",
@@ -40,19 +38,16 @@
       "departureAnimation": "Animacja odjazdu",
       "departureAnimationDuration": "Czas trwania animacji (ms)",
       "noAnimation": "Brak",
-
       "interactions-expandable": "Interakcje",
-
       "entities-expandable": "Encje (wymagane)",
       "addEntity": "Dodaj encję",
-
       "card.editor.interactions-expandable": "Interakcje",
       "tap_action": "Akcja przy dotknięciu",
       "hold_action": "Akcja przy przytrzymaniu",
       "double_tap_action": "Akcja przy podwójnym dotknięciu",
-
       "entity": {
         "entity": "Encja",
+        "stationName": "Nazwa stacji",
         "destinationName": "Nazwa celu",
         "lineName": "Nazwa linii",
         "lineColor": "Kolor linii",
@@ -74,6 +69,7 @@
       }
     },
     "list-header": {
+      "station-name": "Stacja",
       "icon": "Ikona",
       "line": "Linia",
       "destination": "Cel",

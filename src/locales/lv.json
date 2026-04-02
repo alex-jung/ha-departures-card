@@ -4,7 +4,6 @@
       "title": "Kartes virsraksts (neobligāts)",
       "icon": "Kartes ikona (neobligāts)",
       "showCardHeader": "Rādīt kartes galveni",
-
       "design-expandable": "Dizains un saturs",
       "cardOrientation": "Kartes orientācija",
       "cardOrientationVerticalDescription": "Rāda atiešanas ritināmā sarakstā",
@@ -18,7 +17,6 @@
       "entitiesFilter": "Atiešanas filtrs (minūtes)",
       "scrollBackTimeout": "Atgriešanās laiks (sekundes)",
       "sortDepartures": "Kārtot entītijas pēc plānotā atiešanas laika",
-
       "layout-expandable": "Atiešanas rindas izkārtojums",
       "layout": "Pievienot šūnu",
       "layout-cells": {
@@ -28,11 +26,11 @@
         "time-diff": "Atiet pēc",
         "planned-time": "Plānotais laiks",
         "estimated-time": "Prognozētais laiks",
+        "station-name": "Stacijas nosaukums",
         "delay": "Kavēšanās"
       },
       "cellWidths": "Šūnu platumi (piem. 50px, 1fr, auto)",
       "layoutWarning": "Šīs šūnas tiks ignorētas horizontālā kartes orientācijā",
-
       "animation-expandable": "Atiešanas ikona un animācija",
       "departureIcon": "Pielāgota atiešanas ikona",
       "animateLine": "Animēt atiešanas rindu",
@@ -40,19 +38,16 @@
       "departureAnimation": "Atiešanas animācija",
       "departureAnimationDuration": "Animācijas ilgums (ms)",
       "noAnimation": "Nav",
-
       "interactions-expandable": "Mijiedarbības",
-
       "entities-expandable": "Entītijas (nepieciešams)",
       "addEntity": "Pievienot entītiju",
-
       "card.editor.interactions-expandable": "Mijiedarbības",
       "tap_action": "Darbība pieskaroties",
       "hold_action": "Darbība turot",
       "double_tap_action": "Darbība divreiz pieskaroties",
-
       "entity": {
         "entity": "Entītija",
+        "stationName": "Stacijas nosaukums",
         "destinationName": "Galamērķa nosaukums",
         "lineName": "Līnijas nosaukums",
         "lineColor": "Līnijas krāsa",
@@ -74,6 +69,7 @@
       }
     },
     "list-header": {
+      "station-name": "Stacija",
       "icon": "Ikona",
       "line": "Līnija",
       "destination": "Galamērķis",

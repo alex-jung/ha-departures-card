@@ -22,6 +22,7 @@ export const DEFAULT_SCROLL_BACK_TIMEOUT = 5;
 export const DEFAULT_CARD_THEME = CardTheme.BASIC;
 
 export const LAYOUT_VERTICAL = new Map<string, string>([
+  [LayoutCell.STATION_NAME, "1fr"],
   [LayoutCell.ICON, "30px"],
   [LayoutCell.LINE, "50px"],
   [LayoutCell.DESTINATION, "1fr"],
@@ -31,6 +32,7 @@ export const LAYOUT_VERTICAL = new Map<string, string>([
   [LayoutCell.DELAY, "45px"],
 ]);
 export const LAYOUT_HORIZONTAL = new Map<string, string>([
+  [LayoutCell.STATION_NAME, "1fr"],
   [LayoutCell.ICON, "30px"],
   [LayoutCell.LINE, "50px"],
   [LayoutCell.DESTINATION, "1fr"],

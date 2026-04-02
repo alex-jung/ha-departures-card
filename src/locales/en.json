@@ -4,7 +4,6 @@
       "title": "Card header text (optional)",
       "icon": "Card icon (optional)",
       "showCardHeader": "Show card header",
-
       "design-expandable": "Design & content",
       "cardOrientation": "Card orientation",
       "cardOrientationVerticalDescription": "Show departures in a scrollable list",
@@ -18,7 +17,6 @@
       "entitiesFilter": "Departure filter (minutes)",
       "scrollBackTimeout": "Scroll-back time (seconds)",
       "sortDepartures": "Sort entities by planned departure time",
-
       "layout-expandable": "Departure layout",
       "layout": "Add cell",
       "layout-cells": {
@@ -28,11 +26,11 @@
         "time-diff": "Departure in",
         "planned-time": "Planned time",
         "estimated-time": "Estimated time",
+        "station-name": "Station name",
         "delay": "Delay"
       },
       "cellWidths": "Cell widths (e.g. 50px, 1fr, auto)",
       "layoutWarning": "The following cells will be ignored when using the horizontal orientation",
-
       "animation-expandable": "Departure icon & animation",
       "departureIcon": "Custom departure icon",
       "animateLine": "Animate departure line",
@@ -40,19 +38,16 @@
       "departureAnimation": "Departure animation",
       "departureAnimationDuration": "Animation duration (ms)",
       "noAnimation": "None",
-
       "interactions-expandable": "Interactions",
-
       "entities-expandable": "Entities (required)",
       "addEntity": "Add entity",
-
       "card.editor.interactions-expandable": "Interactions",
       "tap_action": "Tap action",
       "hold_action": "Hold action",
       "double_tap_action": "Double tap action",
-
       "entity": {
         "entity": "Entity",
+        "stationName": "Station name",
         "destinationName": "Destination name",
         "lineName": "Line name",
         "lineColor": "Line color",
@@ -74,6 +69,7 @@
       }
     },
     "list-header": {
+      "station-name": "Station",
       "icon": "Icon",
       "line": "Line",
       "destination": "Destination",

@@ -4,7 +4,6 @@
       "title": "Kartenüberschrift (optional)",
       "icon": "Kartensymbol  (optional)",
       "showCardHeader": "Kartenüberschrift anzeigen",
-
       "design-expandable": "Design & Inhalt",
       "cardOrientation": "Kartenausrichtung",
       "cardOrientationVerticalDescription": "Zeigt die Ankünfte in einer scrollbaren Liste",
@@ -18,7 +17,6 @@
       "entitiesFilter": "Abfahrtsfilter (Minuten)",
       "scrollBackTimeout": "Zurückscroll-Zeit (Sekunden)",
       "sortDepartures": "Entitäten nach geplanter Ankunft sortieren",
-
       "layout-expandable": "Layout der Ankunftszeile",
       "layout": "Zelle hinzufügen",
       "layout-cells": {
@@ -28,11 +26,11 @@
         "time-diff": "Ankunft in",
         "planned-time": "Geplante Zeit",
         "estimated-time": "Geschätzte Zeit",
+        "station-name": "Stationsname",
         "delay": "Verspätung"
       },
       "cellWidths": "Zellenbreiten (z.B. 50px, 1fr, auto)",
       "layoutWarning": "Die folgenden Zellen werden bei horizontaler Kartenausrichtung ignoriert",
-
       "animation-expandable": "Ankunftssymbol & Animation",
       "departureIcon": "Benutzerdefiniertes Ankunftssymbol",
       "animateLine": "Ankunftszeile animieren",
@@ -40,19 +38,16 @@
       "departureAnimation": "Ankunftsanimation",
       "departureAnimationDuration": "Animationsdauer (ms)",
       "noAnimation": "Keine",
-
       "interactions-expandable": "Interaktionen",
-
       "entities-expandable": "Entitäten (erforderlich)",
       "addEntity": "Entität hinzufügen",
-
       "card.editor.interactions-expandable": "Interaktionen",
       "tap_action": "Verhalten bei Antippen",
       "hold_action": "Verhalten bei Festhalten",
       "double_tap_action": "Verhalten bei Doppeltipp",
-
       "entity": {
         "entity": "Entität",
+        "stationName": "Stationsname",
         "destinationName": "Zielname",
         "lineName": "Linienname",
         "lineColor": "Linienfarbe",
@@ -74,6 +69,7 @@
       }
     },
     "list-header": {
+      "station-name": "Station",
       "icon": "Icon",
       "line": "Linie",
       "destination": "Ziel",

@@ -24,6 +24,18 @@ describe("Layout", () => {
     });
   });
 
+  describe("Valid input / horizontal / station-name", () => {
+    const layout = new Layout([LayoutCell.STATION_NAME, LayoutCell.DESTINATION], CardOrientation.HORIZONTAL);
+
+    it("should get cells for station-name and destination", () => {
+      expect(layout.getCells()).toEqual(["station-name", "destination"]);
+    });
+    it("should get columns for station-name and destination", () => {
+      const expectedColumns = `${LAYOUT_HORIZONTAL.get(LayoutCell.STATION_NAME)} ${LAYOUT_HORIZONTAL.get(LayoutCell.DESTINATION)}`;
+      expect(layout.getColumns()).toEqual(expectedColumns);
+    });
+  });
+
   describe("Filter invalid cells", () => {
     let layout = new Layout("icon invalid_1 hello world", CardOrientation.HORIZONTAL);
 
@@ -44,6 +56,16 @@ describe("Layout", () => {
     });
     it("should get default columns if no layout provided", () => {
       expect(layout.getColumns()).toEqual(Array.from(LAYOUT_VERTICAL.values()).join(" "));
+    });
+
+    it("should include station-name cell in vertical layout", () => {
+      const l = new Layout([LayoutCell.STATION_NAME, LayoutCell.TIME_DIFF], CardOrientation.VERTICAL);
+      expect(l.getCells()).toEqual(["station-name", "time-diff"]);
+    });
+    it("should get columns for station-name in vertical layout", () => {
+      const l = new Layout([LayoutCell.STATION_NAME, LayoutCell.TIME_DIFF], CardOrientation.VERTICAL);
+      const expectedColumns = `${LAYOUT_VERTICAL.get(LayoutCell.STATION_NAME)} ${LAYOUT_VERTICAL.get(LayoutCell.TIME_DIFF)}`;
+      expect(l.getColumns()).toEqual(expectedColumns);
     });
   });
 
