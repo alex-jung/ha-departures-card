@@ -15,6 +15,7 @@ export interface Config extends LovelaceCardConfig {
   entities?: EntityConfig[];
   icon: string;
   layout: Array<LayoutCell | string>;
+  cellWidths?: Record<string, string>;
   scrollBackTimeout: number;
   showCardHeader: boolean;
   showListHeader: boolean;

@@ -101,7 +101,7 @@ export class ContentTable extends Content {
   ];
 
   protected createLayout(): Layout {
-    return new Layout(this.cardConfig.layout, CardOrientation.HORIZONTAL);
+    return new Layout(this.cardConfig.layout, CardOrientation.HORIZONTAL, this.cardConfig.cellWidths);
   }
 
   public renderContent() {

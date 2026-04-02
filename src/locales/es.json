@@ -30,6 +30,7 @@
         "estimated-time": "Hora estimada",
         "delay": "Retraso"
       },
+      "cellWidths": "Anchos de celda (p.ej. 50px, 1fr, auto)",
       "layoutWarning": "Las siguientes celdas serán ignoradas con orientación horizontal",
 
       "animation-expandable": "Icono y animación de salida",
@@ -64,6 +65,7 @@
         "sortDepartures": "Ordena las salidas por su hora planificada",
         "scrollBackTimeout": "Tiempo en segundos antes de que la lista vuelva automáticamente al inicio",
         "layout": "Configuración de las celdas mostradas y su orden en una fila de salida",
+        "cellWidths": "La fila de salida utiliza un diseño CSS grid. Aquí se puede ajustar el ancho de cada celda (p.ej. 50px, 1fr, auto). Valor vacío usa el ancho predeterminado.",
         "departureIcon": "Si no se define icono personalizado, se usará el icono de transporte de la entidad",
         "animateLine": "Si está desactivado, solo se animará la celda de tiempo de salida",
         "arrivalTimeOffset": "Tiempo en minutos antes de la salida cuando comienza la animación",

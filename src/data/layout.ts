@@ -17,10 +17,12 @@ import { CardOrientation, LayoutCell } from "../types";
 export class Layout {
   _layoutCells: Array<string>;
   _cardOrientation: CardOrientation;
+  _cellWidths?: Record<string, string>;
 
-  constructor(cells: Array<LayoutCell | string> | string | undefined, cardOrientation: CardOrientation) {
+  constructor(cells: Array<LayoutCell | string> | string | undefined, cardOrientation: CardOrientation, cellWidths?: Record<string, string>) {
     this._layoutCells = this._parseCardLayout(cells, cardOrientation);
     this._cardOrientation = cardOrientation;
+    this._cellWidths = cellWidths;
   }
 
   /**
@@ -41,7 +43,7 @@ export class Layout {
 
     return this._layoutCells
       .map((cell) => {
-        return layoutValues.get(cell);
+        return this._cellWidths?.[cell] ?? layoutValues.get(cell);
       })
       .join(" ");
   }

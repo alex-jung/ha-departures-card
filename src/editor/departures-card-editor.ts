@@ -10,7 +10,7 @@ import { cardStyles, contentCore } from "../styles";
 import { EntityTab } from "./entity-tab";
 import { mdiTableRow, mdiPalette, mdiFormatListBulleted, mdiAnimation } from "@mdi/js";
 import { AnimatePreset, animatePresets } from "../animate-presets";
-import { DEFAULT_ARRIVAL_OFFSET, DEFAULT_DEPARTURE_ANIMATION, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT } from "../constants";
+import { DEFAULT_ARRIVAL_OFFSET, DEFAULT_DEPARTURE_ANIMATION, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, LAYOUT_HORIZONTAL, LAYOUT_VERTICAL } from "../constants";
 
 @customElement("departures-card-editor")
 export class DeparturesCardEditor extends LitElement implements LovelaceCardEditor {
@@ -260,7 +260,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     },
   ];
 
-  private _schemaLayout = (localize: Function) => [
+  private _schemaLayout = (localize: Function, layout: Array<string>, orientation: CardOrientation) => [
     {
       name: "layout",
       selector: {
@@ -277,6 +277,27 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
         },
       },
     },
+    ...(layout.length > 0
+      ? [
+          {
+            type: "constant",
+            name: "cellWidths",
+            required: true,
+          },
+          {
+            name: "cellWidths",
+            type: "grid",
+            schema: layout.map((cell) => {
+              const defaultWidths = orientation === CardOrientation.HORIZONTAL ? LAYOUT_HORIZONTAL : LAYOUT_VERTICAL;
+              return {
+                name: cell,
+                description: { suggested_value: defaultWidths.get(cell) ?? "" },
+                selector: { text: {} },
+              };
+            }),
+          },
+        ]
+      : []),
   ];
 
   private _schemaAnimation = (localize: Function) => [
@@ -378,7 +399,13 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
 
     const schemaGeneral = this._schemaGeneral(this._config!.showCardHeader);
     const schemaDesign = this._schemaDesign(this.computeLabelCallback, this._config.cardOrientation, this._config.limitEntities, this._config.entities?.length ?? 1);
-    const schemaLayout = this._schemaLayout(this.computeLabelCallback);
+    const layout = this._config.layout ?? [];
+    const orientation = this._config.cardOrientation;
+    const schemaLayout = this._schemaLayout(this.computeLabelCallback, layout, orientation);
+    const layoutData = {
+      ...this._config,
+      cellWidths: Object.fromEntries(layout.map((cell) => [cell, this._config!.cellWidths?.[cell] ?? ""])),
+    };
     const schemaAnimation = this._schemaAnimation(this.computeLabelCallback);
     const schemaInteractions = this._schemaInteractions();
 
@@ -412,11 +439,16 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
         <div style="padding: 16px 0px;">
           <ha-form
             .schema="${schemaLayout}"
-            .data="${this._config}"
+            .data="${layoutData}"
             .hass="${this.hass}"
-            .computeLabel=${this.computeLabelCallback}
+            .computeLabel=${this.computeLabelLayoutCallback}
             .computeHelper=${this.computeHelperCallback}
             @value-changed=${this.configChanged}></ha-form>
+          ${layout.length > 0
+            ? html`<p class="secondary" style="margin: 0 16px 8px; font-size: 12px; color: var(--secondary-text-color);">
+                ${localize("card.editor.help.cellWidths", lang)}
+              </p>`
+            : nothing}
         </div>
         ${this._config?.cardOrientation == CardOrientation.HORIZONTAL
           ? html`<div class="error">
@@ -503,6 +535,13 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
 
   private computeLabelCallback = (schema: any) => localize(`card.editor.${schema.name}`, this.hass.locale?.language);
 
+  private computeLabelLayoutCallback = (schema: any) => {
+    const lang = this.hass.locale?.language;
+    const cellLabel = localize(`card.editor.layout-cells.${schema.name}`, lang);
+    if (cellLabel !== `card.editor.layout-cells.${schema.name}`) return cellLabel;
+    return localize(`card.editor.${schema.name}`, lang);
+  };
+
   private computeHelperCallback(schema: any) {
     let help_text = localize(`card.editor.help.${schema.name}`, this.hass.locale?.language);
 
@@ -576,6 +615,11 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     }
 
     const newConfig = { ...(event.detail.value as Config) } as Config;
+
+    if (newConfig.cellWidths) {
+      const cleaned = Object.fromEntries(Object.entries(newConfig.cellWidths).filter(([, v]) => v !== ""));
+      newConfig.cellWidths = Object.keys(cleaned).length > 0 ? cleaned : undefined;
+    }
 
     if (this._config?.departureAnimation != newConfig.departureAnimation) {
       this._cancelPreviewAnimations();
