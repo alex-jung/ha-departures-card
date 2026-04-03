@@ -93,6 +93,9 @@ export const contentCore = css`
   }
   .cell-station-name {
     text-align: center;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .cell-delay {
     color: white;
