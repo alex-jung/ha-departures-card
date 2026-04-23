@@ -1,5 +1,5 @@
 import { HomeAssistant } from "custom-card-helpers";
-import { EntityConfig, DeparturesDataRow, DeparturesData } from "../types";
+import { EntityConfig, DeparturesDataRow, DeparturesData, DestinationSource } from "../types";
 import { DataParser, Parser } from "./data-parsers";
 import { HassEntity } from "home-assistant-js-websocket";
 import { EntityNotAvailable, UnsupportedEntityError } from "../exceptions";
@@ -59,13 +59,8 @@ export class DepartureTimesPool {
       dep.times.forEach((time) => {
         if (time.timeDiff >= 0) {
           list.push({
-            entity: dep.entity,
-            lineName: dep.lineName,
-            destinationName: dep.destinationName,
-            lineColor: dep.lineColor,
-            icon: dep.icon,
+            ...dep,
             time: time,
-            stationName: dep.stationName,
           });
         }
       });
@@ -128,11 +123,25 @@ export class DepartureTimesPool {
   private _createOrUpdateEntry(config: EntityConfig, parser: Parser) {
     const entityId = config.entity;
     const lineName = config.lineName || parser.getLineName();
-    const direction = config.destinationName || parser.getDirection();
     const lineColor = config.lineColor;
     const times = parser.getTimes();
     const icon = config.icon || parser.getTransportIcon() || DEFAULT_ENTITY_ICON;
     const stationName = config.stationName ?? "";
+    const destinationSource = config.destinationSource ?? DestinationSource.DIRECTION;
+
+    let direction: string | null;
+    switch (destinationSource) {
+      case DestinationSource.CUSTOM:
+        direction = config.destinationName;
+        break;
+      case DestinationSource.HEAD_SIGN:
+        direction = null;
+        break;
+      case DestinationSource.DIRECTION:
+      default:
+        direction = parser.getDirection();
+        break;
+    }
 
     if (!this._data.has(config.entity)) {
       // create a new data entry
@@ -140,6 +149,7 @@ export class DepartureTimesPool {
         entity: entityId,
         lineName: lineName,
         destinationName: direction,
+        destinationSource: destinationSource,
         lineColor: lineColor,
         icon: icon,
         times: times,
@@ -154,6 +164,7 @@ export class DepartureTimesPool {
       if (data) {
         data.lineName = lineName;
         data.destinationName = direction;
+        data.destinationSource = destinationSource;
         data.lineColor = lineColor;
         data.icon = icon;
         data.times = times;

@@ -48,11 +48,17 @@
       "entity": {
         "entity": "Entité",
         "stationName": "Nom de la station",
-        "destinationName": "Nom de la destination",
+        "destinationSource": "Source du nom de destination",
+        "destinationName": "Nom de destination personnalisé",
         "lineName": "Nom de la ligne",
         "lineColor": "Couleur de la ligne",
         "icon": "Icône de transport personnalisée",
         "remove": "Supprimer"
+      },
+      "destinationSourceOptions": {
+        "direction": "Attribut 'direction'",
+        "head_sign": "Attribut 'head_sign'",
+        "custom": "Valeur personnalisée"
       },
       "help": {
         "showListHeader": "Affiche les en-têtes de colonnes de la liste des départs",

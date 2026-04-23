@@ -48,11 +48,17 @@
       "entity": {
         "entity": "Encja",
         "stationName": "Nazwa stacji",
-        "destinationName": "Nazwa celu",
+        "destinationSource": "Źródło nazwy celu",
+        "destinationName": "Niestandardowa nazwa celu",
         "lineName": "Nazwa linii",
         "lineColor": "Kolor linii",
         "icon": "Własna ikona transportu",
         "remove": "Usuń"
+      },
+      "destinationSourceOptions": {
+        "direction": "Atrybut 'direction'",
+        "head_sign": "Atrybut 'head_sign'",
+        "custom": "Wartość niestandardowa"
       },
       "help": {
         "showListHeader": "Wyświetla nagłówki kolumn listy odjazdów",

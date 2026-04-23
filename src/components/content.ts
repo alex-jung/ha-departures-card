@@ -2,7 +2,7 @@ import { html, LitElement, nothing, TemplateResult, CSSResultGroup, PropertyValu
 import { property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { CardTheme, Config, DeparturesDataRow, LayoutCell } from "../types";
+import { CardTheme, Config, DeparturesDataRow, DestinationSource, LayoutCell } from "../types";
 import { lightFormat } from "date-fns";
 import { contentCore } from "../styles";
 import { DEFAULT_ENTITY_ICON } from "../constants";
@@ -374,9 +374,13 @@ export abstract class Content extends LitElement {
     }
 
     const hasAlerts = departure.time.hasAlerts;
+    const destinationName =
+      departure.destinationSource === DestinationSource.HEAD_SIGN
+        ? (departure.time.headSign ?? departure.destinationName)
+        : departure.destinationName;
 
     return html` <div class="cell-destination" theme=${this.theme}>
-      <span class="cell-destination-label" style=${styleMap(styles)}>${departure.destinationName}</span>
+      <span class="cell-destination-label" style=${styleMap(styles)}>${destinationName}</span>
       ${hasAlerts
         ? html`
             <span class="cell-alert-badge">

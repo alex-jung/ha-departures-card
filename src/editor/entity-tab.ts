@@ -1,4 +1,4 @@
-import { EntityConfig } from "../types";
+import { EntityConfig, DestinationSource } from "../types";
 
 export class EntityTab {
   index: number;
@@ -13,6 +13,7 @@ export class EntityTab {
         lineColor: null,
         lineName: null,
         destinationName: null,
+        destinationSource: DestinationSource.DIRECTION,
       } as EntityConfig;
     } else {
       this.config = config;

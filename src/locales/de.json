@@ -48,11 +48,17 @@
       "entity": {
         "entity": "Entität",
         "stationName": "Stationsname",
-        "destinationName": "Zielname",
+        "destinationSource": "Zielname Quelle",
+        "destinationName": "Benutzerdefinierter Zielname",
         "lineName": "Linienname",
         "lineColor": "Linienfarbe",
         "icon": "Transport Icon",
         "remove": "Entfernen"
+      },
+      "destinationSourceOptions": {
+        "direction": "Attribut 'direction'",
+        "head_sign": "Attribut 'head_sign'",
+        "custom": "Benutzerdefiniert"
       },
       "help": {
         "showListHeader": "Zeigt die Spaltenüberschriften der Ankunftsliste an",

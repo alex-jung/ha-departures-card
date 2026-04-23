@@ -48,11 +48,17 @@
       "entity": {
         "entity": "Entita",
         "stationName": "Název stanice",
-        "destinationName": "Název cíle",
+        "destinationSource": "Zdroj názvu cíle",
+        "destinationName": "Vlastní název cíle",
         "lineName": "Název linky",
         "lineColor": "Barva linky",
         "icon": "Vlastní ikona dopravy",
         "remove": "Odstranit"
+      },
+      "destinationSourceOptions": {
+        "direction": "Atribut 'direction'",
+        "head_sign": "Atribut 'head_sign'",
+        "custom": "Vlastní hodnota"
       },
       "help": {
         "showListHeader": "Zobrazí záhlaví sloupců seznamu odjezdů",
