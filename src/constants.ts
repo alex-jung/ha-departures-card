@@ -1,6 +1,6 @@
 import { CardOrientation, CardTheme, LayoutCell } from "./types";
 
-export const CARD_VERSION = "3.9.0";
+export const CARD_VERSION = "3.9.1";
 export const CARD_REPO_URL = "https://github.com/alex-jung/ha-departures-card";
 
 export const DEFAULT_UPDATE_INTERVAL = 10000; // -> 10 sec
