@@ -5,6 +5,7 @@ import { localize } from "../locales/localize";
 import { mdiDelete } from "@mdi/js";
 import { cardStyles } from "../styles";
 import { EntityTab } from "./entity-tab";
+import { DestinationSource } from "../types";
 
 @customElement("departures-entity-editor")
 export class DeparturesCardEntityEditor extends LitElement {
@@ -33,38 +34,60 @@ export class DeparturesCardEntityEditor extends LitElement {
   @property({ attribute: false })
   public data!: EntityTab;
 
-  private _schema = [
-    {
-      name: "entity",
-      selector: { entity: {}, domain: "ha_departures" },
-    },
-    {
-      name: "stationName",
-      selector: { text: {} },
-    },
-    {
-      name: "destinationName",
-      selector: { text: {} },
-    },
-    {
-      name: "",
-      type: "grid",
-      schema: [
-        {
-          name: "lineName",
-          selector: { text: {} },
+  private get _schema() {
+    const lang = this.hass?.locale?.language;
+    const destinationSource = this.data?.config?.destinationSource ?? DestinationSource.DIRECTION;
+
+    return [
+      {
+        name: "entity",
+        selector: { entity: {}, domain: "ha_departures" },
+      },
+      {
+        name: "stationName",
+        selector: { text: {} },
+      },
+      {
+        name: "destinationSource",
+        selector: {
+          select: {
+            mode: "dropdown",
+            options: [
+              { value: DestinationSource.DIRECTION, label: localize("card.editor.destinationSourceOptions.direction", lang) },
+              { value: DestinationSource.HEAD_SIGN, label: localize("card.editor.destinationSourceOptions.head_sign", lang) },
+              { value: DestinationSource.CUSTOM, label: localize("card.editor.destinationSourceOptions.custom", lang) },
+            ],
+          },
         },
-        {
-          name: "lineColor",
-          selector: { text: {} },
-        },
-      ],
-    },
-    {
-      name: "icon",
-      selector: { icon: {} },
-    },
-  ] as const;
+      },
+      ...(destinationSource === DestinationSource.CUSTOM
+        ? [
+            {
+              name: "destinationName",
+              selector: { text: {} },
+            },
+          ]
+        : []),
+      {
+        name: "",
+        type: "grid",
+        schema: [
+          {
+            name: "lineName",
+            selector: { text: {} },
+          },
+          {
+            name: "lineColor",
+            selector: { text: {} },
+          },
+        ],
+      },
+      {
+        name: "icon",
+        selector: { icon: {} },
+      },
+    ] as const;
+  }
 
   protected render() {
     if (!this.hass) {

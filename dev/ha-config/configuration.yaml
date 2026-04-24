@@ -27,11 +27,11 @@ template:
           icon: mdi:tram
           times: >
             {{ [
-              {"planned": (now() + timedelta(minutes=3)).isoformat(),  "estimated": (now() + timedelta(minutes=5)).isoformat(),  "trip_id": "20260316_14:43_de-DELFI_3118795864", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": true},
-              {"planned": (now() + timedelta(minutes=13)).isoformat(), "estimated": (now() + timedelta(minutes=13)).isoformat(), "trip_id": "20260316_14:53_de-DELFI_3118795863", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": true},
-              {"planned": (now() + timedelta(minutes=23)).isoformat(), "estimated": (now() + timedelta(minutes=23)).isoformat(), "trip_id": "20260316_15:03_de-DELFI_3118795862", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": false},
-              {"planned": (now() + timedelta(minutes=33)).isoformat(), "estimated": (now() + timedelta(minutes=33)).isoformat(), "trip_id": "20260316_15:13_de-DELFI_3118795795", "cancelled": false, "head_sign": "Doku-Zentrum", "alerts": false},
-              {"planned": (now() + timedelta(minutes=43)).isoformat(), "estimated": (now() + timedelta(minutes=43)).isoformat(), "trip_id": "20260316_15:23_de-DELFI_3118795860", "cancelled": true,  "head_sign": "Doku-Zentrum", "alerts": false}
+              {"planned": (now() + timedelta(minutes=3)).isoformat(),  "estimated": (now() + timedelta(minutes=5)).isoformat(),  "trip_id": "20260316_14:43_de-DELFI_3118795864", "cancelled": false, "head_sign": "Param-taram", "alerts": true},
+              {"planned": (now() + timedelta(minutes=13)).isoformat(), "estimated": (now() + timedelta(minutes=13)).isoformat(), "trip_id": "20260316_14:53_de-DELFI_3118795863", "cancelled": false, "head_sign": "Param-taram", "alerts": true},
+              {"planned": (now() + timedelta(minutes=23)).isoformat(), "estimated": (now() + timedelta(minutes=23)).isoformat(), "trip_id": "20260316_15:03_de-DELFI_3118795862", "cancelled": false, "head_sign": "Param-taram", "alerts": false},
+              {"planned": (now() + timedelta(minutes=33)).isoformat(), "estimated": (now() + timedelta(minutes=33)).isoformat(), "trip_id": "20260316_15:13_de-DELFI_3118795795", "cancelled": false, "head_sign": "Param-taram", "alerts": false},
+              {"planned": (now() + timedelta(minutes=43)).isoformat(), "estimated": (now() + timedelta(minutes=43)).isoformat(), "trip_id": "20260316_15:23_de-DELFI_3118795860", "cancelled": true,  "head_sign": "Param-taram", "alerts": false}
             ] }}
 
       - name: "U6 Garching Forschungszentrum"

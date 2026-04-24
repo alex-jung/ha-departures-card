@@ -527,13 +527,14 @@ title: Frankenstr.
 
 ## Entity Properties
 
-| yaml attribute                      | Type   | Required | Default value |
-| ----------------------------------- | ------ | -------- | ------------- |
-| [linecolor](#linecolor)             | string | no       | empty         |
-| [linename](#linename)               | string | no       | empty         |
-| [destinationname](#destinationname) | string | no       | empty         |
-| [stationName](#stationName)         | string | no       | empty         |
-| [icon](#icon-1)                     | string | no       | empty         |
+| yaml attribute                              | Type   | Required | Default value |
+| ------------------------------------------- | ------ | -------- | ------------- |
+| [linecolor](#linecolor)                     | string | no       | empty         |
+| [linename](#linename)                       | string | no       | empty         |
+| [destinationSource](#destinationsource)     | string | no       | `direction`   |
+| [destinationname](#destinationname)         | string | no       | empty         |
+| [stationName](#stationName)                 | string | no       | empty         |
+| [icon](#icon-1)                             | string | no       | empty         |
 
 ### "lineColor"
 
@@ -571,12 +572,34 @@ entities:
 | ------------------------------------------- | ------------------------------------------ |
 | ![card](assets/image_linecolor_defined.png) | ![card](assets/image_linename_defined.png) |
 
+### "destinationSource"
+
+**Type:** `string`
+**Default**: `"direction"`
+
+Controls which value is used as the destination name for each departure.
+
+| Value       | Description                                                                                   |
+| ----------- | --------------------------------------------------------------------------------------------- |
+| `direction` | Uses the `direction` attribute of the sensor entity (default)                                 |
+| `head_sign` | Uses the `head_sign` field from each individual trip in the `times` array                     |
+| `custom`    | Uses the manually defined [`destinationName`](#destinationname) value                         |
+
+The `head_sign` mode is useful when a single entity contains trips with different final destinations — for example during disruptions when trains are rerouted to an alternative terminal. Each departure row will then show the actual destination of that specific trip instead of the entity's fixed direction attribute.
+
+```yaml
+type: custom:departures-card
+entities:
+  - entity: sensor.karlsfeld_s2_ostbahnhof
+    destinationSource: head_sign
+```
+
 ### "destinationName"
 
 **Type:** `string`
 **Default**: `""`
 
-Option to overwrite default destination name provided by API.
+Option to overwrite default destination name provided by API. Only used when [`destinationSource`](#destinationsource) is set to `custom`.
 
 ```yaml
 type: custom:departures-card

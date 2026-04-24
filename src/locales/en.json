@@ -48,11 +48,17 @@
       "entity": {
         "entity": "Entity",
         "stationName": "Station name",
-        "destinationName": "Destination name",
+        "destinationSource": "Destination source",
+        "destinationName": "Custom destination name",
         "lineName": "Line name",
         "lineColor": "Line color",
         "icon": "Custom transport icon",
         "remove": "Remove"
+      },
+      "destinationSourceOptions": {
+        "direction": "Attribute 'direction'",
+        "head_sign": "Attribute 'head_sign'",
+        "custom": "Custom value"
       },
       "help": {
         "showListHeader": "Show the header row for the departure list",

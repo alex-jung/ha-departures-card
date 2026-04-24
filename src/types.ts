@@ -31,9 +31,16 @@ export interface Config extends LovelaceCardConfig {
   title: string;
 }
 
+export enum DestinationSource {
+  DIRECTION = "direction",
+  HEAD_SIGN = "head_sign",
+  CUSTOM = "custom",
+}
+
 // An entity configuration within the card configuration
 export interface EntityConfig {
   destinationName: string | null;
+  destinationSource?: DestinationSource;
   entity: string;
   icon: string | null;
   lineColor: string | null;

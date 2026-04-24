@@ -48,11 +48,17 @@
       "entity": {
         "entity": "Entītija",
         "stationName": "Stacijas nosaukums",
-        "destinationName": "Galamērķa nosaukums",
+        "destinationSource": "Galamērķa nosaukuma avots",
+        "destinationName": "Pielāgots galamērķa nosaukums",
         "lineName": "Līnijas nosaukums",
         "lineColor": "Līnijas krāsa",
         "icon": "Pielāgota transporta ikona",
         "remove": "Noņemt"
+      },
+      "destinationSourceOptions": {
+        "direction": "Atribūts 'direction'",
+        "head_sign": "Atribūts 'head_sign'",
+        "custom": "Pielāgota vērtība"
       },
       "help": {
         "showListHeader": "Rāda atiešanu saraksta kolonnu virsrakstus",
