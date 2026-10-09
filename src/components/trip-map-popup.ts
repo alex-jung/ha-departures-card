@@ -9,6 +9,7 @@ import { localize } from "../locales/localize";
 
 import leafletCssText from "leaflet/dist/leaflet.css";
 import { formatDistanceToNow } from "date-fns";
+import { HomeAssistant } from "custom-card-helpers";
 
 const TRIP_API_BASE = __TRANSITOUS_API_BASE__ + "/api/v5/trip?tripId=";
 const API_HEADERS = {
@@ -16,6 +17,10 @@ const API_HEADERS = {
   Accept: "application/json",
 };
 const POSITION_UPDATE_INTERVAL_MS = 5000;
+// HA >= 2026.10 proxies OSM tiles via the map_tiles integration; its access token rotates every 30 min.
+const HA_TILE_URL = "/api/map_tiles/raster/{z}/{x}/{y}.png?token=";
+const OSM_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+const TILE_TOKEN_REFRESH_MS = 20 * 60 * 1000;
 
 // ---------------------------------------------------------------------------
 // Component
@@ -403,6 +408,7 @@ export class TripMapPopup extends LitElement {
   @property() title = "";
   @property({ type: Boolean }) open = false;
   @property() language = "en";
+  @property({ attribute: false }) hass?: HomeAssistant;
 
   @state() private _loading = false;
   @state() private _error = false;
@@ -414,6 +420,7 @@ export class TripMapPopup extends LitElement {
   @state() private _destLabel = "";
 
   private _map: L.Map | null = null;
+  private _tileTokenInterval: ReturnType<typeof setInterval> | null = null;
   private _mapRef = createRef<HTMLDivElement>();
   private _stripRef = createRef<HTMLDivElement>();
   private _vehicleMarker: L.Marker | null = null;
@@ -659,11 +666,7 @@ export class TripMapPopup extends LitElement {
 
     this._map = L.map(container);
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-      attribution: "© OpenStreetMap contributors © CARTO",
-      subdomains: "abcd",
-      maxZoom: 19,
-    }).addTo(this._map);
+    this._addTileLayer(this._map);
 
     const bounds: [number, number][] = [];
     let firstPolyline: [number, number][] = [];
@@ -781,11 +784,42 @@ export class TripMapPopup extends LitElement {
       clearInterval(this._positionInterval);
       this._positionInterval = null;
     }
+    if (this._tileTokenInterval !== null) {
+      clearInterval(this._tileTokenInterval);
+      this._tileTokenInterval = null;
+    }
     this._vehicleMarker = null;
     this._nextStopMarker = null;
     if (this._map) {
       this._map.remove();
       this._map = null;
+    }
+  }
+
+  private async _fetchTileToken(): Promise<string | null> {
+    try {
+      const { token } = await this.hass!.callWS<{ token: string }>({ type: "map_tiles/access_token" });
+      return token;
+    } catch {
+      return null;
+    }
+  }
+
+  private async _addTileLayer(map: L.Map) {
+    const token = this.hass ? await this._fetchTileToken() : null;
+    if (map !== this._map) return;
+
+    const layer = L.tileLayer(token ? HA_TILE_URL + token : OSM_TILE_URL, {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 20,
+      maxNativeZoom: 19,
+    }).addTo(map);
+
+    if (token) {
+      this._tileTokenInterval = setInterval(async () => {
+        const fresh = await this._fetchTileToken();
+        if (fresh && map === this._map) layer.setUrl(HA_TILE_URL + fresh);
+      }, TILE_TOKEN_REFRESH_MS);
     }
   }
 
