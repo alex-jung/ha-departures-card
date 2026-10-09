@@ -84,6 +84,7 @@ export abstract class Content extends LitElement {
         .title=${this._dialogTitle}
         .open=${this._dialogOpen}
         .language=${this.language}
+        .hass=${this.hass}
         @popup-closed=${() => {
           this._dialogOpen = false;
         }}></trip-map-popup>
