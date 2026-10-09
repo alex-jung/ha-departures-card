@@ -6,6 +6,7 @@
 [![Downloads](https://img.shields.io/github/downloads/alex-jung/ha-departures-card/total?style=flat-square)](https://github.com/alex-jung/ha-departures-card/releases)
 
 A card to display departure times provided by [Departures](https://github.com/alex-jung/ha-departures) custom integration.
+Other data sources can be used as well, see [Using Other Data Sources](#using-other-data-sources).
 
 <p align="center">
   <img width="600" src="assets/image_top.png"/>
@@ -645,3 +646,60 @@ entities:
 | empty                                  | icon: mdi:lamp                        |
 | -------------------------------------- | ------------------------------------- |
 | ![card](assets/image_icon_default.png) | ![card](assets/image_icon_custom.png) |
+
+---
+
+## Using Other Data Sources
+
+The card is built for the [ha-departures](https://github.com/alex-jung/ha-departures) integration, but it accepts any sensor entity that provides the attributes below. This lets you show departures from other integrations, for example through a [template sensor](https://www.home-assistant.io/integrations/template/).
+
+### Entity attributes
+
+| Attribute   | Type   | Required    | Description                                                                                       |
+| ----------- | ------ | ----------- | ------------------------------------------------------------------------------------------------- |
+| `times`     | list   | yes         | List of departures (see below). Entities without this attribute are reported as not supported.    |
+| `line_name` | string | recommended | Line name, e.g. `U6`. Can be overridden with [lineName](#linename).                               |
+| `direction` | string | recommended | Direction / final destination. Can be overridden with [destinationSource](#destinationsource).    |
+| `icon`      | string | no          | Transport icon, e.g. `mdi:tram`. Can be overridden with [icon](#icon-1).                          |
+
+### Departure entries (`times`)
+
+| Field       | Type    | Required | Description                                                                                          |
+| ----------- | ------- | -------- | ---------------------------------------------------------------------------------------------------- |
+| `planned`   | string  | yes      | Planned departure time as ISO 8601 timestamp with time zone, e.g. `2026-10-10T14:05:00+02:00`.      |
+| `estimated` | string  | no       | Real-time departure. If set, it is used for the countdown and the delay is calculated from it.     |
+| `cancelled` | boolean | no       | `true` if the trip is cancelled. Default: `false`.                                                  |
+| `head_sign` | string  | no       | Destination of this particular trip, used with `destinationSource: head_sign`.                      |
+| `alerts`    | boolean | no       | `true` if service alerts exist for this trip.                                                       |
+| `trip_id`   | string  | no       | Trip ID used by the [Trip Info Popup](#trip-info-popup). Only [Transitous](https://transitous.org) trip IDs are supported. |
+
+### Example template sensor
+
+```yaml
+template:
+  - sensor:
+      - name: "Tram 6 Doku-Zentrum"
+        unique_id: tram_6_doku_zentrum
+        state: "departures"
+        attributes:
+          line_name: "6"
+          direction: "Doku-Zentrum"
+          icon: mdi:tram
+          times: >
+            {{ [
+              {"planned": (now() + timedelta(minutes=3)).isoformat(), "estimated": (now() + timedelta(minutes=5)).isoformat()},
+              {"planned": (now() + timedelta(minutes=13)).isoformat()},
+              {"planned": (now() + timedelta(minutes=23)).isoformat(), "cancelled": true}
+            ] }}
+```
+
+In a real setup, build the `times` list from the attributes of your source entity instead of `now()`.
+
+### Troubleshooting
+
+If the card shows no departures for your sensor, check the entity in **Developer tools → States**:
+
+- `times` must be a **list**, not a string. Make sure the template renders a list (e.g. `[{...}, {...}]`) and not quoted text.
+- `planned` and `estimated` must be valid timestamps, preferably ISO 8601 with time zone.
+- Departures in the past are hidden. At least one entry must be in the future.
+- The entity state must not be `unavailable`.
