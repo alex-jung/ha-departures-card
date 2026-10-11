@@ -10,6 +10,7 @@
       "cardOrientationHorizontalDescription": "Show departures in a table view (legacy  behavior)",
       "theme": "Card Theme",
       "showListHeader": "Show list header",
+      "showMapPopup": "Show map popup",
       "showScrollButtons": "Show scroll buttons",
       "departuresToShow": "Number of departures to show",
       "limitEntities": "Limit number of entities to show",
@@ -62,6 +63,7 @@
       },
       "help": {
         "showListHeader": "Show the header row for the departure list",
+        "showMapPopup": "Long press on a departure opens the trip info popup with map",
         "showScrollButtons": "Show buttons to scroll through the departure list",
         "sortDepartures": "Sort departures by their planned time",
         "scrollBackTimeout": "Time in seconds before the list automatically scrolls back to the top",

@@ -6,7 +6,7 @@ import { groupBy } from "lodash";
 import { DepartureTime } from "../data/departure-time";
 import { lightFormat } from "date-fns";
 import { classMap } from "lit/directives/class-map.js";
-import { DEFAULT_ENTITY_ICON } from "../constants";
+import { DEFAULT_ENTITY_ICON, DEFAULT_SHOW_MAP_POPUP } from "../constants";
 import { Layout } from "../data/layout";
 import { styleMap } from "lit/directives/style-map.js";
 import { actionHandler } from "../action-handler";
@@ -192,7 +192,7 @@ export class ContentTable extends Content {
         entity-id="${departure.entity}"
         @action=${this._handleAction}
         .actionHandler=${actionHandler({
-          hasHold: true,
+          hasHold: this.cardConfig.showMapPopup ?? DEFAULT_SHOW_MAP_POPUP,
           hasDoubleClick: hasAction(this.cardConfig.double_tap_action),
         })}
         theme=${this.cardConfig.theme}

@@ -10,6 +10,7 @@
       "cardOrientationHorizontalDescription": "Muestra las salidas en una vista de tabla",
       "theme": "Tema de la tarjeta",
       "showListHeader": "Mostrar encabezado de lista",
+      "showMapPopup": "Mostrar mapa emergente",
       "showScrollButtons": "Mostrar botones de desplazamiento",
       "departuresToShow": "Número de salidas a mostrar",
       "limitEntities": "Limitar número de entidades a mostrar",
@@ -62,6 +63,7 @@
       },
       "help": {
         "showListHeader": "Muestra los encabezados de columna de la lista de salidas",
+        "showMapPopup": "Una pulsación larga sobre una salida abre la ventana de información del viaje con mapa",
         "showScrollButtons": "Muestra botones para desplazar la lista hacia arriba y abajo",
         "sortDepartures": "Ordena las salidas por su hora planificada",
         "scrollBackTimeout": "Tiempo en segundos antes de que la lista vuelva automáticamente al inicio",

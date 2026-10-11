@@ -5,7 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { CardTheme, Config, DeparturesDataRow, DestinationSource, LayoutCell } from "../types";
 import { lightFormat } from "date-fns";
 import { contentCore } from "../styles";
-import { DEFAULT_ENTITY_ICON } from "../constants";
+import { DEFAULT_ENTITY_ICON, DEFAULT_SHOW_MAP_POPUP } from "../constants";
 import { Layout } from "../data/layout";
 
 import { localize } from "../locales/localize";
@@ -263,7 +263,7 @@ export abstract class Content extends LitElement {
         data-trip-id="${departure.time.tripId}"
         @action=${this._handleAction}
         .actionHandler=${actionHandler({
-          hasHold: true,
+          hasHold: this.cardConfig.showMapPopup ?? DEFAULT_SHOW_MAP_POPUP,
           hasDoubleClick: hasAction(this.cardConfig.double_tap_action),
         })}
         theme=${this.theme}
@@ -280,7 +280,7 @@ export abstract class Content extends LitElement {
 
     const entityId = target.getAttribute("entity-id") ?? undefined;
 
-    if (ev.detail.action === "hold") {
+    if (ev.detail.action === "hold" && (this.cardConfig.showMapPopup ?? DEFAULT_SHOW_MAP_POPUP)) {
       let tripId: string | undefined;
       let el: HTMLElement | null = this._pointerDownTarget;
       while (el) {

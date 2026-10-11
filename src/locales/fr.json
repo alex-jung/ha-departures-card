@@ -10,6 +10,7 @@
       "cardOrientationHorizontalDescription": "Affiche les départs dans une vue tableau",
       "theme": "Thème de la carte",
       "showListHeader": "Afficher l'en-tête de liste",
+      "showMapPopup": "Afficher la carte popup",
       "showScrollButtons": "Afficher les boutons de défilement",
       "departuresToShow": "Nombre de départs à afficher",
       "limitEntities": "Limiter le nombre d'entités à afficher",
@@ -62,6 +63,7 @@
       },
       "help": {
         "showListHeader": "Affiche les en-têtes de colonnes de la liste des départs",
+        "showMapPopup": "Un appui long sur un départ ouvre la fenêtre d'informations du trajet avec carte",
         "showScrollButtons": "Affiche des boutons pour faire défiler la liste vers le haut et le bas",
         "sortDepartures": "Trie les départs par leur heure planifiée",
         "scrollBackTimeout": "Temps en secondes avant que la liste revienne automatiquement au début",

@@ -48,7 +48,7 @@ A card to display departure times provided by [Departures](https://github.com/al
 > [!WARNING]
 > This feature is experimental and may contain bugs. If you run into any issues or unexpected behaviour, please [open an issue](https://github.com/alex-jung/ha-departures-card/issues) - your feedback is very welcome and helps improve the feature!
 
-**Long press** (hold) on any departure row to open the trip info popup.
+**Long press** (hold) on any departure row to open the trip info popup. It can be disabled with [showMapPopup](#showMapPopup).
 Trip data is fetched from the [Transitous](https://transitous.org) open transit API (`api.transitous.org`).
 
 <p align="center">
@@ -105,6 +105,7 @@ When the data source provides service alerts for a departure, a warning indicato
 | [scrollBackTimeout](#scrollBackTimeout)                   | number       | no       | 5                                                     |
 | [showCardHeader](#showCardHeader)                         | boolean      | no       | true                                                  |
 | [showListHeader](#showListHeader)                         | boolean      | no       | true                                                  |
+| [showMapPopup](#showMapPopup)                             | boolean      | no       | true                                                  |
 | [showScrollButtons](#showScrollButtons)                   | boolean      | no       | true                                                  |
 | [sortDepartures](#sortDepartures)                         | boolean      | no       | true                                                  |
 | [theme](#theme)                                           | string       | no       | "Basic"                                               |
@@ -418,6 +419,18 @@ showListHeader: true
 | showListHeader: true                       | showListHeader: false                         |
 | ------------------------------------------ | --------------------------------------------- |
 | ![card](assets/image_show_list_header.png) | ![card](assets/image_show_no_list_header.png) |
+
+### "showMapPopup"
+
+**Type:** `boolean`
+**Default**: `true`
+
+Enables the [Trip Info Popup](#trip-info-popup) on long press. Set to `false` if the popup should never open, e.g. on touch panels where scrolling the list triggers it accidentally.
+
+```yaml
+type: custom:departures-card
+showMapPopup: false
+```
 
 ### "showScrollButtons"
 

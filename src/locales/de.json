@@ -10,6 +10,7 @@
       "cardOrientationHorizontalDescription": "Zeigt die Abfahrten in einer Tabellenansicht",
       "theme": "Card Theme",
       "showListHeader": "Listenüberschrift anzeigen",
+      "showMapPopup": "Karten-Popup anzeigen",
       "showScrollButtons": "Scroll-Schaltflächen anzeigen",
       "departuresToShow": "Anzahl anzuzeigender Abfahrten",
       "limitEntities": "Anzahl der Entitäten begrenzen",
@@ -62,6 +63,7 @@
       },
       "help": {
         "showListHeader": "Zeigt die Spaltenüberschriften der Abfahrtsliste an",
+        "showMapPopup": "Langes Drücken auf eine Abfahrt öffnet das Trip-Info-Popup mit Karte",
         "showScrollButtons": "Zeigt Schaltflächen zum Hoch- und Runterscrollen der Liste an",
         "sortDepartures": "Sortiert die Abfahrten nach ihrer geplanten Zeit",
         "scrollBackTimeout": "Zeit in Sekunden, nach der automatisch zum Listenanfang zurückgescrollt wird",
