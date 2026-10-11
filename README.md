@@ -235,6 +235,9 @@ Specifies how many departures are displayed on a single page.
 
 This value determines the visible height of the card. If more departures are available than can be shown at once, the list becomes scrollable.
 
+> [!NOTE]
+> In a [sections view](https://www.home-assistant.io/dashboards/sections/) with a fixed number of rows (_Auto height_ disabled in the _Layout_ tab), this option has no effect: the card fills the configured rows and shows as many departures as fit into them. Enable _Auto height_ to use this option again.
+
 ```yaml
 type: custom:departures-card
 departuresToShow: 5
