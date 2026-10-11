@@ -10,6 +10,7 @@
       "cardOrientationHorizontalDescription": "Rāda atiešanas tabulas skatā",
       "theme": "Kartes motīvs",
       "showListHeader": "Rādīt saraksta galveni",
+      "showMapPopup": "Rādīt kartes uznirstošo logu",
       "showScrollButtons": "Rādīt ritināšanas pogas",
       "departuresToShow": "Rādāmo atiešanu skaits",
       "limitEntities": "Ierobežot rādāmo entītiju skaitu",
@@ -62,6 +63,7 @@
       },
       "help": {
         "showListHeader": "Rāda atiešanu saraksta kolonnu virsrakstus",
+        "showMapPopup": "Ilgi turot nospiestu atiešanu, tiek atvērts brauciena informācijas logs ar karti",
         "showScrollButtons": "Rāda pogas saraksta ritināšanai uz augšu un leju",
         "sortDepartures": "Kārto atiešanas pēc plānotā laika",
         "scrollBackTimeout": "Laiks sekundēs, pēc kura saraksts automātiski atgriežas sākumā",

@@ -10,6 +10,7 @@ import { cardStyles, contentCore } from "../styles";
 import { EntityTab } from "./entity-tab";
 import { mdiTableRow, mdiPalette, mdiFormatListBulleted, mdiAnimation } from "@mdi/js";
 import { AnimatePreset, animatePresets } from "../animate-presets";
+import { isMapPopupEnabled } from "../helpers";
 import { DEFAULT_ARRIVAL_OFFSET, DEFAULT_DEPARTURE_ANIMATION, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, LAYOUT_HORIZONTAL, LAYOUT_VERTICAL } from "../constants";
 
 @customElement("departures-card-editor")
@@ -191,6 +192,10 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     },
     {
       name: "showListHeader",
+      selector: { boolean: {} },
+    },
+    {
+      name: "showMapPopup",
       selector: { boolean: {} },
     },
     ...(orientation == CardOrientation.VERTICAL
@@ -432,7 +437,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
         <div style="padding: 16px 0px;">
           <ha-form
             .schema="${schemaDesign}"
-            .data="${this._config}"
+            .data="${{ ...this._config, showMapPopup: isMapPopupEnabled(this._config) }}"
             .hass="${this.hass}"
             .computeLabel=${this.computeLabelCallback}
             .computeHelper=${this.computeHelperCallback}

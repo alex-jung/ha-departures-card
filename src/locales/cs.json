@@ -10,6 +10,7 @@
       "cardOrientationHorizontalDescription": "Zobrazí odjezdy v tabulkovém zobrazení",
       "theme": "Motiv karty",
       "showListHeader": "Zobrazit záhlaví seznamu",
+      "showMapPopup": "Zobrazit vyskakovací mapu",
       "showScrollButtons": "Zobrazit tlačítka pro posouvání",
       "departuresToShow": "Počet zobrazených odjezdů",
       "limitEntities": "Omezit počet zobrazených entit",
@@ -62,6 +63,7 @@
       },
       "help": {
         "showListHeader": "Zobrazí záhlaví sloupců seznamu odjezdů",
+        "showMapPopup": "Dlouhé podržení na odjezdu otevře okno s informacemi o spoji a mapou",
         "showScrollButtons": "Zobrazí tlačítka pro posouvání seznamu nahoru a dolů",
         "sortDepartures": "Seřadí odjezdy podle plánovaného času",
         "scrollBackTimeout": "Čas v sekundách, po kterém se seznam automaticky vrátí na začátek",
