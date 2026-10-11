@@ -1,4 +1,4 @@
-import { ClassTimer, getContrastTextColor } from "../src/helpers";
+import { ClassTimer, getContrastTextColor, isMapPopupEnabled } from "../src/helpers";
 
 describe("getContrastTextColor", () => {
   it("should return white for short hex values", () => {
@@ -87,5 +87,17 @@ describe("Tests for ClassTimer", () => {
     const timer = new ClassTimer(1000);
     timer.restart();
     expect(timer.isRunning()).toBe(false);
+  });
+});
+
+describe("isMapPopupEnabled", () => {
+  it("should be enabled by default", () => {
+    expect(isMapPopupEnabled(undefined)).toBe(true);
+    expect(isMapPopupEnabled({})).toBe(true);
+  });
+
+  it("should respect the showMapPopup option", () => {
+    expect(isMapPopupEnabled({ showMapPopup: true })).toBe(true);
+    expect(isMapPopupEnabled({ showMapPopup: false })).toBe(false);
   });
 });
