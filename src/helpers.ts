@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { StopInfo, StopTimepoint } from "./types";
+import { Config, StopInfo, StopTimepoint } from "./types";
 import type { Locale } from "date-fns";
 import { enUS, de, fr, es, it, nl, pl, pt, ptBR, ru, zhCN, zhTW, ja, ko, sv, nb, da, fi, hu, cs, sk, ro, bg, hr, sl, tr, ar, he, uk, ca, et, lv, lt, el } from "date-fns/locale";
 
@@ -32,6 +32,21 @@ export function prepareDate(date: Date | string | null | undefined): Date {
   parsedDate.setSeconds(0, 0);
 
   return parsedDate;
+}
+
+/**
+ * Returns true if the card height is defined by the dashboard grid (sections view with a fixed number of rows)
+ * instead of the number of departures to show.
+ */
+export function hasFixedGridHeight(config: Partial<Config> | undefined): boolean {
+  return typeof config?.grid_options?.rows === "number";
+}
+
+/**
+ * Returns the number of rows (at least one) with the given height and gap between them that fit into the given height.
+ */
+export function getRowsFittingHeight(height: number, rowHeight: number, gap: number): number {
+  return Math.max(1, Math.floor((height + gap) / (rowHeight + gap)));
 }
 
 export function getContrastTextColor(bgColor: string) {

@@ -10,6 +10,7 @@ import { cardStyles, contentCore } from "../styles";
 import { EntityTab } from "./entity-tab";
 import { mdiTableRow, mdiPalette, mdiFormatListBulleted, mdiAnimation } from "@mdi/js";
 import { AnimatePreset, animatePresets } from "../animate-presets";
+import { hasFixedGridHeight } from "../helpers";
 import { DEFAULT_ARRIVAL_OFFSET, DEFAULT_DEPARTURE_ANIMATION, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, LAYOUT_HORIZONTAL, LAYOUT_VERTICAL } from "../constants";
 
 @customElement("departures-card-editor")
@@ -119,7 +120,7 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
       : []),
   ];
 
-  private _schemaDesign = (localize: Function, orientation: CardOrientation, limitEntities: boolean, countEntities: number) => [
+  private _schemaDesign = (localize: Function, orientation: CardOrientation, limitEntities: boolean, countEntities: number, fixedHeight: boolean) => [
     {
       name: "cardOrientation",
       required: true,
@@ -238,6 +239,9 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
         ]),
     {
       name: "departuresToShow",
+      // in a sections view with a fixed number of rows the height is defined by the grid
+      disabled: fixedHeight,
+      helperKey: fixedHeight ? "departuresToShowFixedHeight" : undefined,
       selector: {
         number: {
           min: 1,
@@ -405,7 +409,13 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     const lang = this.hass.locale?.language;
 
     const schemaGeneral = this._schemaGeneral(this._config!.showCardHeader);
-    const schemaDesign = this._schemaDesign(this.computeLabelCallback, this._config.cardOrientation, this._config.limitEntities, this._config.entities?.length ?? 1);
+    const schemaDesign = this._schemaDesign(
+      this.computeLabelCallback,
+      this._config.cardOrientation,
+      this._config.limitEntities,
+      this._config.entities?.length ?? 1,
+      this._config.cardOrientation == CardOrientation.VERTICAL && hasFixedGridHeight(this._config),
+    );
     const layout = this._config.layout ?? [];
     const orientation = this._config.cardOrientation;
     const schemaLayout = this._schemaLayout(this.computeLabelCallback, layout, orientation);
@@ -550,9 +560,10 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
   };
 
   private computeHelperCallback(schema: any) {
-    let help_text = localize(`card.editor.help.${schema.name}`, this.hass.locale?.language);
+    const key = schema.helperKey ?? schema.name;
+    let help_text = localize(`card.editor.help.${key}`, this.hass.locale?.language);
 
-    return !help_text.endsWith(schema.name) ? help_text : undefined;
+    return !help_text.endsWith(key) ? help_text : undefined;
   }
 
   private addEntity() {

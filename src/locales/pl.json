@@ -61,6 +61,7 @@
         "custom": "Wartość niestandardowa"
       },
       "help": {
+        "departuresToShowFixedHeight": "Wysokość jest określona przez liczbę wierszy w zakładce 'Układ'. Włącz tam 'Automatyczna wysokość', aby użyć tej opcji.",
         "showListHeader": "Wyświetla nagłówki kolumn listy odjazdów",
         "showScrollButtons": "Wyświetla przyciski do przewijania listy w górę i w dół",
         "sortDepartures": "Sortuje odjazdy według planowanego czasu",

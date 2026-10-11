@@ -30,6 +30,7 @@ import {
   DEFAULT_UPDATE_INTERVAL,
 } from "../constants";
 import { localize } from "../locales/localize";
+import { hasFixedGridHeight } from "../helpers";
 
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
@@ -57,6 +58,13 @@ export class DeparturesCard extends LitElement {
 
   @property({ attribute: false })
   public hass!: HomeAssistant;
+
+  // Set by Home Assistant, "grid" when the card is placed in a sections view
+  @property({ attribute: false })
+  public layout?: string;
+
+  @property({ type: Boolean, reflect: true, attribute: "fixed-height" })
+  private fixedHeight = false;
 
   private _updateTimer: any;
 
@@ -96,6 +104,13 @@ export class DeparturesCard extends LitElement {
     this.config = config;
   }
 
+  public getGridOptions() {
+    return {
+      rows: "auto",
+      min_rows: 3,
+    };
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._updateTimer = setInterval(() => {
@@ -106,6 +121,10 @@ export class DeparturesCard extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     clearInterval(this._updateTimer);
+  }
+
+  protected willUpdate(): void {
+    this.fixedHeight = this.layout === "grid" && hasFixedGridHeight(this.config);
   }
 
   public render() {
@@ -161,6 +180,7 @@ export class DeparturesCard extends LitElement {
           .departures=${departures}
           .hass=${this.hass}
           .cardConfig=${cardConfig}
+          .fixedHeight=${this.fixedHeight}
           .errors=${this.dataPool.errors}></card-content-list>`;
       case CardOrientation.HORIZONTAL:
         return html`<card-content-table
@@ -169,6 +189,7 @@ export class DeparturesCard extends LitElement {
           .departures=${departures}
           .hass=${this.hass}
           .cardConfig=${cardConfig}
+          .fixedHeight=${this.fixedHeight}
           .errors=${this.dataPool.errors}></card-content-table>`;
       default:
         return html`<div>${localize("card.errors.no-card-orientation-set", this.hass.locale?.language)}</div>`;

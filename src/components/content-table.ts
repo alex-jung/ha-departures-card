@@ -24,6 +24,22 @@ export class ContentTable extends Content {
         display: flex;
         flex-direction: column;
       }
+      /* Sections view with a fixed number of rows: stretch the rows to fill the available space */
+      :host([fixed-height]) {
+        display: block;
+        height: 100%;
+      }
+      :host([fixed-height]) .content {
+        height: 100%;
+        overflow-y: auto;
+      }
+      :host([fixed-height]) .table-content {
+        min-height: 100%;
+        box-sizing: border-box;
+      }
+      :host([fixed-height]) .table-row {
+        flex: 1;
+      }
       .table-row {
         display: grid;
         align-items: stretch;
