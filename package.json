@@ -13,7 +13,7 @@
   ],
   "repository": "https://github.com/alex-jung/ha-departures-card",
   "license": "MIT",
-  "author": "Alex Jung <jungdevelop@googlemail.com>",
+  "author": "Alex Jung <contact@alex-jung.org>",
   "version": "3.10.0",
   "type": "module",
   "scripts": {
