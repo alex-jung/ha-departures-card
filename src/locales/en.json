@@ -62,6 +62,7 @@
         "custom": "Custom value"
       },
       "help": {
+        "departuresToShowFixedHeight": "The height is defined by the number of rows in the 'Layout' tab. Enable 'Auto height' there to use this option.",
         "showListHeader": "Show the header row for the departure list",
         "showMapPopup": "Long press on a departure opens the trip info popup with map",
         "showScrollButtons": "Show buttons to scroll through the departure list",

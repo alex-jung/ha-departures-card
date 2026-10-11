@@ -62,6 +62,7 @@
         "custom": "Pielāgota vērtība"
       },
       "help": {
+        "departuresToShowFixedHeight": "Augstumu nosaka rindu skaits cilnē 'Izkārtojums'. Ieslēdziet tur 'Automātisks augstums', lai izmantotu šo opciju.",
         "showListHeader": "Rāda atiešanu saraksta kolonnu virsrakstus",
         "showMapPopup": "Ilgi turot nospiestu atiešanu, tiek atvērts brauciena informācijas logs ar karti",
         "showScrollButtons": "Rāda pogas saraksta ritināšanai uz augšu un leju",

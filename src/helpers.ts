@@ -35,6 +35,21 @@ export function prepareDate(date: Date | string | null | undefined): Date {
   return parsedDate;
 }
 
+/**
+ * Returns true if the card height is defined by the dashboard grid (sections view with a fixed number of rows)
+ * instead of the number of departures to show.
+ */
+export function hasFixedGridHeight(config: Partial<Config> | undefined): boolean {
+  return typeof config?.grid_options?.rows === "number";
+}
+
+/**
+ * Returns the number of rows (at least one) with the given height and gap between them that fit into the given height.
+ */
+export function getRowsFittingHeight(height: number, rowHeight: number, gap: number): number {
+  return Math.max(1, Math.floor((height + gap) / (rowHeight + gap)));
+}
+
 export function isMapPopupEnabled(config: Partial<Config> | undefined): boolean {
   return config?.showMapPopup ?? DEFAULT_SHOW_MAP_POPUP;
 }

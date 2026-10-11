@@ -1,4 +1,4 @@
-import { ClassTimer, getContrastTextColor, isMapPopupEnabled } from "../src/helpers";
+import { ClassTimer, getContrastTextColor, getRowsFittingHeight, hasFixedGridHeight, isMapPopupEnabled } from "../src/helpers";
 
 describe("getContrastTextColor", () => {
   it("should return white for short hex values", () => {
@@ -87,6 +87,36 @@ describe("Tests for ClassTimer", () => {
     const timer = new ClassTimer(1000);
     timer.restart();
     expect(timer.isRunning()).toBe(false);
+  });
+});
+
+describe("hasFixedGridHeight", () => {
+  it("should be false without grid options", () => {
+    expect(hasFixedGridHeight(undefined)).toBe(false);
+    expect(hasFixedGridHeight({})).toBe(false);
+    expect(hasFixedGridHeight({ grid_options: { columns: 6 } })).toBe(false);
+  });
+
+  it("should be false for auto height", () => {
+    expect(hasFixedGridHeight({ grid_options: { rows: "auto" } })).toBe(false);
+  });
+
+  it("should be true for a fixed number of rows", () => {
+    expect(hasFixedGridHeight({ grid_options: { rows: 5 } })).toBe(true);
+  });
+});
+
+describe("getRowsFittingHeight", () => {
+  it("should return the number of rows fitting into the height", () => {
+    // 5 rows: 5 * 36 + 4 * 5 = 200
+    expect(getRowsFittingHeight(200, 36, 5)).toBe(5);
+    expect(getRowsFittingHeight(199, 36, 5)).toBe(4);
+    expect(getRowsFittingHeight(312, 36, 5)).toBe(7);
+  });
+
+  it("should return at least one row", () => {
+    expect(getRowsFittingHeight(10, 36, 5)).toBe(1);
+    expect(getRowsFittingHeight(0, 36, 5)).toBe(1);
   });
 });
 

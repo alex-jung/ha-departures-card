@@ -62,6 +62,7 @@
         "custom": "Benutzerdefiniert"
       },
       "help": {
+        "departuresToShowFixedHeight": "Die Höhe wird durch die Anzahl der Zeilen im Tab 'Layout' bestimmt. Aktiviere dort 'Automatische Höhe', um diese Option zu nutzen.",
         "showListHeader": "Zeigt die Spaltenüberschriften der Abfahrtsliste an",
         "showMapPopup": "Langes Drücken auf eine Abfahrt öffnet das Trip-Info-Popup mit Karte",
         "showScrollButtons": "Zeigt Schaltflächen zum Hoch- und Runterscrollen der Liste an",

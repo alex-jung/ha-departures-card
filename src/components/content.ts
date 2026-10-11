@@ -37,6 +37,12 @@ export abstract class Content extends LitElement {
   theme: CardTheme = CardTheme.BASIC;
 
   /**
+   * True if the height is defined by the dashboard grid, the content has to fill the available space.
+   */
+  @property({ type: Boolean, reflect: true, attribute: "fixed-height" })
+  fixedHeight = false;
+
+  /**
    * The layout configuration for the departure rows.
    * @type {Layout}
    */

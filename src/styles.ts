@@ -14,6 +14,28 @@ export const cardStyles = css`
     width: 100%;
     overflow: hidden;
   }
+  /* Sections view with a fixed number of rows: fill the grid cell */
+  :host([fixed-height]) {
+    display: block;
+    height: 100%;
+  }
+  :host([fixed-height]) ha-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+  }
+  :host([fixed-height]) .card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  :host([fixed-height]) card-content-list,
+  :host([fixed-height]) card-content-table {
+    flex: 1;
+    min-height: 0;
+  }
   .card-header {
     display: flex;
     flex-wrap: nowrap;

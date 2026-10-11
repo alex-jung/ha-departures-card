@@ -62,6 +62,7 @@
         "custom": "Valor personalizado"
       },
       "help": {
+        "departuresToShowFixedHeight": "La altura se define por el número de filas en la pestaña 'Diseño'. Activa 'Altura automática' en esa pestaña para usar esta opción.",
         "showListHeader": "Muestra los encabezados de columna de la lista de salidas",
         "showMapPopup": "Una pulsación larga sobre una salida abre la ventana de información del viaje con mapa",
         "showScrollButtons": "Muestra botones para desplazar la lista hacia arriba y abajo",

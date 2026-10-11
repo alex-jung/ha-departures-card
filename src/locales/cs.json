@@ -62,6 +62,7 @@
         "custom": "Vlastní hodnota"
       },
       "help": {
+        "departuresToShowFixedHeight": "Výška je určena počtem řádků na kartě 'Rozložení'. Pro použití této volby tam zapněte 'Automatická výška'.",
         "showListHeader": "Zobrazí záhlaví sloupců seznamu odjezdů",
         "showMapPopup": "Dlouhé podržení na odjezdu otevře okno s informacemi o spoji a mapou",
         "showScrollButtons": "Zobrazí tlačítka pro posouvání seznamu nahoru a dolů",

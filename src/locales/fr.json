@@ -62,6 +62,7 @@
         "custom": "Valeur personnalisée"
       },
       "help": {
+        "departuresToShowFixedHeight": "La hauteur est définie par le nombre de lignes dans l'onglet 'Mise en page'. Activez 'Hauteur automatique' dans cet onglet pour utiliser cette option.",
         "showListHeader": "Affiche les en-têtes de colonnes de la liste des départs",
         "showMapPopup": "Un appui long sur un départ ouvre la fenêtre d'informations du trajet avec carte",
         "showScrollButtons": "Affiche des boutons pour faire défiler la liste vers le haut et le bas",
