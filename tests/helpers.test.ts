@@ -1,4 +1,4 @@
-import { ClassTimer, getContrastTextColor, getRowsFittingHeight, hasFixedGridHeight } from "../src/helpers";
+import { ClassTimer, getContrastTextColor, getRowsFittingHeight, hasFixedGridHeight, isMapPopupEnabled } from "../src/helpers";
 
 describe("getContrastTextColor", () => {
   it("should return white for short hex values", () => {
@@ -117,5 +117,17 @@ describe("getRowsFittingHeight", () => {
   it("should return at least one row", () => {
     expect(getRowsFittingHeight(10, 36, 5)).toBe(1);
     expect(getRowsFittingHeight(0, 36, 5)).toBe(1);
+  });
+});
+
+describe("isMapPopupEnabled", () => {
+  it("should be enabled by default", () => {
+    expect(isMapPopupEnabled(undefined)).toBe(true);
+    expect(isMapPopupEnabled({})).toBe(true);
+  });
+
+  it("should respect the showMapPopup option", () => {
+    expect(isMapPopupEnabled({ showMapPopup: true })).toBe(true);
+    expect(isMapPopupEnabled({ showMapPopup: false })).toBe(false);
   });
 });

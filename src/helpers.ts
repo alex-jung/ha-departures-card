@@ -1,5 +1,6 @@
 import L from "leaflet";
 import { Config, StopInfo, StopTimepoint } from "./types";
+import { DEFAULT_SHOW_MAP_POPUP } from "./constants";
 import type { Locale } from "date-fns";
 import { enUS, de, fr, es, it, nl, pl, pt, ptBR, ru, zhCN, zhTW, ja, ko, sv, nb, da, fi, hu, cs, sk, ro, bg, hr, sl, tr, ar, he, uk, ca, et, lv, lt, el } from "date-fns/locale";
 
@@ -47,6 +48,10 @@ export function hasFixedGridHeight(config: Partial<Config> | undefined): boolean
  */
 export function getRowsFittingHeight(height: number, rowHeight: number, gap: number): number {
   return Math.max(1, Math.floor((height + gap) / (rowHeight + gap)));
+}
+
+export function isMapPopupEnabled(config: Partial<Config> | undefined): boolean {
+  return config?.showMapPopup ?? DEFAULT_SHOW_MAP_POPUP;
 }
 
 export function getContrastTextColor(bgColor: string) {

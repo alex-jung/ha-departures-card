@@ -19,6 +19,7 @@ export interface Config extends LovelaceCardConfig {
   scrollBackTimeout: number;
   showCardHeader: boolean;
   showListHeader: boolean;
+  showMapPopup?: boolean;
   showScrollButtons: boolean;
   sortDepartures: boolean;
   theme: CardTheme;

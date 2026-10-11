@@ -9,6 +9,7 @@ export const DEFAULT_CARD_TITLE = "Departures";
 export const DEFAULT_CARD_ICON = "mdi:bus-multiple";
 export const DEFAULT_SHOW_SCROLLBUTTONS = true;
 export const DEFAULT_SHOW_LIST_HEADER = true;
+export const DEFAULT_SHOW_MAP_POPUP = true;
 export const DEFAULT_CARD_ORIENTATION = CardOrientation.VERTICAL;
 export const DEFAULT_SORT_DEPARTURES = false;
 export const DEFAULT_DEPARTURE_ICON = "";
