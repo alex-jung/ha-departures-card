@@ -54,6 +54,17 @@ export function isMapPopupEnabled(config: Partial<Config> | undefined): boolean 
   return config?.showMapPopup ?? DEFAULT_SHOW_MAP_POPUP;
 }
 
+/**
+ * Returns the entity IDs used by the other entries of the card, so the editor can hide them in the entity picker.
+ * The entity of the entry at the given index is never part of the result, otherwise its own selection would be hidden.
+ */
+export function getEntitiesOfOtherEntries(entities: Array<string | null | undefined>, index: number): string[] {
+  const own = entities[index];
+  const others = entities.filter((entity, i): entity is string => i !== index && !!entity && entity !== own);
+
+  return [...new Set(others)];
+}
+
 export function getContrastTextColor(bgColor: string) {
   // remove # from color if present
   const hex = bgColor.replace("#", "");
