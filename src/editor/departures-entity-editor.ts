@@ -34,6 +34,9 @@ export class DeparturesCardEntityEditor extends LitElement {
   @property({ attribute: false })
   public data!: EntityTab;
 
+  @property({ attribute: false })
+  public excludeEntities: string[] = [];
+
   private get _schema() {
     const lang = this.hass?.locale?.language;
     const destinationSource = this.data?.config?.destinationSource ?? DestinationSource.DIRECTION;
@@ -41,7 +44,7 @@ export class DeparturesCardEntityEditor extends LitElement {
     return [
       {
         name: "entity",
-        selector: { entity: {}, domain: "ha_departures" },
+        selector: { entity: { exclude_entities: this.excludeEntities }, domain: "ha_departures" },
       },
       {
         name: "stationName",

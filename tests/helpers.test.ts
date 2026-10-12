@@ -1,4 +1,4 @@
-import { ClassTimer, getContrastTextColor, getRowsFittingHeight, hasFixedGridHeight, isMapPopupEnabled } from "../src/helpers";
+import { ClassTimer, getContrastTextColor, getEntitiesOfOtherEntries, getRowsFittingHeight, hasFixedGridHeight, isMapPopupEnabled } from "../src/helpers";
 
 describe("getContrastTextColor", () => {
   it("should return white for short hex values", () => {
@@ -129,5 +129,29 @@ describe("isMapPopupEnabled", () => {
   it("should respect the showMapPopup option", () => {
     expect(isMapPopupEnabled({ showMapPopup: true })).toBe(true);
     expect(isMapPopupEnabled({ showMapPopup: false })).toBe(false);
+  });
+});
+
+describe("getEntitiesOfOtherEntries", () => {
+  it("should return the entities of all other entries", () => {
+    expect(getEntitiesOfOtherEntries(["sensor.a", "sensor.b", "sensor.c"], 1)).toEqual(["sensor.a", "sensor.c"]);
+  });
+
+  it("should return nothing for a card with a single entry", () => {
+    expect(getEntitiesOfOtherEntries([], 0)).toEqual([]);
+    expect(getEntitiesOfOtherEntries([""], 0)).toEqual([]);
+    expect(getEntitiesOfOtherEntries(["sensor.a"], 0)).toEqual([]);
+  });
+
+  it("should skip entries without an entity", () => {
+    expect(getEntitiesOfOtherEntries(["sensor.a", "", undefined, null, "sensor.b"], 4)).toEqual(["sensor.a"]);
+  });
+
+  it("should never return the entity of the entry itself", () => {
+    expect(getEntitiesOfOtherEntries(["sensor.a", "sensor.a", "sensor.b"], 0)).toEqual(["sensor.b"]);
+  });
+
+  it("should return each entity only once", () => {
+    expect(getEntitiesOfOtherEntries(["sensor.a", "sensor.b", "sensor.b"], 0)).toEqual(["sensor.b"]);
   });
 });

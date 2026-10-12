@@ -10,7 +10,7 @@ import { cardStyles, contentCore } from "../styles";
 import { EntityTab } from "./entity-tab";
 import { mdiTableRow, mdiPalette, mdiFormatListBulleted, mdiAnimation } from "@mdi/js";
 import { AnimatePreset, animatePresets } from "../animate-presets";
-import { hasFixedGridHeight, isMapPopupEnabled } from "../helpers";
+import { getEntitiesOfOtherEntries, hasFixedGridHeight, isMapPopupEnabled } from "../helpers";
 import { DEFAULT_ARRIVAL_OFFSET, DEFAULT_DEPARTURE_ANIMATION, DEFAULT_DEPARTURES_TO_SHOW, DEFAULT_SCROLL_BACK_TIMEOUT, LAYOUT_HORIZONTAL, LAYOUT_VERTICAL } from "../constants";
 
 @customElement("departures-card-editor")
@@ -530,7 +530,12 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
             </ha-tab-group>
             <ha-icon-button .path=${mdiPlus} .label=${localize("card.editor.addEntity", lang)} @click=${this.addEntity}></ha-icon-button>
           </div>
-          <departures-entity-editor .hass=${this.hass} .data=${this.getTabData()} @onDelete=${this.removeEntity} @onChange=${this.updateEntity}></departures-entity-editor>
+          <departures-entity-editor
+            .hass=${this.hass}
+            .data=${this.getTabData()}
+            .excludeEntities=${this.getEntitiesOfOtherTabs()}
+            @onDelete=${this.removeEntity}
+            @onChange=${this.updateEntity}></departures-entity-editor>
         </div>
       </ha-expansion-panel>
     `;
@@ -552,6 +557,17 @@ export class DeparturesCardEditor extends LitElement implements LovelaceCardEdit
     }
 
     throw Error(`Wrong entity tab index detected: ${index}. Tabs length: ${this._tabs.length}`);
+  }
+
+  /**
+   * Returns the entities which are already used by the other tabs.
+   * They are hidden in the entity picker of the currently selected tab.
+   */
+  private getEntitiesOfOtherTabs(): string[] {
+    return getEntitiesOfOtherEntries(
+      this._tabs.map((tab) => tab.config?.entity),
+      parseInt(this._currTab) - 1,
+    );
   }
 
   private computeLabelCallback = (schema: any) => localize(`card.editor.${schema.name}`, this.hass.locale?.language);
